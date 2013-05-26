@@ -104,7 +104,7 @@ class BasicTest extends FunSuite with ShouldMatchers with PrivateMethodTester wi
   test("cannot overleap"){
     val chessboard = getInitialPosition()
     chessboard.applyMove(Move("e2", "e4"))
-    chessboard.applyMove(Move("e7", "e5"))pending
+    chessboard.applyMove(Move("e7", "e5"))
     expectIllegal(chessboard, Move("e4", "e5"))
     expectIllegal(chessboard, Move("e5", "e4"))
   }
