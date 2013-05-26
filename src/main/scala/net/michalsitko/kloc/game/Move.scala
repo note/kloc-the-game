@@ -7,4 +7,7 @@ package net.michalsitko.game
  * Time: 10:15 PM
  * To change this template use File | Settings | File Templates.
  */
-case class Move(from: String, to: String)
+class Move(fromStr: String, toStr: String){
+  val from: Field = Field.fromString(fromStr)
+  val to: Field = Field.fromString(toStr)
+}

@@ -1,5 +1,7 @@
 package net.michalsitko.game
 
+import net.michalsitko.kloc.game.{Black, White, Color}
+
 /**
  * Created with IntelliJ IDEA.
  * User: michal
@@ -9,13 +11,17 @@ package net.michalsitko.game
  */
 
 abstract trait Rook extends Piece{
-  val a = 0
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = ???
 }
 
 case object WhiteRook extends Rook{
   def getSymbol(): Char = 'R'
+
+  def getColor(): Color = new White
 }
 
 case object BlackRook extends Rook{
   def getSymbol(): Char = WhiteRook.getSymbol().toLower
+
+  def getColor(): Color = new Black
 }

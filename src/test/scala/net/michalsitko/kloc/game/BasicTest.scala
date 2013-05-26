@@ -34,6 +34,18 @@ class BasicTest extends FunSuite with ShouldMatchers with PrivateMethodTester wi
 
   behavior of "Pawn"*/
 
+  test("can be created from String") {
+    val field = Field.fromString("a2")
+    expectResult(1)(field.row)
+    expectResult(0)(field.column)
+  }
+
+  test("can be created from String 2") {
+    val field = Field.fromString("c8")
+    expectResult(7)(field.row)
+    expectResult(2)(field.column)
+  }
+
   test("chessboard can be load from file") {
     val chessboard = Chessboard.loadFromFile("/initial.position")
     val getPiece = getPieceInvoker(chessboard)_
@@ -48,44 +60,56 @@ class BasicTest extends FunSuite with ShouldMatchers with PrivateMethodTester wi
     expectResult(null)(getPiece(4, 5).getOrElse(null))
   }
 
-  test("can move forward by 2 fields from start position") {
-    expectLegal(getInitialPosition(), Move("e2", "e4"))
-    expectLegal(getInitialPosition(), Move("e7", "e5"))
-    expectLegal(getInitialPosition(), Move("a7", "a5"))
+  test("applyMove should change state of chessboard") {
+    val chessboard = getInitialPosition()
+    chessboard.applyMove(new Move("e2", "e4"))
+    expectResult(null)(chessboard.getPiece(Field.fromString("e2")).getOrElse(null))
+    expectResult(WhitePawn)(chessboard.getPiece(Field.fromString("e4")).getOrElse(null))
+  }
 
-    expectIllegal(getInitialPosition(), Move("e2", "d4"))
-    expectIllegal(getInitialPosition(), Move("e2", "e5"))
+  test("can move forward by 2 fields from start position") {
+    expectLegal(getInitialPosition(), new Move("e2", "e4"))
+    expectLegal(getInitialPosition(), new Move("e7", "e5"))
+    expectLegal(getInitialPosition(), new Move("a7", "a5"))
+
+    expectIllegal(getInitialPosition(), new Move("e2", "d4"))
+    expectIllegal(getInitialPosition(), new Move("e2", "e5"))
   }
 
   test("can move forward by 1 field from start position") {
-    expectLegal(getInitialPosition(), Move("e2", "e3"))
-    expectLegal(getInitialPosition(), Move("e7", "e6"))
+    expectLegal(getInitialPosition(), new Move("e2", "e3"))
+    expectLegal(getInitialPosition(), new Move("e7", "e6"))
   }
 
   test("cannot move forward by 2 fields from non-start position"){
     val chessboard = getInitialPosition()
-    chessboard.applyMove(Move("e2", "e3"))
-    chessboard.applyMove(Move("e7", "e6"))
-    expectIllegal(chessboard, Move("e3", "e5"))
-    expectIllegal(chessboard, Move("e7", "e6"))
+    chessboard.applyMove(new Move("e2", "e3"))
+    chessboard.applyMove(new Move("e7", "e6"))
+
+    expectIllegal(chessboard, new Move("e3", "e5"))
+    expectIllegal(chessboard, new Move("e7", "e6"))
   }
 
   test("move forward by 1 field from non-start position"){
     val chessboard = getInitialPosition()
-    chessboard.applyMove(Move("e2", "e3"))
-    chessboard.applyMove(Move("e7", "e6"))
-    expectLegal(chessboard, Move("e3", "e4"))
-    expectLegal(chessboard, Move("e6", "e5"))
+    chessboard.applyMove(new Move("e2", "e3"))
+    chessboard.applyMove(new Move("e7", "e6"))
+
+    expectLegal(chessboard, new Move("e3", "e4"))
+    expectLegal(chessboard, new Move("e6", "e5"))
+    expectIllegal(chessboard, new Move("e3", "e2"))
+    expectIllegal(chessboard, new Move("e6", "e7"))
   }
 
   test("take on diagonal 1 field forward"){
     val chessboard = getInitialPosition()
-    chessboard.applyMove(Move("e2", "e4"))
-    chessboard.applyMove(Move("d7", "d5"))
-    expectLegal(chessboard, Move("e4", "d5"))
-    expectLegal(chessboard, Move("d5", "e4"))
-    expectIllegal(chessboard, Move("e4", "f5"))
-    expectIllegal(chessboard, Move("d5", "c4"))
+    chessboard.applyMove(new Move("e2", "e4"))
+    chessboard.applyMove(new Move("d7", "d5"))
+
+    expectLegal(chessboard, new Move("e4", "d5"))
+    expectLegal(chessboard, new Move("d5", "e4"))
+    expectIllegal(chessboard, new Move("e4", "f5"))
+    expectIllegal(chessboard, new Move("d5", "c4"))
   }
 
   test("enpassant right after enemy pawn move"){
@@ -103,10 +127,10 @@ class BasicTest extends FunSuite with ShouldMatchers with PrivateMethodTester wi
 
   test("cannot overleap"){
     val chessboard = getInitialPosition()
-    chessboard.applyMove(Move("e2", "e4"))
-    chessboard.applyMove(Move("e7", "e5"))
-    expectIllegal(chessboard, Move("e4", "e5"))
-    expectIllegal(chessboard, Move("e5", "e4"))
+    chessboard.applyMove(new Move("e2", "e4"))
+    chessboard.applyMove(new Move("e7", "e5"))
+    expectIllegal(chessboard, new Move("e4", "e5"))
+    expectIllegal(chessboard, new Move("e5", "e4"))
   }
 
  /* behavior of "Rock"

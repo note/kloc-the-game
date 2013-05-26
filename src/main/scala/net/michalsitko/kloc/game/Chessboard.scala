@@ -11,22 +11,43 @@ import io.Source
  * To change this template use File | Settings | File Templates.
  */
 class Chessboard {
-  def applyMove(move: Move) {
+  def isPinned(move: Move): Boolean = false
 
+  def nothingBetween(field: Field, field1: Field): Boolean = true
+
+  def setPiece(field: Field, piece: Option[Piece]) {
+    fields(field.row)(field.column) = piece
+  }
+
+  def applyMove(move: Move) {
+     // this method assumes that move is legal
+    setPiece(move.to, getPiece(move.from))
+    setPiece(move.from, None)
+  }
+
+  def areBasicCriteriaSatisfied(move: Move): Boolean = {
+    if (!getPiece(move.from).isDefined)
+      return false
+
+    if (getPiece(move.to).isDefined){
+      val activePiece = getPiece(move.from).get
+      val passivePiece = getPiece(move.to).get
+      return activePiece.getColor() != passivePiece.getColor()
+    }else
+      return true
   }
 
   def isMoveCorrect(move: Move): Boolean = {
-    false
+    if (areBasicCriteriaSatisfied(move))
+      return getPiece(move.from).get.isMoveCorrect(this, move)
+    return false
   }
 
-  /*protected def getPiece(field: String) = {
+  def getPiece(field: Field): Option[Piece] = {
+    getPiece(field.row, field.column)
+  }
 
-  }*/
-
-  protected def getPiece(row: Int, column: Int) = {
-    require(row >= 0 && row <= 7)
-    require(column >= 0 && column <= 7)
-
+  def getPiece(row: Int, column: Int): Option[Piece] = {
     fields(row)(column)
   }
 

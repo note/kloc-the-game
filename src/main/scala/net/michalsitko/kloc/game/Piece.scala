@@ -1,5 +1,7 @@
 package net.michalsitko.game
 
+import net.michalsitko.kloc.game.Colored
+
 /**
  * Created with IntelliJ IDEA.
  * User: michal
@@ -8,7 +10,9 @@ package net.michalsitko.game
  * To change this template use File | Settings | File Templates.
  */
 
-abstract trait Piece extends Piece.Value {
+abstract trait Piece extends Piece.Value with Colored{
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean
+
   def getSymbol(): Char
 }
 
