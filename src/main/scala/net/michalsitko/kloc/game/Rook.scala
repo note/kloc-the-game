@@ -11,7 +11,16 @@ import net.michalsitko.kloc.game.{Black, White, Color}
  */
 
 abstract trait Rook extends Piece{
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = ???
+  def isRookMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
+    (from.sameRow(to) && !chessboard.somethingBetweenHorizontally(from, to)) || (from.sameColumn(to) && !chessboard.somethingBetweenVertically(from, to))
+  }
+
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    if (super.areBasicCriteriaSatisfied(chessboard, move))
+      isRookMove(chessboard, move.from, move.to)
+    else
+      false
+  }
 }
 
 case object WhiteRook extends Rook{

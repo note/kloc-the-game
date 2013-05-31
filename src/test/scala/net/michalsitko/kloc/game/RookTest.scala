@@ -11,7 +11,7 @@ import org.scalatest.matchers.ShouldMatchers
  * Time: 2:58 PM
  * To change this template use File | Settings | File Templates.
  */
-class RookTest  extends FunSuite with ShouldMatchers with PositionGenerator{
+class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
   private def expectLegal(chessboard: Chessboard, move: Move) {
     expectResult(true)(chessboard.isMoveCorrect(move))
   }
