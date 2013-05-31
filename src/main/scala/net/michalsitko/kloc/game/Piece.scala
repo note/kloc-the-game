@@ -14,6 +14,19 @@ abstract trait Piece extends Piece.Value with Colored{
   def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean
 
   def getSymbol(): Char
+
+  protected def areBasicCriteriaSatisfied(chessboard: Chessboard, move: Move): Boolean = {
+    !chessboard.isPinned(move) && isDestinationFieldAccessible(chessboard, move)
+  }
+
+  private def isDestinationFieldAccessible(chessboard: Chessboard, move: Move): Boolean = {
+    if (chessboard.getPiece(move.to).isDefined){
+      val activePiece = chessboard.getPiece(move.from).get
+      val passivePiece = chessboard.getPiece(move.to).get
+      activePiece.getColor() != passivePiece.getColor()
+    }else
+      true
+  }
 }
 
 object Piece extends Enum[Piece]{

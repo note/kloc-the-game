@@ -36,7 +36,10 @@ abstract trait Pawn extends Piece{
       (move.to.column-move.from.column).abs == 1 && move.to.row-move.from.row == expectedDiff()
     }
 
-    !chessboard.isPinned(move) && (isCorrectForward() || isCorrectTake())
+    if (super.areBasicCriteriaSatisfied(chessboard, move))
+      isCorrectForward() || isCorrectTake()
+    else
+      false
   }
 }
 

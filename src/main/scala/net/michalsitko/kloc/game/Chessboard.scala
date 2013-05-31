@@ -2,6 +2,7 @@ package net.michalsitko.game
 
 import java.nio.file.{Files, Paths}
 import io.Source
+import java.io.FileNotFoundException
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,20 +26,8 @@ class Chessboard {
     setPiece(move.from, None)
   }
 
-  def areBasicCriteriaSatisfied(move: Move): Boolean = {
-    if (!getPiece(move.from).isDefined)
-      return false
-
-    if (getPiece(move.to).isDefined){
-      val activePiece = getPiece(move.from).get
-      val passivePiece = getPiece(move.to).get
-      return activePiece.getColor() != passivePiece.getColor()
-    }else
-      return true
-  }
-
   def isMoveCorrect(move: Move): Boolean = {
-    if (areBasicCriteriaSatisfied(move))
+    if (getPiece((move.from)).isDefined)
       return getPiece(move.from).get.isMoveCorrect(this, move)
     return false
   }
@@ -59,14 +48,18 @@ object Chessboard{
 
   def loadFromFile(fileName: String): Chessboard = {
     val chessboard = new Chessboard
-    val source = Source.fromURL(getClass.getResource(fileName))
-    val content = source.mkString.replaceAll("""\s+""", "")
+    try{
+      val source = Source.fromURL(getClass.getResource(fileName))
+      val content = source.mkString.replaceAll("""\s+""", "")
 
-    val iterator = content.iterator
-    for (row <- chessboard.fields.reverse; i <- 0 to (row.size - 1)){
-      row(i) = symbolToPieceMap.get(iterator.next())
+      val iterator = content.iterator
+      for (row <- chessboard.fields.reverse; i <- 0 to (row.size - 1)){
+        row(i) = symbolToPieceMap.get(iterator.next())
+      }
+      chessboard
+    } catch {
+      case ex: NullPointerException => throw new FileNotFoundException()
     }
-    chessboard
   }
 
   private def createSymbolToPieceMap(): Map[Char, Piece] = {
