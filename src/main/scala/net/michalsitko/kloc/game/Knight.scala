@@ -11,7 +11,13 @@ import net.michalsitko.kloc.game.{Black, White, Color}
  */
 
 abstract trait Knight extends Piece{
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = ???
+
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    if (super.areBasicCriteriaSatisfied(chessboard, move))
+      move.to.isKnightAccessible(move.from)
+    else
+      false
+  }
 }
 
 case object WhiteKnight extends Knight{

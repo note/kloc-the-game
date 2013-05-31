@@ -8,6 +8,15 @@ package net.michalsitko.game
  * To change this template use File | Settings | File Templates.
  */
 case class Field (row: Int, column: Int){
+  def isKnightAccessible(anotherField: Field): Boolean = {
+    val diffs = ((row - anotherField.row).abs, (column - anotherField.column).abs)
+    diffs match {
+      case (1, 2) => true
+      case (2, 1) => true
+      case _ => false
+    }
+  }
+
   require(row >= 0 && row <= 7)
   require(column >= 0 && column <= 7)
 
