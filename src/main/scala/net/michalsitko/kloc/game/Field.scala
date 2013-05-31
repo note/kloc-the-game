@@ -10,6 +10,18 @@ package net.michalsitko.game
 case class Field (row: Int, column: Int){
   require(row >= 0 && row <= 7)
   require(column >= 0 && column <= 7)
+
+  def sameRow(anotherField: Field): Boolean = {
+    row == anotherField.row
+  }
+
+  def sameColumn(anotherField: Field): Boolean = {
+    column == anotherField.column
+  }
+
+  def sameDiagonal(anotherField: Field): Boolean = {
+    (row - anotherField.row).abs == (column - anotherField.column).abs
+  }
 }
 
 object Field{

@@ -51,17 +51,88 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
   // it's job of other classes to verify if move is correct
   test("applyMove allows you to apply incorrect moves") {
     val chessboard = getInitialPosition()
-
     chessboard.applyMove(new Move("b2", "b6"))
+
     expectResult(null)(chessboard.getPiece(Field.fromString("b2")).getOrElse(null))
     expectResult(WhitePawn)(chessboard.getPiece(Field.fromString("b6")).getOrElse(null))
   }
 
   test("applyMove allows you to apply incorrect moves 2") {
     val chessboard = getInitialPosition()
-
     chessboard.applyMove(new Move("b2", "b7"))
+
     expectResult(null)(chessboard.getPiece(Field.fromString("b2")).getOrElse(null))
     expectResult(WhitePawn)(chessboard.getPiece(Field.fromString("b7")).getOrElse(null))
+  }
+
+  test("somethingBetweenHorizontally") {
+    val chessboard = getInitialPosition()
+    chessboard.applyMove(new Move("e2", "e4"))
+
+    expectResult(true)(chessboard.somethingBetweenHorizontally(Field.fromString("f4"), Field.fromString("d4")))
+    expectResult(true)(chessboard.somethingBetweenHorizontally(Field.fromString("h4"), Field.fromString("a4")))
+    expectResult(true)(chessboard.somethingBetweenHorizontally(Field.fromString("f2"), Field.fromString("c2")))
+
+    expectResult(false)(chessboard.somethingBetweenHorizontally(Field.fromString("f3"), Field.fromString("c3")))
+    expectResult(false)(chessboard.somethingBetweenHorizontally(Field.fromString("f3"), Field.fromString("e3")))
+    expectResult(false)(chessboard.somethingBetweenHorizontally(Field.fromString("e4"), Field.fromString("f4")))
+  }
+
+  test("somethingBetweenHorizontally throw IllegalArgumentException") {
+    val chessboard = getInitialPosition()
+
+    intercept[IllegalArgumentException]{
+      expectResult(true)(chessboard.somethingBetweenHorizontally(Field.fromString("f4"), Field.fromString("d6")))
+    }
+  }
+
+  test("somethingBetweenVertically") {
+    val chessboard = getInitialPosition()
+    chessboard.applyMove(new Move("e2", "e4"))
+
+    expectResult(true)(chessboard.somethingBetweenVertically(Field.fromString("e3"), Field.fromString("e6")))
+    expectResult(true)(chessboard.somethingBetweenVertically(Field.fromString("e1"), Field.fromString("e7")))
+    expectResult(true)(chessboard.somethingBetweenVertically(Field.fromString("b1"), Field.fromString("b3")))
+
+    expectResult(false)(chessboard.somethingBetweenVertically(Field.fromString("f3"), Field.fromString("f6")))
+  }
+
+  test("somethingBetweenVertically throw IllegalArgumentException") {
+    val chessboard = getInitialPosition()
+
+    intercept[IllegalArgumentException]{
+      expectResult(true)(chessboard.somethingBetweenVertically(Field.fromString("f4"), Field.fromString("d6")))
+    }
+  }
+
+  for((field, anotherField, expectedResult) <- List(
+    ("c1", "e3", true),
+    ("f8", "c5", true),
+    ("d3", "f5", true),
+    ("f1", "b5", false),
+    ("a2", "b3", false)
+  )){
+    if (expectedResult)
+      test("something between diagonally between " + field + " and " + anotherField) {
+        val chessboard = getInitialPosition()
+        chessboard.applyMove(new Move("e2", "e4"))
+
+        expectResult(expectedResult)(chessboard.somethingBetweenDiagonally(Field.fromString(field), Field.fromString(anotherField)))
+      }
+    else
+      test("nothing between diagonally between " + field + " and " + anotherField) {
+        val chessboard = getInitialPosition()
+        chessboard.applyMove(new Move("e2", "e4"))
+
+        expectResult(expectedResult)(chessboard.somethingBetweenDiagonally(Field.fromString(field), Field.fromString(anotherField)))
+      }
+  }
+
+  test("somethingBetweenDiagonally throw IllegalArgumentException") {
+    val chessboard = getInitialPosition()
+
+    intercept[IllegalArgumentException]{
+      expectResult(true)(chessboard.somethingBetweenDiagonally(Field.fromString("e4"), Field.fromString("e2")))
+    }
   }
 }

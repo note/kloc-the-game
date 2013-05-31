@@ -22,7 +22,7 @@ abstract trait Pawn extends Piece{
         return false
       var correct = false
       correct = correct || (move.to.row - move.from.row) == expectedDiff()
-      correct = correct || isOnStartPosition(move.from) && move.to.row - move.from.row == 2 * expectedDiff() && chessboard.nothingBetween(move.from, move.to)
+      correct = correct || isOnStartPosition(move.from) && move.to.row - move.from.row == 2 * expectedDiff() && !chessboard.somethingBetweenVertically(move.from, move.to)
       return correct;
     }
 
