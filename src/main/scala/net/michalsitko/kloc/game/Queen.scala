@@ -10,7 +10,25 @@ import net.michalsitko.kloc.game.{Black, White, Color}
  * To change this template use File | Settings | File Templates.
  */
 abstract trait Queen extends Piece{
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = ???
+  def isQueenMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
+    if (from.sameRow(to))
+      return !chessboard.somethingBetweenHorizontally(from, to)
+
+    if (from.sameColumn(to))
+      return !chessboard.somethingBetweenVertically(from, to)
+
+    if (from.sameDiagonal(to))
+      return !chessboard.somethingBetweenDiagonally(from, to)
+
+    false
+  }
+
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    if (super.areBasicCriteriaSatisfied(chessboard, move))
+      isQueenMove(chessboard, move.from, move.to)
+    else
+      false
+  }
 }
 
 case object WhiteQueen extends Queen{
