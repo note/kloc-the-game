@@ -11,7 +11,16 @@ import net.michalsitko.kloc.game.{Black, White, Color, Colored}
  */
 
 abstract trait Bishop extends Piece{
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = ???
+  def isBishopMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
+    from.sameDiagonal(to) && !chessboard.somethingBetweenDiagonally(from, to)
+  }
+
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    if (super.areBasicCriteriaSatisfied(chessboard, move))
+      isBishopMove(chessboard, move.from, move.to)
+    else
+      false
+  }
 }
 
 case object WhiteBishop extends Bishop{
