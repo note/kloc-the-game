@@ -12,6 +12,8 @@ import java.io.FileNotFoundException
  * To change this template use File | Settings | File Templates.
  */
 class Chessboard {
+  private val fields = Array.fill[Option[Piece]](8, 8)(None)
+
   def isPinned(move: Move): Boolean = false
 
   def somethingBetweenHorizontally(field: Field, anotherField: Field): Boolean = {
@@ -95,8 +97,6 @@ class Chessboard {
   def getPiece(row: Int, column: Int): Option[Piece] = {
     fields(row)(column)
   }
-
-  private val fields = Array.ofDim[Option[Piece]](8, 8)
 }
 
 object Chessboard{

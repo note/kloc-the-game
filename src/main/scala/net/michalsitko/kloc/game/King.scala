@@ -11,7 +11,18 @@ import net.michalsitko.kloc.game.{Black, White, Color}
  */
 
 abstract trait King extends Piece{
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = ???
+  def isKingMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
+    val columnDiff = (from.column - to.column).abs
+    val rowDiff = (from.row - to.row).abs
+    (rowDiff > 0 || columnDiff > 0) && rowDiff < 2 && columnDiff < 2
+  }
+
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    if (super.areBasicCriteriaSatisfied(chessboard, move))
+      isKingMove(chessboard, move.from, move.to)
+    else
+      false
+  }
 }
 
 case object WhiteKing extends King{
