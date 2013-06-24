@@ -1,9 +1,10 @@
 package net.michalsitko.kloc.game
 
-import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{BeforeAndAfter, fixture}
+import org.scalatest.matchers.{MatchResult, ShouldMatchers, Matcher}
 import net.michalsitko.game._
 import scala.Some
+import net.michalsitko.kloc.game.matchers.CustomMatchers.beLegal
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,56 +13,49 @@ import scala.Some
  * Time: 11:34 PM
  * To change this template use File | Settings | File Templates.
  */
-class KingTest extends FunSuite with ShouldMatchers with PositionGenerator {
-  private def expectLegal(chessboard: Chessboard, move: Move) {
-    expectResult(true)(chessboard.isMoveCorrect(move))
-  }
+class KingTest extends fixture.FunSpec with ShouldMatchers with PositionGenerator {
+  type FixtureParam = Chessboard
 
-  def expectIllegal(chessboard: Chessboard, move: Move) {
-    expectResult(false)(chessboard.isMoveCorrect(move))
-  }
-
-  test("can move all directions by one field") {
-    val chessboard = new Chessboard
+  def withFixture(test: OneArgTest) {
+    // it seems to be odd and actually is. Piece is lazy so we have to invoke is somehow before first use of any of its specializations
     Piece
-    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
 
-    expectLegal(chessboard, Move("e4", "e3"))
-    expectLegal(chessboard, Move("e4", "e5"))
-    expectLegal(chessboard, Move("e4", "d4"))
-    expectLegal(chessboard, Move("e4", "f4"))
-    expectLegal(chessboard, Move("e4", "f5"))
-    expectLegal(chessboard, Move("e4", "f3"))
+    val chessboard = new Chessboard
+    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
+    test(chessboard)
   }
 
-  test("cannot move by more than one field") {
-    val chessboard = new Chessboard
-    Piece
-    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
+  describe("A King") {
+    it("can move all directions by one field") {
+      chessboard =>
+        (chessboard, Move("e4", "e3")) should beLegal
+        (chessboard, Move("e4", "e5")) should beLegal
+        (chessboard, Move("e4", "d4")) should beLegal
+        (chessboard, Move("e4", "f4")) should beLegal
+        (chessboard, Move("e4", "f5")) should beLegal
+        (chessboard, Move("e4", "f3")) should beLegal
+    }
 
-    expectIllegal(chessboard, Move("e4", "e2"))
-    expectIllegal(chessboard, Move("e4", "e8"))
-    expectIllegal(chessboard, Move("e4", "c4"))
-    expectIllegal(chessboard, Move("e4", "g3"))
-    expectIllegal(chessboard, Move("e4", "g2"))
-  }
+    it("cannot move by more than one field") {
+      chessboard =>
+        (chessboard, Move("e4", "e2")) should not (beLegal)
+        (chessboard, Move("e4", "e8")) should not (beLegal)
+        (chessboard, Move("e4", "c4")) should not (beLegal)
+        (chessboard, Move("e4", "g3")) should not (beLegal)
+        (chessboard, Move("e4", "g2")) should not (beLegal)
+    }
 
-  test("can take enemy piece") {
-    val chessboard = new Chessboard
-    Piece
-    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
-    chessboard.setPiece(Field.fromString("d5"), Some(BlackRook))
+    it("can take enemy piece") {
+      chessboard =>
+        chessboard.setPiece(Field.fromString("d5"), Some(BlackRook))
+        (chessboard, Move("e4", "d5")) should beLegal
+    }
 
-    expectLegal(chessboard, Move("e4", "d5"))
-  }
-
-  test("cannot overleap") {
-    val chessboard = new Chessboard
-    Piece
-    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
-    chessboard.setPiece(Field.fromString("e5"), Some(WhitePawn))
-
-    expectIllegal(chessboard, Move("e4", "e5"))
+    it("cannot overleap") {
+      chessboard =>
+        chessboard.setPiece(Field.fromString("e5"), Some(WhitePawn))
+        (chessboard, Move("e4", "e5")) should not (beLegal)
+    }
   }
 
   /*test("can be checked") {
