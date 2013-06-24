@@ -43,7 +43,7 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
 
   test("applyMove should change state of chessboard") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("e2", "e4"))
+    chessboard.applyMove(Move("e2", "e4"))
     expectResult(null)(chessboard.getPiece(Field.fromString("e2")).getOrElse(null))
     expectResult(WhitePawn)(chessboard.getPiece(Field.fromString("e4")).getOrElse(null))
   }
@@ -51,7 +51,7 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
   // it's job of other classes to verify if move is correct
   test("applyMove allows you to apply incorrect moves") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("b2", "b6"))
+    chessboard.applyMove(Move("b2", "b6"))
 
     expectResult(null)(chessboard.getPiece(Field.fromString("b2")).getOrElse(null))
     expectResult(WhitePawn)(chessboard.getPiece(Field.fromString("b6")).getOrElse(null))
@@ -59,7 +59,7 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
 
   test("applyMove allows you to apply incorrect moves 2") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("b2", "b7"))
+    chessboard.applyMove(Move("b2", "b7"))
 
     expectResult(null)(chessboard.getPiece(Field.fromString("b2")).getOrElse(null))
     expectResult(WhitePawn)(chessboard.getPiece(Field.fromString("b7")).getOrElse(null))
@@ -67,7 +67,7 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
 
   test("somethingBetweenHorizontally") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("e2", "e4"))
+    chessboard.applyMove(Move("e2", "e4"))
 
     expectResult(true)(chessboard.somethingBetweenHorizontally(Field.fromString("f4"), Field.fromString("d4")))
     expectResult(true)(chessboard.somethingBetweenHorizontally(Field.fromString("h4"), Field.fromString("a4")))
@@ -88,7 +88,7 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
 
   test("somethingBetweenVertically") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("e2", "e4"))
+    chessboard.applyMove(Move("e2", "e4"))
 
     expectResult(true)(chessboard.somethingBetweenVertically(Field.fromString("e3"), Field.fromString("e6")))
     expectResult(true)(chessboard.somethingBetweenVertically(Field.fromString("e1"), Field.fromString("e7")))
@@ -115,14 +115,14 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
     if (expectedResult)
       test("something between diagonally between " + field + " and " + anotherField) {
         val chessboard = getInitialPosition()
-        chessboard.applyMove(new Move("e2", "e4"))
+        chessboard.applyMove(Move("e2", "e4"))
 
         expectResult(expectedResult)(chessboard.somethingBetweenDiagonally(Field.fromString(field), Field.fromString(anotherField)))
       }
     else
       test("nothing between diagonally between " + field + " and " + anotherField) {
         val chessboard = getInitialPosition()
-        chessboard.applyMove(new Move("e2", "e4"))
+        chessboard.applyMove(Move("e2", "e4"))
 
         expectResult(expectedResult)(chessboard.somethingBetweenDiagonally(Field.fromString(field), Field.fromString(anotherField)))
       }

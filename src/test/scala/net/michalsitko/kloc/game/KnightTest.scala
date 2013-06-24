@@ -22,35 +22,35 @@ class KnightTest extends FunSuite with ShouldMatchers with PositionGenerator {
 
   test("can move knight's moves") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("e2", "e4"))
+    chessboard.applyMove(Move("e2", "e4"))
 
-    expectLegal(chessboard, new Move("g1", "f3"))
-    expectLegal(chessboard, new Move("g1", "h3"))
-    expectLegal(chessboard, new Move("g1", "e2"))
-    expectLegal(chessboard, new Move("b8", "a6"))
-    expectLegal(chessboard, new Move("b8", "c6"))
+    expectLegal(chessboard, Move("g1", "f3"))
+    expectLegal(chessboard, Move("g1", "h3"))
+    expectLegal(chessboard, Move("g1", "e2"))
+    expectLegal(chessboard, Move("b8", "a6"))
+    expectLegal(chessboard, Move("b8", "c6"))
   }
 
   test("can take enemy piece") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("g1", "f3"))
-    chessboard.applyMove(new Move("e7", "e5"))
+    chessboard.applyMove(Move("g1", "f3"))
+    chessboard.applyMove(Move("e7", "e5"))
 
-    expectLegal(chessboard, new Move("f3", "e5"))
+    expectLegal(chessboard, Move("f3", "e5"))
   }
 
   test("cannot take its own piece") {
     val chessboard = getInitialPosition()
 
-    expectIllegal(chessboard, new Move("g1", "e2"))
+    expectIllegal(chessboard, Move("g1", "e2"))
   }
 
   test("cannot move other way than knight's moves") {
     val chessboard = getInitialPosition()
-    chessboard.applyMove(new Move("f2", "f4"))
-    chessboard.applyMove(new Move("g2", "g4"))
+    chessboard.applyMove(Move("f2", "f4"))
+    chessboard.applyMove(Move("g2", "g4"))
 
-    expectIllegal(getInitialPosition(), new Move("g1", "g3"))
-    expectIllegal(getInitialPosition(), new Move("g1", "e3"))
+    expectIllegal(getInitialPosition(), Move("g1", "g3"))
+    expectIllegal(getInitialPosition(), Move("g1", "e3"))
   }
 }

@@ -7,7 +7,11 @@ package net.michalsitko.game
  * Time: 10:15 PM
  * To change this template use File | Settings | File Templates.
  */
-class Move(fromStr: String, toStr: String){
-  val from: Field = Field.fromString(fromStr)
-  val to: Field = Field.fromString(toStr)
+case class Move(from: Field, to: Field){
+}
+
+object Move{
+  def apply(fromStr: String, toStr: String) = {
+    new Move(Field.fromString(fromStr), Field.fromString(toStr))
+  }
 }

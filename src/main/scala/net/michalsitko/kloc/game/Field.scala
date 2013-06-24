@@ -1,5 +1,7 @@
 package net.michalsitko.game
 
+import java.util
+
 /**
  * Created with IntelliJ IDEA.
  * User: michal
@@ -8,6 +10,26 @@ package net.michalsitko.game
  * To change this template use File | Settings | File Templates.
  */
 case class Field (row: Int, column: Int){
+
+  def inRange(i: Int): Boolean = {
+    i >= 0 && i <= 7
+  }
+
+  def nextFields(direction: (Int, Int)) = {
+    var currentRow = row + direction._1
+    var currentColumn = column + direction._2
+    val result = new util.ArrayList[Field]()
+
+    while (inRange(currentRow) && inRange(currentColumn)){
+      result.add(Field(currentRow, currentColumn))
+      currentRow = row + direction._1
+      currentColumn = column + direction._2
+    }
+
+    result
+  }
+
+
   def isKnightAccessible(anotherField: Field): Boolean = {
     val diffs = ((row - anotherField.row).abs, (column - anotherField.column).abs)
     diffs match {

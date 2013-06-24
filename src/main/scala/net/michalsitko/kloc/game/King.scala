@@ -1,6 +1,7 @@
 package net.michalsitko.game
 
 import net.michalsitko.kloc.game.{Black, White, Color}
+import java.util
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +11,7 @@ import net.michalsitko.kloc.game.{Black, White, Color}
  * To change this template use File | Settings | File Templates.
  */
 
-abstract trait King extends Piece{
+abstract trait King extends Piece {
   def isKingMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
     val columnDiff = (from.column - to.column).abs
     val rowDiff = (from.row - to.row).abs
@@ -23,16 +24,45 @@ abstract trait King extends Piece{
     else
       false
   }
-}
 
-case object WhiteKing extends King{
-  def getSymbol(): Char = 'K'
+  /*private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int)): util.Collection[Field] = {
+    val result = new util.ArrayList[Field]()
+    for (nextField <- start.nextFields(direction)) {
+      if (chessboard.getPiece(nextField).isDefined)
+        if (chessboard.getPiece(nextField).get.getColor() == getColor())
+          return result
+        else {
+          if (chessboard.isMoveCorrect(new Move(nextField, start))) {
+            result.add(nextField)
+            return result
+          }else
+            return result
+        }
 
-  def getColor(): Color = new White
-}
+      return result
+    }
 
-case object BlackKing extends King{
-  def getSymbol(): Char = WhiteKing.getSymbol().toLower
+    def allDirections() = {
+      for (i <- -1 to 1; j <- -1 to 1; if (i!=0 || j!=0)) yield {(i,j)}
+    }*/
 
-  def getColor(): Color = new Black
-}
+    /*def getCheckingPieces(chessboard: Chessboard, field: Field): List[Field] = {
+      val checkingPieces = new util.ArrayList[Field]()
+      for (direction <- allDirections()) {
+        checkingPieces.addAll(checkingPiecesInDirection(chessboard, field, direction))
+      }
+    }*/
+  }
+
+  case object WhiteKing extends King {
+
+    def getSymbol(): Char = 'K'
+
+    def getColor(): Color = new White
+  }
+
+  case object BlackKing extends King {
+    def getSymbol(): Char = WhiteKing.getSymbol().toLower
+
+    def getColor(): Color = new Black
+  }

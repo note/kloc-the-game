@@ -26,12 +26,12 @@ class KingTest extends FunSuite with ShouldMatchers with PositionGenerator {
     Piece
     chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
 
-    expectLegal(chessboard, new Move("e4", "e3"))
-    expectLegal(chessboard, new Move("e4", "e5"))
-    expectLegal(chessboard, new Move("e4", "d4"))
-    expectLegal(chessboard, new Move("e4", "f4"))
-    expectLegal(chessboard, new Move("e4", "f5"))
-    expectLegal(chessboard, new Move("e4", "f3"))
+    expectLegal(chessboard, Move("e4", "e3"))
+    expectLegal(chessboard, Move("e4", "e5"))
+    expectLegal(chessboard, Move("e4", "d4"))
+    expectLegal(chessboard, Move("e4", "f4"))
+    expectLegal(chessboard, Move("e4", "f5"))
+    expectLegal(chessboard, Move("e4", "f3"))
   }
 
   test("cannot move by more than one field") {
@@ -39,11 +39,11 @@ class KingTest extends FunSuite with ShouldMatchers with PositionGenerator {
     Piece
     chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
 
-    expectIllegal(chessboard, new Move("e4", "e2"))
-    expectIllegal(chessboard, new Move("e4", "e8"))
-    expectIllegal(chessboard, new Move("e4", "c4"))
-    expectIllegal(chessboard, new Move("e4", "g3"))
-    expectIllegal(chessboard, new Move("e4", "g2"))
+    expectIllegal(chessboard, Move("e4", "e2"))
+    expectIllegal(chessboard, Move("e4", "e8"))
+    expectIllegal(chessboard, Move("e4", "c4"))
+    expectIllegal(chessboard, Move("e4", "g3"))
+    expectIllegal(chessboard, Move("e4", "g2"))
   }
 
   test("can take enemy piece") {
@@ -52,7 +52,7 @@ class KingTest extends FunSuite with ShouldMatchers with PositionGenerator {
     chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
     chessboard.setPiece(Field.fromString("d5"), Some(BlackRook))
 
-    expectLegal(chessboard, new Move("e4", "d5"))
+    expectLegal(chessboard, Move("e4", "d5"))
   }
 
   test("cannot overleap") {
@@ -61,6 +61,15 @@ class KingTest extends FunSuite with ShouldMatchers with PositionGenerator {
     chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
     chessboard.setPiece(Field.fromString("e5"), Some(WhitePawn))
 
-    expectIllegal(chessboard, new Move("e4", "e5"))
+    expectIllegal(chessboard, Move("e4", "e5"))
   }
+
+  /*test("can be checked") {
+    val chessboard = new Chessboard
+    Piece
+    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
+    chessboard.setPiece(Field.fromString("e8"), Some(BlackRook))
+
+    expectResult(true)(WhiteKing.isChecked("e4"))
+  }*/
 }
