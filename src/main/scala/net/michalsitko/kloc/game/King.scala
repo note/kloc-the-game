@@ -25,53 +25,45 @@ abstract trait King extends Piece {
       false
   }
 
-  /*private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int)): util.Collection[Field] = {
-    val result = new util.ArrayList[Field]()
-    for (nextField <- start.nextFields(direction)) {
-      if (chessboard.getPiece(nextField).isDefined)
-        if (chessboard.getPiece(nextField).get.getColor() == getColor())
-          return result
-        else {
-          if (chessboard.isMoveCorrect(new Move(nextField, start))) {
-            result.add(nextField)
-            return result
-          }else
-            return result
-        }
+  def isChecked(chessboard: Chessboard, field: Field): Boolean = getCheckingPieces(chessboard, field).nonEmpty
 
-      return result
-    }
-
-    def allDirections() = {
-      for (i <- -1 to 1; j <- -1 to 1; if (i!=0 || j!=0)) yield {(i,j)}
-    }*/
-
-    /*def getCheckingPieces(chessboard: Chessboard, field: Field): List[Field] = {
-      val checkingPieces = new util.ArrayList[Field]()
-      for (direction <- allDirections()) {
-        checkingPieces.addAll(checkingPiecesInDirection(chessboard, field, direction))
-      }
-    }*/
+  private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int)): List[Field] = {
+    for (nextField <- start.nextFields(direction)
+         if (chessboard.getPiece(nextField).isDefined);
+         if (chessboard.getPiece(nextField).get.getColor() != getColor());
+         if (chessboard.isMoveCorrect(new Move(nextField, start)))
+    ) yield nextField
   }
 
-  object KingFactory extends PieceFactory {
-    def forColor(color: Color) : King = {
-      color match {
-        case White() => WhiteKing
-        case Black() => BlackKing
-      }
+  def allDirections() = {
+    for (i <- -1 to 1; j <- -1 to 1; if (i != 0 || j != 0)) yield {
+      (i, j)
     }
   }
 
-  case object WhiteKing extends King {
-
-    def getSymbol(): Char = 'K'
-
-    def getColor(): Color = new White
+  def getCheckingPieces(chessboard: Chessboard, field: Field) = {
+    (for (direction <- allDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
   }
+}
 
-  case object BlackKing extends King {
-    def getSymbol(): Char = WhiteKing.getSymbol().toLower
-
-    def getColor(): Color = new Black
+object KingFactory extends PieceFactory {
+  def forColor(color: Color): King = {
+    color match {
+      case White() => WhiteKing
+      case Black() => BlackKing
+    }
   }
+}
+
+case object WhiteKing extends King {
+
+  def getSymbol(): Char = 'K'
+
+  def getColor(): Color = new White
+}
+
+case object BlackKing extends King {
+  def getSymbol(): Char = WhiteKing.getSymbol().toLower
+
+  def getColor(): Color = new Black
+}

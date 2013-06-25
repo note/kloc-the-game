@@ -20,12 +20,12 @@ case class Field (row: Int, column: Int){
   def nextFields(direction: (Int, Int)) = {
     var currentRow = row + direction._1
     var currentColumn = column + direction._2
-    val result = new util.ArrayList[Field]()
+    var result = List[Field]()
 
     while (inRange(currentRow) && inRange(currentColumn)){
-      result.add(Field(currentRow, currentColumn))
-      currentRow = row + direction._1
-      currentColumn = column + direction._2
+      result = result :+  Field(currentRow, currentColumn)
+      currentRow = currentRow + direction._1
+      currentColumn = currentColumn + direction._2
     }
 
     result

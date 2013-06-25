@@ -17,7 +17,7 @@ import scala.Some
 
 class KingTest extends FlatSpec with KingBehaviour {
   private def prepareChessboardWithKing(king: King): Chessboard = {
-    // it seems to be odd and actually is. Piece is lazy so we have to invoke is somehow before first use of any of its specializations
+    // it seems to be odd and in fact it is. Piece is lazy so we have to invoke is somehow before first use of any of its specializations
     Piece
 
     val chessboard = new Chessboard
@@ -25,13 +25,18 @@ class KingTest extends FlatSpec with KingBehaviour {
     chessboard
   }
 
-  "White King" should behave like king(prepareChessboardWithKing(WhiteKing), White())
-  "BlackKing" should behave like king(prepareChessboardWithKing(BlackKing), Black())
+  "White King" should behave like king(prepareChessboardWithKing(WhiteKing), WhiteKing)
+  "BlackKing" should behave like king(prepareChessboardWithKing(BlackKing), BlackKing)
 }
 
 trait KingBehaviour extends ShouldMatchers with PositionGenerator {
   this: FlatSpec =>
-  def king(chessboard: Chessboard, colorBeingTested: Color) {
+
+  def king(chessboard: Chessboard, kingBeingTested: King) {
+    val colorBeingTested: Color = kingBeingTested.getColor()
+    val oppositeRook: Rook = RookFactory.forColor(colorBeingTested.opposite())
+    val friendlyRook: Rook = RookFactory.forColor(colorBeingTested)
+
     it can "move all directions by one field" in {
       val legalFields = List("d3", "e3", "f3", "d4", "f4", "d5", "e5", "f5")
       for (destinationField <- legalFields){
@@ -46,30 +51,37 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
       for (destinationField <- illegalFields){
         (chessboard, Move("e4", destinationField)) should not (beLegal)
       }
-      /*(chessboard, Move("e4", "e2")) should not(beLegal)
-      (chessboard, Move("e4", "e8")) should not(beLegal)
-      (chessboard, Move("e4", "c4")) should not(beLegal)
-      (chessboard, Move("e4", "g3")) should not(beLegal)
-      (chessboard, Move("e4", "g2")) should not(beLegal)*/
     }
 
     it can "take enemy piece" in {
-      chessboard.setPiece("d5", Some(RookFactory.forColor(colorBeingTested.opposite())))
+      chessboard.setPiece("d5", Some(oppositeRook))
       (chessboard, Move("e4", "d5")) should beLegal
     }
 
     it can "not overleap" in {
-      chessboard.setPiece("e5", Some(RookFactory.forColor(colorBeingTested)))
+      chessboard.setPiece("e5", Some(friendlyRook))
       (chessboard, Move("e4", "e5")) should not(beLegal)
     }
+
+    it can "be checked" in {
+      val attackingFields = List("e1", "e2", "e3", "e5", "e6", "e7", "e8", "a4", "b4", "c4", "d4", "f4", "g4", "h4")
+
+      for (attackingField <- attackingFields){
+        chessboard.setPiece(attackingField, Some(oppositeRook))
+        expectResult(true)(kingBeingTested.isChecked(chessboard, "e4"))
+        chessboard.setPiece(attackingField, None)
+      }
+
+      val nonAttackingFields = allFields.filter(!attackingFields.contains(_))
+
+      for (attackingField <- nonAttackingFields){
+        chessboard.setPiece(attackingField, Some(oppositeRook))
+        expectResult(false)(kingBeingTested.isChecked(chessboard, "e4"))
+        chessboard.setPiece(attackingField, None)
+      }
+    }
+
+    it can "be checkmated" in pending
   }
 
-  /*test("can be checked") {
-    val chessboard = new Chessboard
-    Piece
-    chessboard.setPiece("e4", Some(WhiteKing))
-    chessboard.setPiece("e8", Some(BlackRook))
-
-    expectResult(true)(WhiteKing.isChecked("e4"))
-  }*/
 }
