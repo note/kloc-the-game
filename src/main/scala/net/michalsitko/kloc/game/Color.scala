@@ -7,4 +7,14 @@ package net.michalsitko.kloc.game
  * Time: 1:18 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class Color ()
+sealed abstract class Color () {
+  def opposite(): Color
+}
+
+case class White() extends Color (){
+  def opposite(): Color = return Black()
+}
+
+case class Black() extends Color (){
+  def opposite(): Color = return White()
+}

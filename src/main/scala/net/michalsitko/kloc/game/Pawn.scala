@@ -10,8 +10,9 @@ import net.michalsitko.kloc.game.{Black, White, Color}
  * To change this template use File | Settings | File Templates.
  */
 
-abstract trait Pawn extends Piece{
+abstract trait Pawn extends Piece {
   def isOnStartPosition(fromField: Field): Boolean
+
   def expectedDiff(): Int
 
   def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
@@ -33,7 +34,7 @@ abstract trait Pawn extends Piece{
       // if there is any piece on the destination field we do not have to check if this is enemy
       // we checked if there is no friend on destination field in method areBasicCriteriaSatisfied
 
-      (move.to.column-move.from.column).abs == 1 && move.to.row-move.from.row == expectedDiff()
+      (move.to.column - move.from.column).abs == 1 && move.to.row - move.from.row == expectedDiff()
     }
 
     if (super.areBasicCriteriaSatisfied(chessboard, move))
@@ -43,7 +44,16 @@ abstract trait Pawn extends Piece{
   }
 }
 
-case object WhitePawn extends Pawn{
+object PawnFactory extends PieceFactory {
+  def forColor(color: Color): Pawn = {
+    color match {
+      case White() => WhitePawn
+      case Black() => BlackPawn
+    }
+  }
+}
+
+case object WhitePawn extends Pawn {
   def getSymbol(): Char = 'P'
 
   def getColor(): Color = new White
@@ -53,7 +63,7 @@ case object WhitePawn extends Pawn{
   def expectedDiff = 1
 }
 
-case object BlackPawn extends Pawn{
+case object BlackPawn extends Pawn {
   def getSymbol(): Char = WhitePawn.getSymbol().toLower
 
   def getColor(): Color = new Black

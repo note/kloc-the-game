@@ -31,6 +31,15 @@ abstract trait Queen extends Piece{
   }
 }
 
+object QueenFactory extends PieceFactory{
+  def forColor(color: Color) : Queen = {
+    color match {
+      case White() => WhiteQueen
+      case Black() => BlackQueen
+    }
+  }
+}
+
 case object WhiteQueen extends Queen{
   def getSymbol(): Char = 'Q'
 

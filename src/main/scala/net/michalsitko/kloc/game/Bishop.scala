@@ -23,6 +23,15 @@ abstract trait Bishop extends Piece{
   }
 }
 
+object BishopFactory extends PieceFactory{
+  def forColor(color: Color) : Bishop = {
+    color match {
+      case White() => WhiteBishop
+      case Black() => BlackBishop
+    }
+  }
+}
+
 case object WhiteBishop extends Bishop{
   def getSymbol(): Char = 'B'
 

@@ -3,6 +3,7 @@ package net.michalsitko.kloc.game
 import net.michalsitko.game.{Chessboard, Move}
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
+import net.michalsitko.kloc.game.matchers.CustomMatchers.beLegal
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,10 +26,10 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     chessboard.applyMove(Move("a2", "b3"))
     chessboard.applyMove(Move("a7", "b6"))
 
-    expectLegal(chessboard, Move("a1", "a2"))
-    expectLegal(chessboard, Move("a1", "a6"))
-    expectLegal(chessboard, Move("a8", "a7"))
-    expectLegal(chessboard, Move("a8", "a4"))
+    (chessboard, Move("a1", "a2")) should beLegal
+    (chessboard, Move("a1", "a6")) should beLegal
+    (chessboard, Move("a8", "a7")) should beLegal
+    (chessboard, Move("a8", "a4")) should beLegal
   }
 
   test("can move horizontally") {
@@ -36,8 +37,8 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     chessboard.applyMove(Move("a2", "a4"))
     chessboard.applyMove(Move("a1", "a3"))
 
-    expectLegal(chessboard, Move("a3", "b3"))
-    expectLegal(chessboard, Move("a3", "g3"))
+    (chessboard, Move("a3", "b3")) should beLegal
+    (chessboard, Move("a3", "g3")) should beLegal
   }
 
   test("can take enemy piece") {
@@ -45,8 +46,8 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     chessboard.applyMove(Move("a2", "b3"))
     chessboard.applyMove(Move("a7", "b6"))
 
-    expectLegal(chessboard, Move("a1", "a8"))
-    expectLegal(chessboard, Move("a8", "a1"))
+    (chessboard, Move("a1", "a8")) should beLegal
+    (chessboard, Move("a8", "a1")) should beLegal
   }
 
   test("cannot move other way than vertically and horizontally") {
@@ -54,9 +55,9 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     chessboard.applyMove(Move("a2", "a4"))
     chessboard.applyMove(Move("b2", "b4"))
 
-    expectIllegal(getInitialPosition(), Move("a1", "b2"))
-    expectIllegal(getInitialPosition(), Move("a1", "d4"))
-    expectIllegal(getInitialPosition(), Move("a1", "b3"))
+    (getInitialPosition(), Move("a1", "b2")) should not (beLegal)
+    (getInitialPosition(), Move("a1", "d4")) should not (beLegal)
+    (getInitialPosition(), Move("a1", "b3")) should not (beLegal)
   }
 
   test("cannot overleap") {
@@ -64,9 +65,9 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     chessboard.applyMove(Move("a2", "a4"))
     chessboard.applyMove(Move("a7", "b6"))
 
-    expectIllegal(chessboard, Move("a1", "a4"))
-    expectIllegal(chessboard, Move("a1", "a5"))
-    expectIllegal(chessboard, Move("a8", "a2"))
-    expectIllegal(chessboard, Move("a8", "a1"))
+    (chessboard, Move("a1", "a4")) should not (beLegal)
+    (chessboard, Move("a1", "a5")) should not (beLegal)
+    (chessboard, Move("a8", "a2")) should not (beLegal)
+    (chessboard, Move("a8", "a1")) should not (beLegal)
   }
 }

@@ -1,6 +1,6 @@
 package net.michalsitko.game
 
-import net.michalsitko.kloc.game.Colored
+import net.michalsitko.kloc.game.{Color, Colored}
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +27,10 @@ abstract trait Piece extends Piece.Value with Colored{
     }else
       true
   }
+}
+
+abstract trait PieceFactory {
+  def forColor(color: Color): Piece
 }
 
 object Piece extends Enum[Piece]{

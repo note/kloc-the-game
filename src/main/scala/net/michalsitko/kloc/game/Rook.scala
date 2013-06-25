@@ -23,6 +23,15 @@ abstract trait Rook extends Piece{
   }
 }
 
+object RookFactory extends PieceFactory{
+  def forColor(color: Color) : Rook = {
+    color match {
+      case White() => WhiteRook
+      case Black() => BlackRook
+    }
+  }
+}
+
 case object WhiteRook extends Rook{
   def getSymbol(): Char = 'R'
 

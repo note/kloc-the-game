@@ -54,6 +54,15 @@ abstract trait King extends Piece {
     }*/
   }
 
+  object KingFactory extends PieceFactory {
+    def forColor(color: Color) : King = {
+      color match {
+        case White() => WhiteKing
+        case Black() => BlackKing
+      }
+    }
+  }
+
   case object WhiteKing extends King {
 
     def getSymbol(): Char = 'K'

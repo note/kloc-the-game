@@ -1,10 +1,11 @@
 package net.michalsitko.kloc.game
 
-import org.scalatest.{BeforeAndAfter, fixture}
+import org.scalatest._
 import org.scalatest.matchers.{MatchResult, ShouldMatchers, Matcher}
 import net.michalsitko.game._
 import scala.Some
 import net.michalsitko.kloc.game.matchers.CustomMatchers.beLegal
+import scala.Some
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,21 +14,24 @@ import net.michalsitko.kloc.game.matchers.CustomMatchers.beLegal
  * Time: 11:34 PM
  * To change this template use File | Settings | File Templates.
  */
-class KingTest extends fixture.FunSpec with ShouldMatchers with PositionGenerator {
-  type FixtureParam = Chessboard
 
-  def withFixture(test: OneArgTest) {
-    // it seems to be odd and actually is. Piece is lazy so we have to invoke is somehow before first use of any of its specializations
-    Piece
+class KingTest extends FlatSpec with KingBehaviour{
+    private def prepareChessboardWithKing(king: King): Chessboard = {
+      // it seems to be odd and actually is. Piece is lazy so we have to invoke is somehow before first use of any of its specializations
+      Piece
 
-    val chessboard = new Chessboard
-    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
-    test(chessboard)
-  }
+      val chessboard = new Chessboard
+      chessboard.setPiece("e4", Some(king))
+      chessboard
+    }
 
-  describe("A King") {
-    it("can move all directions by one field") {
-      chessboard =>
+  "White King" should behave like king(prepareChessboardWithKing(WhiteKing), White())
+  "BlackKing" should behave like king(prepareChessboardWithKing(BlackKing), Black())
+}
+
+trait KingBehaviour extends ShouldMatchers with PositionGenerator {   this: FlatSpec =>
+  def king (chessboard: Chessboard, colorBeingTested: Color) {
+    it can "move all directions by one field" in {
         (chessboard, Move("e4", "e3")) should beLegal
         (chessboard, Move("e4", "e5")) should beLegal
         (chessboard, Move("e4", "d4")) should beLegal
@@ -36,8 +40,7 @@ class KingTest extends fixture.FunSpec with ShouldMatchers with PositionGenerato
         (chessboard, Move("e4", "f3")) should beLegal
     }
 
-    it("cannot move by more than one field") {
-      chessboard =>
+    it can "not move by more than one field" in {
         (chessboard, Move("e4", "e2")) should not (beLegal)
         (chessboard, Move("e4", "e8")) should not (beLegal)
         (chessboard, Move("e4", "c4")) should not (beLegal)
@@ -45,15 +48,13 @@ class KingTest extends fixture.FunSpec with ShouldMatchers with PositionGenerato
         (chessboard, Move("e4", "g2")) should not (beLegal)
     }
 
-    it("can take enemy piece") {
-      chessboard =>
-        chessboard.setPiece(Field.fromString("d5"), Some(BlackRook))
+    it can "take enemy piece" in {
+        chessboard.setPiece("d5", Some(RookFactory.forColor(colorBeingTested.opposite())))
         (chessboard, Move("e4", "d5")) should beLegal
     }
 
-    it("cannot overleap") {
-      chessboard =>
-        chessboard.setPiece(Field.fromString("e5"), Some(WhitePawn))
+    it can "not overleap" in {
+        chessboard.setPiece("e5", Some(RookFactory.forColor(colorBeingTested)))
         (chessboard, Move("e4", "e5")) should not (beLegal)
     }
   }
@@ -61,8 +62,8 @@ class KingTest extends fixture.FunSpec with ShouldMatchers with PositionGenerato
   /*test("can be checked") {
     val chessboard = new Chessboard
     Piece
-    chessboard.setPiece(Field.fromString("e4"), Some(WhiteKing))
-    chessboard.setPiece(Field.fromString("e8"), Some(BlackRook))
+    chessboard.setPiece("e4", Some(WhiteKing))
+    chessboard.setPiece("e8", Some(BlackRook))
 
     expectResult(true)(WhiteKing.isChecked("e4"))
   }*/

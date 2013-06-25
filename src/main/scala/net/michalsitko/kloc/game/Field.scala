@@ -59,7 +59,7 @@ object Field{
   def AsciiLower = 97;
   def AsciiUpper = 65;
 
-  def fromString(fieldStr: String): Field = {
+  implicit def fromString(fieldStr: String): Field = {
     require(fieldStr.size == 2)
     require(fieldStr(0).isLetter)
     require(fieldStr(1).isDigit)
