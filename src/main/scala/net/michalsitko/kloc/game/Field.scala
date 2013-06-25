@@ -10,6 +10,8 @@ import java.util
  * To change this template use File | Settings | File Templates.
  */
 case class Field (row: Int, column: Int){
+  require(row >= 0 && row <= 7)
+  require(column >= 0 && column <= 7)
 
   def inRange(i: Int): Boolean = {
     i >= 0 && i <= 7
@@ -29,7 +31,6 @@ case class Field (row: Int, column: Int){
     result
   }
 
-
   def isKnightAccessible(anotherField: Field): Boolean = {
     val diffs = ((row - anotherField.row).abs, (column - anotherField.column).abs)
     diffs match {
@@ -38,9 +39,6 @@ case class Field (row: Int, column: Int){
       case _ => false
     }
   }
-
-  require(row >= 0 && row <= 7)
-  require(column >= 0 && column <= 7)
 
   def sameRow(anotherField: Field): Boolean = {
     row == anotherField.row
@@ -53,11 +51,19 @@ case class Field (row: Int, column: Int){
   def sameDiagonal(anotherField: Field): Boolean = {
     (row - anotherField.row).abs == (column - anotherField.column).abs
   }
+
+  override def toString: String = {
+    Field.columnLetterFromInt(column).toString + (row + 1)
+  }
 }
 
 object Field{
   def AsciiLower = 97;
   def AsciiUpper = 65;
+
+  def columnLetterFromInt(columnInt: Int): Char = {
+    (columnInt + AsciiLower).toChar
+  }
 
   implicit def fromString(fieldStr: String): Field = {
     require(fieldStr.size == 2)

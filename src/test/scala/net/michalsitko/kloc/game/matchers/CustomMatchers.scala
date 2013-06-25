@@ -16,8 +16,8 @@ trait CustomMatchers {
       def apply(left: (Chessboard, Move)) =
         MatchResult(
           left._1.isMoveCorrect(left._2),
-          left._1 + " was not legal",
-          left._1 + " was legal"
+          left._2 + " was not legal",
+          left._2 + " was legal"
         )
     }
 }

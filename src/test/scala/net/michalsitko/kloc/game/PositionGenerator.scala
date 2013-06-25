@@ -13,6 +13,7 @@ trait PositionGenerator {
   private val InitialPositionFileName = "/initial.position"
   private val TypicalPositionFileName = "/typical.position"
   private val PromotionPositionFileName = "/promotion.position"
+  protected val allFields = for (letter <- 'a' to 'h'; number <- 1 to 8) yield {letter.toString() + number}
 
   def getInitialPosition(): Chessboard = {
     Chessboard.loadFromFile(InitialPositionFileName)
