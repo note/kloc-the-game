@@ -27,6 +27,8 @@ abstract trait King extends Piece {
 
   def isChecked(chessboard: Chessboard, field: Field): Boolean = getCheckingPieces(chessboard, field).nonEmpty
 
+  def isCheckmated(chessboard: Chessboard, field: Field): Boolean = false
+
   private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int)): List[Field] = {
     for (nextField <- start.nextFields(direction)
          if (chessboard.getPiece(nextField).isDefined);
@@ -41,8 +43,16 @@ abstract trait King extends Piece {
     }
   }
 
+  def knightMoves() = {
+    List((1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, -1))
+  }
+
   def getCheckingPieces(chessboard: Chessboard, field: Field) = {
-    (for (direction <- allDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
+    val attackingKnights = for ((i, j) <- knightMoves()
+                                if chessboard.isMoveCorrect(Move(Field(field.row + i, field.column + j), field))
+    ) yield Field(field.row + i, field.column + j)
+    val otherAttackingPieces = (for (direction <- allDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
+    attackingKnights ++ otherAttackingPieces
   }
 }
 

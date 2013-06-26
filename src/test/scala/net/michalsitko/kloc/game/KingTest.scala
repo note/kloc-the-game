@@ -36,6 +36,9 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
     val colorBeingTested: Color = kingBeingTested.getColor()
     val oppositeRook: Rook = RookFactory.forColor(colorBeingTested.opposite())
     val friendlyRook: Rook = RookFactory.forColor(colorBeingTested)
+    val friendlyKnight: Knight = KnightFactory.forColor(colorBeingTested)
+    val oppositeKnight: Knight = KnightFactory.forColor(colorBeingTested.opposite())
+    val friendlyPawn: Pawn = PawnFactory.forColor(colorBeingTested)
 
     it can "move all directions by one field" in {
       val legalFields = List("d3", "e3", "f3", "d4", "f4", "d5", "e5", "f5")
@@ -63,7 +66,7 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
       (chessboard, Move("e4", "e5")) should not(beLegal)
     }
 
-    it can "be checked" in {
+    it can "be checked by rook" in {
       val attackingFields = List("e1", "e2", "e3", "e5", "e6", "e7", "e8", "a4", "b4", "c4", "d4", "f4", "g4", "h4")
 
       for (attackingField <- attackingFields){
@@ -81,7 +84,71 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
       }
     }
 
-    it can "be checkmated" in pending
+    it can "be checked by knight" in {
+      val attackingFields = List("d2", "f2", "g3", "g5", "f6", "d6", "c5", "c3")
+
+      for (attackingField <- attackingFields){
+        chessboard.setPiece(attackingField, Some(oppositeKnight))
+        expectResult(true)(kingBeingTested.isChecked(chessboard, "e4"))
+        chessboard.setPiece(attackingField, None)
+      }
+
+      val nonAttackingFields = allFields.filter(!attackingFields.contains(_))
+
+      for (attackingField <- nonAttackingFields){
+        chessboard.setPiece(attackingField, Some(oppositeKnight))
+        expectResult(false)(kingBeingTested.isChecked(chessboard, "e4"))
+        chessboard.setPiece(attackingField, None)
+      }
+    }
+
+    it can "be checkmated" in {
+      chessboard.setPiece("d1", Some(oppositeRook))
+      chessboard.setPiece("e1", Some(oppositeRook))
+      chessboard.setPiece("f1", Some(oppositeRook))
+
+      expectResult(true)(kingBeingTested.isCheckmated(chessboard, "e4"))
+    }
+
+    it can "be shielded against checkmate" in {
+      chessboard.setPiece("d1", Some(oppositeRook))
+      chessboard.setPiece("e1", Some(oppositeRook))
+      chessboard.setPiece("f1", Some(oppositeRook))
+
+      // Rook f2 shields againts oppositeRook on f1 (so King can escape)
+      chessboard.setPiece("f2", Some(friendlyPawn))
+      expectResult(false)(kingBeingTested.isCheckmated(chessboard, "e4"))
+    }
+
+    it can "be shielded against checkmate 2" in {
+      chessboard.setPiece("d1", Some(oppositeRook))
+      chessboard.setPiece("e1", Some(oppositeRook))
+      chessboard.setPiece("f1", Some(oppositeRook))
+
+      // Rook h2 shields againts oppositeRook on e1 by Move(h2, e2)
+      chessboard.setPiece("h2", Some(friendlyRook))
+      expectResult(false)(kingBeingTested.isCheckmated(chessboard, "e4"))
+    }
+
+    it should "not be checkmated when attacker can be taken" in {
+      chessboard.setPiece("d1", Some(oppositeRook))
+      chessboard.setPiece("e1", Some(oppositeRook))
+      chessboard.setPiece("f1", Some(oppositeRook))
+
+      // Knight c2 can take Rook e1
+      chessboard.setPiece("c2", Some(friendlyKnight))
+      expectResult(false)(kingBeingTested.isCheckmated(chessboard, "e4"))
+    }
+
+    it can "be checkmated 2" in {
+      chessboard.setPiece("d1", Some(oppositeRook))
+      chessboard.setPiece("e1", Some(oppositeRook))
+      chessboard.setPiece("e8", Some(oppositeRook))
+      chessboard.setPiece("f1", Some(oppositeRook))
+
+      chessboard.setPiece("c2", Some(friendlyKnight))
+      expectResult(true)(kingBeingTested.isCheckmated(chessboard, "e4"))
+    }
   }
 
 }
