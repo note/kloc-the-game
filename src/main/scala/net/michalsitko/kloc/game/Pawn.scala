@@ -13,9 +13,19 @@ abstract trait Pawn extends Piece {
 
   def expectedDiff(): Int
 
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
-    def isPinned(): Boolean = false
+  def isLastLineMove(move: Move): Boolean
 
+  def isCorrectPromotion(move: Move): Boolean = {
+    move match {
+      case promotionMove: PromotionMove => promotionMove.promoteTo match {
+        case _: King | _:Pawn => false
+        case _ => true
+      }
+      case _ => false
+    }
+  }
+
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     def isCorrectForward(): Boolean = {
       if (chessboard.getPiece(move.to).isDefined || move.from.column != move.to.column)
         return false
@@ -35,9 +45,13 @@ abstract trait Pawn extends Piece {
       (move.to.column - move.from.column).abs == 1 && move.to.row - move.from.row == expectedDiff()
     }
 
-    if (super.areBasicCriteriaSatisfied(chessboard, move))
-      isCorrectForward() || isCorrectTake()
-    else
+    if (super.areBasicCriteriaSatisfied(chessboard, move)){
+      val pawnCorrect = isCorrectForward() || isCorrectTake()
+      if (isLastLineMove(move))
+        pawnCorrect && isCorrectPromotion(move)
+      else
+        pawnCorrect
+    }else
       false
   }
 }
@@ -59,6 +73,10 @@ case object WhitePawn extends Pawn {
   def isOnStartPosition(fromField: Field) = fromField.row == 1
 
   def expectedDiff = 1
+
+  def isLastLineMove(move: Move): Boolean = {
+    move.to.row == 7
+  }
 }
 
 case object BlackPawn extends Pawn {
@@ -69,4 +87,8 @@ case object BlackPawn extends Pawn {
   def isOnStartPosition(fromField: Field) = fromField.row == 6
 
   def expectedDiff = -1
+
+  def isLastLineMove(move: Move): Boolean = {
+    move.to.row == 0
+  }
 }

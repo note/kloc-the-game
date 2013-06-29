@@ -30,7 +30,6 @@ class KingTest extends FlatSpec with KingBehaviour {
 trait KingBehaviour extends ShouldMatchers with PositionGenerator {
       this: FlatSpec =>
 
-
   def fixture(king: King):Chessboard = {
     val chessboard = new Chessboard
     allFields.map(chessboard.setPiece(_, None))
@@ -44,8 +43,15 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
     val friendlyRook: Rook = RookFactory.forColor(colorBeingTested)
     val friendlyKnight: Knight = KnightFactory.forColor(colorBeingTested)
     val oppositeKnight: Knight = KnightFactory.forColor(colorBeingTested.opposite())
-    val friendlyPawn: Pawn = PawnFactory.forColor(colorBeingTested)
-    val oppositeKing: King = KingFactory.forColor(colorBeingTested)
+    val oppositeKing: King = KingFactory.forColor(colorBeingTested.opposite())
+
+    def checkmateFixture(king: King): Chessboard = {
+      val chessboard = fixture(king)
+      chessboard.setPiece("d1", Some(oppositeRook))
+      chessboard.setPiece("e1", Some(oppositeRook))
+      chessboard.setPiece("f1", Some(oppositeRook))
+      chessboard
+    }
 
     it can "move all directions by one field" in {
       val chessboard = fixture(kingBeingTested)
@@ -120,8 +126,8 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
 
       // Rook e1 is pinned
       chessboard.setPiece("e1", Some(oppositeRook))
-      chessboard.setPiece("a1", Some(oppositeRook))
-      chessboard.setPiece("f1", Some(oppositeRook))
+      chessboard.setPiece("a1", Some(oppositeKing))
+      chessboard.setPiece("f1", Some(friendlyRook))
 
       expectResult(true)(kingBeingTested.isChecked(chessboard, "e4"))
     }
@@ -138,19 +144,13 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
     }
 
     it can "be checkmated" in {
-      val chessboard = fixture(kingBeingTested)
-      chessboard.setPiece("d1", Some(oppositeRook))
-      chessboard.setPiece("e1", Some(oppositeRook))
-      chessboard.setPiece("f1", Some(oppositeRook))
+      val chessboard = checkmateFixture(kingBeingTested)
 
       expectResult(true)(kingBeingTested.isCheckmated(chessboard, "e4"))
     }
 
     it can "be shielded against checkmate" in {
-      val chessboard = fixture(kingBeingTested)
-      chessboard.setPiece("d1", Some(oppositeRook))
-      chessboard.setPiece("e1", Some(oppositeRook))
-      chessboard.setPiece("f1", Some(oppositeRook))
+      val chessboard = checkmateFixture(kingBeingTested)
 
       // Rook f2 shields againts oppositeRook on f1 (so King can escape)
       chessboard.setPiece("f2", Some(friendlyKnight))
@@ -158,10 +158,7 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
     }
 
     it can "be shielded against checkmate 2" in {
-      val chessboard = fixture(kingBeingTested)
-      chessboard.setPiece("d1", Some(oppositeRook))
-      chessboard.setPiece("e1", Some(oppositeRook))
-      chessboard.setPiece("f1", Some(oppositeRook))
+      val chessboard = checkmateFixture(kingBeingTested)
 
       // Rook h2 shields againts oppositeRook on e1 by Move(h2, e2)
       chessboard.setPiece("h2", Some(friendlyRook))
@@ -169,10 +166,7 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
     }
 
     it should "not be checkmated when attacker can be taken" in {
-      val chessboard = fixture(kingBeingTested)
-      chessboard.setPiece("d1", Some(oppositeRook))
-      chessboard.setPiece("e1", Some(oppositeRook))
-      chessboard.setPiece("f1", Some(oppositeRook))
+      val chessboard = checkmateFixture(kingBeingTested)
 
       // Knight c2 can take Rook e1
       chessboard.setPiece("c2", Some(friendlyKnight))
@@ -180,11 +174,8 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
     }
 
     it can "be checkmated 2" in {
-      val chessboard = fixture(kingBeingTested)
-      chessboard.setPiece("d1", Some(oppositeRook))
-      chessboard.setPiece("e1", Some(oppositeRook))
+      val chessboard = checkmateFixture(kingBeingTested)
       chessboard.setPiece("e8", Some(oppositeRook))
-      chessboard.setPiece("f1", Some(oppositeRook))
 
       chessboard.setPiece("c2", Some(friendlyKnight))
       expectResult(true)(kingBeingTested.isCheckmated(chessboard, "e4"))

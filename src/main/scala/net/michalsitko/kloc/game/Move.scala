@@ -7,12 +7,29 @@ package net.michalsitko.kloc.game
  * Time: 10:15 PM
  * To change this template use File | Settings | File Templates.
  */
-case class Move(from: Field, to: Field){
+/*abstract class AbstractMove(from: Field, to: Field){
+}*/
+
+class Move(source: Field, destination: Field){
+  val from = source
+  val to = destination
+}
+
+class PromotionMove(from: Field, to: Field, pieceToPromote: Piece) extends Move(from: Field, to: Field){
+  val promoteTo = pieceToPromote
 }
 
 object Move{
   def apply(fromStr: String, toStr: String) = {
     new Move(Field.fromString(fromStr), Field.fromString(toStr))
+  }
+
+  def apply(from: Field, to: Field) = {
+    new Move(from, to)
+  }
+
+  def apply(fromStr: String, toStr: String, promoteTo: Piece) = {
+    new PromotionMove(Field.fromString(fromStr), Field.fromString(toStr), promoteTo)
   }
 
   def forDestinations(sourceField: Field, destinationFields: List[Field]) = {

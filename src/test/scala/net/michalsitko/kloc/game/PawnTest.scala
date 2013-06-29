@@ -74,7 +74,16 @@ class PawnTest extends FunSuite with ShouldMatchers with PositionGenerator{
   }
 
   test("be promoted to any piece") {
-    val chessboard = getPromotionPosition()
+    val chessboard = new Chessboard
+    chessboard.setPiece("a7", Some(WhitePawn))
+    expectLegal(chessboard, Move("a7", "a8", WhiteQueen))
+    expectLegal(chessboard, Move("a7", "a8", WhiteRook))
+    expectLegal(chessboard, Move("a7", "a8", WhiteBishop))
+    expectLegal(chessboard, Move("a7", "a8", WhiteKnight))
+
+    expectIllegal(chessboard, Move("a7", "a8", WhiteKing))
+    expectIllegal(chessboard, Move("a7", "a8", WhitePawn))
+    expectIllegal(chessboard, Move("a7", "a8"))
   }
 
   test("cannot overleap when forward by one field"){

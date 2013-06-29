@@ -13,6 +13,8 @@ import org.scalatest.PrivateMethodTester
  * Time: 11:34 AM
  * To change this template use File | Settings | File Templates.
  */
+//TODO: stalemate test
+//TODO: refactoring
 class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTester with PositionGenerator{
   def getPieceInvoker (chessboard: Chessboard) (row: Int, column: Int) : Option[Piece] = {
     val getPiece = PrivateMethod[Option[Piece]]('getPiece)

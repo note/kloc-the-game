@@ -21,7 +21,4 @@ trait PositionGenerator {
     Chessboard.loadFromFile(TypicalPositionFileName)
   }
 
-  def getPromotionPosition(): Chessboard = {
-    Chessboard.loadFromFile(PromotionPositionFileName)
-  }
 }
