@@ -1,4 +1,4 @@
-package net.michalsitko.game
+package net.michalsitko.kloc.game
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,5 +13,9 @@ case class Move(from: Field, to: Field){
 object Move{
   def apply(fromStr: String, toStr: String) = {
     new Move(Field.fromString(fromStr), Field.fromString(toStr))
+  }
+
+  def forDestinations(sourceField: Field, destinationFields: List[Field]) = {
+    destinationFields.map(Move(sourceField, _))
   }
 }

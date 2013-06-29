@@ -1,6 +1,5 @@
 package net.michalsitko.kloc.game
 
-import net.michalsitko.game.{Chessboard, Move}
 import org.scalatest.{PrivateMethodTester, FunSuite}
 import org.scalatest.matchers.ShouldMatchers
 
@@ -92,5 +91,15 @@ class PawnTest extends FunSuite with ShouldMatchers with PositionGenerator{
     chessboard.applyMove(Move("e2", "e6"))
 
     expectIllegal(chessboard, Move("e7", "e5"))
+  }
+
+  test("can be pinned") {
+    val chessboard = new Chessboard
+    chessboard.setPiece("e1", Some(WhiteKing))
+    chessboard.setPiece("b4", Some(BlackBishop))
+    chessboard.setPiece("d2", Some(WhitePawn))
+
+    expectResult(true){chessboard.isPinned(Move("d2", "d3"))}
+    expectResult(true){chessboard.isPinned(Move("d2", "d4"))}
   }
 }

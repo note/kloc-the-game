@@ -1,8 +1,8 @@
 package net.michalsitko.kloc.game
 
-import net.michalsitko.game.{Move, Chessboard}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
+import scala.Some
 
 /**
  * Created with IntelliJ IDEA.
@@ -61,5 +61,16 @@ class BishopTest extends FunSuite with ShouldMatchers with PositionGenerator {
     expectIllegal(chessboard, Move("f1", "d3"))
     expectIllegal(chessboard, Move("f1", "c4"))
     expectIllegal(chessboard, Move("c1", "h6"))
+  }
+
+  test("can be pinned") {
+    val chessboard = new Chessboard
+    chessboard.setPiece("e1", Some(WhiteKing))
+    chessboard.setPiece("b4", Some(BlackBishop))
+    chessboard.setPiece("d2", Some(WhiteBishop))
+
+    expectResult(true){chessboard.isPinned(Move("d2", "c1"))}
+    expectResult(true){chessboard.isPinned(Move("d2", "e3"))}
+    expectResult(false){chessboard.isPinned(Move("d2", "c3"))}
   }
 }

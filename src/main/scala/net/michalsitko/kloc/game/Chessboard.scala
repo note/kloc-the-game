@@ -1,4 +1,4 @@
-package net.michalsitko.game
+package net.michalsitko.kloc.game
 
 import java.nio.file.{Files, Paths}
 import io.Source
@@ -13,52 +13,86 @@ import java.io.FileNotFoundException
  */
 class Chessboard {
   private val fields = Array.fill[Option[Piece]](8, 8)(None)
+  protected val allFields = for (letter <- 'a' to 'h'; number <- 1 to 8) yield {letter.toString() + number}
 
-  def isPinned(move: Move): Boolean = false
+  def getFieldOfKing(color: Color): Option[Field] = {
+    val expectedKing = KingFactory.forColor(color)
+    allFields.map(Field.fromString((_))).find(getPiece(_).getOrElse(null) == expectedKing)
+  }
+
+  def withAppliedMove[T] (move: Move) (fn: (Chessboard) => T): T = {
+    val activePiece = getPiece(move.from)
+    val old = getPiece(move.to)
+    applyMove(move)
+    val result = fn(this)
+    setPiece(move.to, old)
+    setPiece(move.from, activePiece)
+    result
+  }
+
+  def isPinned(move: Move): Boolean = {
+    val activeColor = getPiece(move.from).get.getColor()
+    val fieldOfKing = getFieldOfKing(activeColor)
+
+    // TODO: refactor
+    if(!fieldOfKing.isDefined || getPiece(move.from).get == WhiteKing || getPiece(move.from).get == BlackKing)
+      return false
+
+    val king = KingFactory.forColor(activeColor)
+    withAppliedMove(move){
+      king.isChecked(_, fieldOfKing.get)
+    }
+  }
 
   def somethingBetweenHorizontally(field: Field, anotherField: Field): Boolean = {
-    require(field.sameRow(anotherField))
-
-    val row = field.row
-    val (smaller, bigger) = if (field.column < anotherField.column) (field, anotherField) else (anotherField, field)
-    for (i <- (smaller.column + 1) to (bigger.column - 1))
-      if (getPiece(row, i).isDefined)
-        return true
-
-    return false
+    field.nextFieldsTo(getDirectionForHorizontal(field, anotherField), anotherField).exists(getPiece(_).map(_ => true).getOrElse(false))
   }
 
   def somethingBetweenVertically(field: Field, anotherField: Field): Boolean = {
-    require(field.sameColumn(anotherField))
-
-    val column = field.column
-    val (smaller, bigger) = if (field.row < anotherField.row) (field, anotherField) else (anotherField, field)
-    for (i <- (smaller.row + 1) to (bigger.row - 1))
-      if (getPiece(i, column).isDefined)
-        return true
-
-    false
+    field.nextFieldsTo(getDirectionForVertical(field, anotherField), anotherField).exists(getPiece(_).map(_ => true).getOrElse(false))
   }
 
   def somethingBetweenDiagonally(field: Field, anotherField: Field): Boolean = {
+    field.nextFieldsTo(getDirectionForDiagonal(field, anotherField), anotherField).exists(getPiece(_).map(_ => true).getOrElse(false))
+  }
+
+  def getFieldsBetween(field: Field, anotherField: Field): List[Field] = {
+    if (field.row == anotherField.row)
+      return field.nextFieldsTo(getDirectionForHorizontal(field, anotherField), anotherField)
+
+    if (field.column == anotherField.column)
+      return field.nextFieldsTo(getDirectionForVertical(field, anotherField), anotherField)
+
+    if (field.sameDiagonal(anotherField))
+      return field.nextFieldsTo(getDirectionForDiagonal(field, anotherField), anotherField)
+
+    List()
+  }
+
+  def getDirectionForHorizontal(field: Field, anotherField: Field): (Int, Int) = {
+    require(field.sameRow(anotherField))
+
+    if (field.column < anotherField.column)
+      (0, 1)
+    else
+      (0, -1)
+  }
+
+  def getDirectionForVertical(field: Field, anotherField: Field): (Int, Int) = {
+    require(field.sameColumn(anotherField))
+
+    if (field.row < anotherField.row)
+      (1, 0)
+    else
+      (-1, 0)
+  }
+
+  def getDirectionForDiagonal(field: Field, anotherField: Field): (Int, Int) = {
     require(field.sameDiagonal(anotherField))
 
-    val columnIncrease = if (field.column < anotherField.column) 1 else -1
     val rowIncrease = if (field.row < anotherField.row) 1 else -1
-    var column = field.column + columnIncrease
-    var row = field.row + rowIncrease
-
-    var iterations = (field.column - anotherField.column).abs - 1
-    while(iterations > 0){
-      if (getPiece(row, column).isDefined)
-        return true
-
-      column += columnIncrease
-      row += rowIncrease
-      iterations -= 1
-    }
-
-    false
+    val columnIncrease = if (field.column < anotherField.column) 1 else -1
+    (rowIncrease, columnIncrease)
   }
 
   def somethingBetween(field: Field, anotherField: Field): Boolean = {
@@ -96,6 +130,10 @@ class Chessboard {
 
   def getPiece(row: Int, column: Int): Option[Piece] = {
     fields(row)(column)
+  }
+
+  def getFieldsOfPieces(color: Color) = {
+    allFields.filter(getPiece(_).map(_.getColor() == color).getOrElse(false)).map(Field.fromString(_))
   }
 }
 

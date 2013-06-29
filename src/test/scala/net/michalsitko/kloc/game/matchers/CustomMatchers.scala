@@ -1,7 +1,7 @@
 package net.michalsitko.kloc.game.matchers
 
 import org.scalatest.matchers.{MatchResult, Matcher}
-import net.michalsitko.game.{Move, Chessboard}
+import net.michalsitko.kloc.game.{Piece, Move, Chessboard}
 
 /**
  * Created with IntelliJ IDEA.

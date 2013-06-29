@@ -2,8 +2,6 @@ package net.michalsitko.kloc.game
 
 import org.scalatest.{PrivateMethodTester, Informer, FunSuite, FlatSpec}
 import org.scalatest.matchers.ShouldMatchers
-import net.michalsitko.game._
-import net.michalsitko.game.Move
 
 /**
  * Created with IntelliJ IDEA.

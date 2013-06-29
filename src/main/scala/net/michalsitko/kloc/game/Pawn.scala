@@ -1,6 +1,4 @@
-package net.michalsitko.game
-
-import net.michalsitko.kloc.game.{Black, White, Color}
+package net.michalsitko.kloc.game
 
 /**
  * Created with IntelliJ IDEA.

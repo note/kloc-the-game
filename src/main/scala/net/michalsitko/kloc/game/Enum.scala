@@ -1,4 +1,4 @@
-package net.michalsitko.game
+package net.michalsitko.kloc.game
 
 /**
  * Created with IntelliJ IDEA.

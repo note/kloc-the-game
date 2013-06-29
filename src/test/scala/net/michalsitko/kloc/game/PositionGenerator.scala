@@ -1,7 +1,5 @@
 package net.michalsitko.kloc.game
 
-import net.michalsitko.game.Chessboard
-
 /**
  * Created with IntelliJ IDEA.
  * User: michal

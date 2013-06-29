@@ -1,6 +1,5 @@
 package net.michalsitko.kloc.game
 
-import net.michalsitko.game.{Move, Chessboard}
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 
@@ -52,5 +51,16 @@ class KnightTest extends FunSuite with ShouldMatchers with PositionGenerator {
 
     expectIllegal(getInitialPosition(), Move("g1", "g3"))
     expectIllegal(getInitialPosition(), Move("g1", "e3"))
+  }
+
+  test("can be pinned") {
+    val chessboard = new Chessboard
+    chessboard.setPiece("e1", Some(WhiteKing))
+    chessboard.setPiece("b4", Some(BlackBishop))
+    chessboard.setPiece("d2", Some(WhiteKnight))
+
+    expectResult(true){chessboard.isPinned(Move("d2", "b1"))}
+    expectResult(true){chessboard.isPinned(Move("d2", "b3"))}
+    expectResult(true){chessboard.isPinned(Move("d2", "f3"))}
   }
 }

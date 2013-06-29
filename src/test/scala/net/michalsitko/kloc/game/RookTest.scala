@@ -1,6 +1,5 @@
 package net.michalsitko.kloc.game
 
-import net.michalsitko.game.{Chessboard, Move}
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 import net.michalsitko.kloc.game.matchers.CustomMatchers.beLegal
@@ -69,5 +68,16 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     (chessboard, Move("a1", "a5")) should not (beLegal)
     (chessboard, Move("a8", "a2")) should not (beLegal)
     (chessboard, Move("a8", "a1")) should not (beLegal)
+  }
+
+  test("can be pinned") {
+    val chessboard = new Chessboard
+    chessboard.setPiece("e1", Some(WhiteKing))
+    chessboard.setPiece("b4", Some(BlackBishop))
+    chessboard.setPiece("d2", Some(WhiteQueen))
+
+    expectResult(true){chessboard.isPinned(Move("d2", "d5"))}
+    expectResult(true){chessboard.isPinned(Move("d2", "c2"))}
+    expectResult(true){chessboard.isPinned(Move("d2", "h2"))}
   }
 }

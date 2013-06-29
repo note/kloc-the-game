@@ -1,7 +1,6 @@
-package net.michalsitko.game
+package net.michalsitko.kloc.game
 
-import net.michalsitko.kloc.game.{Black, White, Color}
-import java.util
+import scala.collection.immutable.IndexedSeq
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,21 +19,62 @@ abstract trait King extends Piece {
 
   def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     if (super.areBasicCriteriaSatisfied(chessboard, move))
-      isKingMove(chessboard, move.from, move.to)
+      isKingMove(chessboard, move.from, move.to) && !wouldBeChecked(chessboard, move)
     else
       false
   }
 
   def isChecked(chessboard: Chessboard, field: Field): Boolean = getCheckingPieces(chessboard, field).nonEmpty
 
-  def isCheckmated(chessboard: Chessboard, field: Field): Boolean = false
+  def isCheckmated(chessboard: Chessboard, field: Field): Boolean = {
+    val attackers: List[Field] = getCheckingPieces(chessboard, field)
+    if(attackers.isEmpty)
+      return false
+
+    val canEscape = canMove(chessboard, field)
+    !canEscape && (attackers.size > 1 || (!canBeShielded(chessboard, field, attackers.head) && !canBeTaken(chessboard, attackers.head)))
+  }
+
+  def canBeTaken(chessboard: Chessboard, attacker: Field): Boolean = {
+    chessboard.getFieldsOfPieces(getColor()).exists((from: Field) => chessboard.isMoveCorrect(Move(from, attacker)))
+  }
+
+  def wouldBeChecked(chessboard: Chessboard, move: Move): Boolean = {
+    /*val old = chessboard.getPiece(move.to)
+    chessboard.applyMove(move)
+    val result = isChecked(chessboard, move.to)
+    chessboard.setPiece(move.to, old)
+    chessboard.setPiece(move.from, Some(this))
+    result*/
+    chessboard.withAppliedMove(move){
+      isChecked(_, move.to)
+    }
+  }
+
+  def canBeShielded(chessboard: Chessboard, kingField: Field, attacker: Field):Boolean = {
+    val friendlyPiecesFields: IndexedSeq[Field] = chessboard.getFieldsOfPieces(getColor())
+    for(friendlyPieceField <- friendlyPiecesFields){
+      val moves = Move.forDestinations(friendlyPieceField, chessboard.getFieldsBetween(kingField, attacker))
+      if(moves.exists(chessboard.isMoveCorrect(_)))
+        return true
+    }
+    false
+  }
 
   private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int)): List[Field] = {
     for (nextField <- start.nextFields(direction)
          if (chessboard.getPiece(nextField).isDefined);
          if (chessboard.getPiece(nextField).get.getColor() != getColor());
+          //isMoveCorrect is too strong. even when piece is pinned can be attacker in the sense of check
+          //TODO: write a test for this
          if (chessboard.isMoveCorrect(new Move(nextField, start)))
     ) yield nextField
+  }
+
+  private def canMove(chessboard: Chessboard, start: Field): Boolean = {
+    allDirections().exists(
+      (direction) => start.nextField(direction).map((destinationField: Field) => chessboard.isMoveCorrect(Move(start, destinationField))).getOrElse(false)
+    )
   }
 
   def allDirections() = {
@@ -48,9 +88,13 @@ abstract trait King extends Piece {
   }
 
   def getCheckingPieces(chessboard: Chessboard, field: Field) = {
-    val attackingKnights = for ((i, j) <- knightMoves()
-                                if chessboard.isMoveCorrect(Move(Field(field.row + i, field.column + j), field))
-    ) yield Field(field.row + i, field.column + j)
+    val attackingKnights =
+      for ((i, j) <- knightMoves()
+           if Field.inRange(field.row + i) && Field.inRange(field.column + i)
+           if chessboard.getPiece(Field(field.row + i, field.column + j)).isDefined
+           if chessboard.getPiece(Field(field.row + i, field.column + j)).get.getColor() != getColor()
+           if chessboard.isMoveCorrect(Move(Field(field.row + i, field.column + j), field))
+      ) yield Field(field.row + i, field.column + j)
     val otherAttackingPieces = (for (direction <- allDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
     attackingKnights ++ otherAttackingPieces
   }

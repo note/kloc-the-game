@@ -1,4 +1,4 @@
-package net.michalsitko.game
+package net.michalsitko.kloc.game
 
 import java.util
 
@@ -10,25 +10,46 @@ import java.util
  * To change this template use File | Settings | File Templates.
  */
 case class Field (row: Int, column: Int){
-  require(row >= 0 && row <= 7)
-  require(column >= 0 && column <= 7)
+  require(Field.inRange(row))
+  require(Field.inRange(row))
 
-  def inRange(i: Int): Boolean = {
-    i >= 0 && i <= 7
-  }
 
-  def nextFields(direction: (Int, Int)) = {
+
+  def nextFields(direction: (Int, Int)): List[Field] = {
     var currentRow = row + direction._1
     var currentColumn = column + direction._2
     var result = List[Field]()
 
-    while (inRange(currentRow) && inRange(currentColumn)){
+    while (Field.inRange(currentRow) && Field.inRange(currentColumn)){
       result = result :+  Field(currentRow, currentColumn)
       currentRow = currentRow + direction._1
       currentColumn = currentColumn + direction._2
     }
 
     result
+  }
+
+  def nextFieldsTo(direction: (Int, Int), endField: Field): List[Field] = {
+    var currentRow = row + direction._1
+    var currentColumn = column + direction._2
+    var result = List[Field]()
+
+    while (Field.inRange(currentRow) && Field.inRange(currentColumn) && Field(currentRow, currentColumn) != endField){
+      result = result :+  Field(currentRow, currentColumn)
+      currentRow = currentRow + direction._1
+      currentColumn = currentColumn + direction._2
+    }
+
+    result
+  }
+
+  def nextField(direction: (Int, Int)): Option[Field] = {
+    val newRow = row + direction._1
+    val newColumn = column + direction._2
+    if(newRow >= 0 && newRow <= 7 && newColumn >= 0 && newColumn <= 7)
+      Some(Field(newRow, newColumn))
+    else
+      None
   }
 
   def isKnightAccessible(anotherField: Field): Boolean = {
@@ -60,6 +81,10 @@ case class Field (row: Int, column: Int){
 object Field{
   def AsciiLower = 97;
   def AsciiUpper = 65;
+
+  def inRange(i: Int): Boolean = {
+    i >= 0 && i <= 7
+  }
 
   def columnLetterFromInt(columnInt: Int): Char = {
     (columnInt + AsciiLower).toChar

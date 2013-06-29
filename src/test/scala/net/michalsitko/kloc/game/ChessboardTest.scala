@@ -1,7 +1,6 @@
 package net.michalsitko.kloc.game
 
 import java.io.FileNotFoundException
-import net.michalsitko.game._
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.PrivateMethodTester.PrivateMethod
