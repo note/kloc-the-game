@@ -89,4 +89,23 @@ class QueenTest extends FunSuite with ShouldMatchers with PositionGenerator{
     expectResult(false){chessboard.isPinned(Move("d2", "c3"))}
     expectResult(false){chessboard.isPinned(Move("d2", "b4"))}
   }
+
+  test("isAnyMovePossible can return true"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("h8", Some(WhiteQueen))
+    chessboard.setPiece("h7", Some(WhiteKnight))
+    chessboard.setPiece("g7", Some(WhiteKnight))
+
+    expectResult(true)(WhiteQueen.isAnyMovePossible(chessboard, "h8"))
+  }
+
+  test("isAnyMovePossible can return false"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("h8", Some(WhiteQueen))
+    chessboard.setPiece("h7", Some(WhiteKnight))
+    chessboard.setPiece("g7", Some(WhiteKnight))
+    chessboard.setPiece("g8", Some(WhiteKnight))
+
+    expectResult(false)(WhiteQueen.isAnyMovePossible(chessboard, "h8"))
+  }
 }

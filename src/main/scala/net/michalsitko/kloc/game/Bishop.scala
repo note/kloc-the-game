@@ -16,6 +16,14 @@ abstract trait Bishop extends Piece {
   def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     isBishopMove(chessboard, move.from, move.to)
   }
+
+  def getDirections(): List[(Int, Int)] = Bishop.getDirections()
+}
+
+object Bishop{
+  def getDirections() = {
+    List((1, 1), (-1, -1), (-1, 1), (1, -1))
+  }
 }
 
 object BishopFactory extends PieceFactory {

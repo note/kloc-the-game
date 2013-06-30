@@ -57,6 +57,7 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     (getInitialPosition(), Move("a1", "b2")) should not (beLegal)
     (getInitialPosition(), Move("a1", "d4")) should not (beLegal)
     (getInitialPosition(), Move("a1", "b3")) should not (beLegal)
+    (getInitialPosition(), Move("a1", "a1")) should not (beLegal)
   }
 
   test("cannot overleap") {
@@ -79,5 +80,22 @@ class RookTest extends FunSuite with ShouldMatchers with PositionGenerator{
     expectResult(true){chessboard.isPinned(Move("d2", "d5"))}
     expectResult(true){chessboard.isPinned(Move("d2", "c2"))}
     expectResult(true){chessboard.isPinned(Move("d2", "h2"))}
+  }
+
+  test("isAnyMovePossible can return true"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("h1", Some(WhiteRook))
+    chessboard.setPiece("h2", Some(WhitePawn))
+
+    expectResult(true)(WhiteRook.isAnyMovePossible(chessboard, "h1"))
+  }
+
+  test("isAnyMovePossible can return false"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("h1", Some(WhiteRook))
+    chessboard.setPiece("h2", Some(WhitePawn))
+    chessboard.setPiece("g1", Some(WhiteKnight))
+
+    expectResult(false)(WhiteRook.isAnyMovePossible(chessboard, "h1"))
   }
 }

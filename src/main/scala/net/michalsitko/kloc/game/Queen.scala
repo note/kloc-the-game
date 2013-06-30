@@ -21,6 +21,8 @@ abstract trait Queen extends Piece {
     false
   }
 
+  def getDirections(): List[(Int, Int)] = King.getDirections()
+
   def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     isQueenMove(chessboard, move.from, move.to)
   }
@@ -34,6 +36,8 @@ object QueenFactory extends PieceFactory {
     }
   }
 }
+
+
 
 case object WhiteQueen extends Queen {
   def getSymbol(): Char = 'Q'

@@ -37,12 +37,6 @@ abstract trait King extends Piece {
   }
 
   def wouldBeChecked(chessboard: Chessboard, move: Move): Boolean = {
-    /*val old = chessboard.getPiece(move.to)
-    chessboard.applyMove(move)
-    val result = isChecked(chessboard, move.to)
-    chessboard.setPiece(move.to, old)
-    chessboard.setPiece(move.from, Some(this))
-    result*/
     chessboard.withAppliedMove(move) {
       isChecked(_, move.to)
     }
@@ -67,31 +61,33 @@ abstract trait King extends Piece {
   }
 
   private def canMove(chessboard: Chessboard, start: Field): Boolean = {
-    allDirections().exists(
+    getDirections().exists(
       (direction) => start.nextField(direction).map((destinationField: Field) => chessboard.isMoveCorrect(Move(start, destinationField))).getOrElse(false)
     )
   }
 
-  def allDirections() = {
-    for (i <- -1 to 1; j <- -1 to 1; if (i != 0 || j != 0)) yield {
-      (i, j)
-    }
-  }
-
-  def knightMoves() = {
-    List((1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, -1))
+  def getDirections(): List[(Int, Int)] = {
+    King.getDirections()
   }
 
   def getCheckingPieces(chessboard: Chessboard, field: Field) = {
     val attackingKnights =
-      for ((i, j) <- knightMoves()
+      for ((i, j) <- Knight.getDirections()
            if Field.inRange(field.row + i) && Field.inRange(field.column + j)
            if chessboard.getPiece(Field(field.row + i, field.column + j)).isDefined
            if chessboard.getPiece(Field(field.row + i, field.column + j)).get.getColor() != getColor()
            if chessboard.isMoveAttacking(Move(Field(field.row + i, field.column + j), field))
       ) yield Field(field.row + i, field.column + j)
-    val otherAttackingPieces = (for (direction <- allDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
+    val otherAttackingPieces = (for (direction <- getDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
     attackingKnights ++ otherAttackingPieces
+  }
+}
+
+object King {
+  def getDirections(): List[(Int, Int)] = {
+    (for (i <- -1 to 1; j <- -1 to 1; if (i != 0 || j != 0)) yield {
+      (i, j)
+    }).toList
   }
 }
 

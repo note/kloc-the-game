@@ -16,6 +16,14 @@ abstract trait Rook extends Piece {
   def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     isRookMove(chessboard, move.from, move.to)
   }
+
+  def getDirections(): List[(Int, Int)] = Rook.getDirections()
+}
+
+object Rook{
+  def getDirections(): List[(Int, Int)] = {
+    List((0, 1), (0, -1), (1, 0), (-1, 0))
+  }
 }
 
 object RookFactory extends PieceFactory {

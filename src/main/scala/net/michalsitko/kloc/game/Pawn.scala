@@ -51,6 +51,10 @@ abstract trait Pawn extends Piece {
     else
       pawnCorrect
   }
+
+  def getDirections(): List[(Int, Int)] = {
+    List((expectedDiff(), -1), (expectedDiff(), 0), (expectedDiff(), 1), (2*expectedDiff(), 0))
+  }
 }
 
 object PawnFactory extends PieceFactory {

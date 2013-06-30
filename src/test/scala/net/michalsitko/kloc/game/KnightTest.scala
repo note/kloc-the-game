@@ -63,4 +63,21 @@ class KnightTest extends FunSuite with ShouldMatchers with PositionGenerator {
     expectResult(true){chessboard.isPinned(Move("d2", "b3"))}
     expectResult(true){chessboard.isPinned(Move("d2", "f3"))}
   }
+
+  test("isAnyMovePossible can return true"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("a1", Some(WhiteKnight))
+    chessboard.setPiece("b3", Some(WhitePawn))
+
+    expectResult(true)(WhiteKnight.isAnyMovePossible(chessboard, "a1"))
+  }
+
+  test("isAnyMovePossible can return false"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("a1", Some(WhiteKnight))
+    chessboard.setPiece("b3", Some(WhitePawn))
+    chessboard.setPiece("c2", Some(WhitePawn))
+
+    expectResult(false)(WhiteKnight.isAnyMovePossible(chessboard, "a1"))
+  }
 }

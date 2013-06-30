@@ -9,6 +9,7 @@ package net.michalsitko.kloc.game
  */
 
 abstract trait Knight extends Piece {
+  def getDirections(): List[(Int, Int)] = Knight.getDirections()
 
   def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     move.to.isKnightAccessible(move.from)
@@ -21,6 +22,12 @@ object KnightFactory extends PieceFactory {
       case White() => WhiteKnight
       case Black() => BlackKnight
     }
+  }
+}
+
+object Knight{
+  def getDirections() = {
+    List((1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, -1))
   }
 }
 

@@ -11,8 +11,19 @@ package net.michalsitko.kloc.game
 abstract trait Piece extends Piece.Value with Colored{
   def checkMoveCorrect(chesssboard: Chessboard, move: Move): Boolean
 
+  def getDirections(): List[(Int, Int)]
+
   def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     areBasicCriteriaSatisfied(chessboard, move) && checkMoveCorrect(chessboard, move)
+  }
+
+  def isAnyMovePossible(chessboard: Chessboard, field: Field): Boolean = {
+    for ((i, j) <- getDirections()
+         if Field.inRange(field.row + i) && Field.inRange(field.column + j)
+         if chessboard.isMoveCorrect(Move(field, Field(field.row + i, field.column + j)))){
+      return true
+    }
+    false
   }
 
   def isMoveAttacking(chessboard: Chessboard, move: Move): Boolean = {

@@ -111,4 +111,20 @@ class PawnTest extends FunSuite with ShouldMatchers with PositionGenerator{
     expectResult(true){chessboard.isPinned(Move("d2", "d3"))}
     expectResult(true){chessboard.isPinned(Move("d2", "d4"))}
   }
+
+  test("isAnyMovePossible can return true"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("e2", Some(WhitePawn))
+    chessboard.setPiece("d3", Some(BlackBishop))
+
+    expectResult(true)(WhitePawn.isAnyMovePossible(chessboard, "e2"))
+  }
+
+  test("isAnyMovePossible can return false"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("e2", Some(WhitePawn))
+    chessboard.setPiece("e3", Some(BlackBishop))
+
+    expectResult(false)(WhitePawn.isAnyMovePossible(chessboard, "h8"))
+  }
 }

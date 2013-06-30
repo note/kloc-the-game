@@ -180,6 +180,22 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
       chessboard.setPiece("c2", Some(friendlyKnight))
       expectResult(true)(kingBeingTested.isCheckmated(chessboard, "e4"))
     }
-  }
 
+    it can "have possible moves" in {
+      val chessboard = new Chessboard
+      chessboard.setPiece("h8", Some(kingBeingTested))
+      chessboard.setPiece("h7", Some(friendlyKnight))
+
+      expectResult(true)(kingBeingTested.isAnyMovePossible(chessboard, "h8"))
+    }
+
+    it can "have no possible moves" in {
+      val chessboard = new Chessboard
+      chessboard.setPiece("h8", Some(kingBeingTested))
+      chessboard.setPiece("h7", Some(friendlyKnight))
+      chessboard.setPiece("g1", Some(oppositeRook))
+
+      expectResult(false)(kingBeingTested.isAnyMovePossible(chessboard, "h8"))
+    }
+  }
 }

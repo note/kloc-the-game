@@ -73,4 +73,19 @@ class BishopTest extends FunSuite with ShouldMatchers with PositionGenerator {
     expectResult(true){chessboard.isPinned(Move("d2", "e3"))}
     expectResult(false){chessboard.isPinned(Move("d2", "c3"))}
   }
+
+  test("isAnyMovePossible can return false"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("a1", Some(WhiteBishop))
+    chessboard.setPiece("b2", Some(WhitePawn))
+
+    expectResult(false)(WhiteBishop.isAnyMovePossible(chessboard, "a1"))
+  }
+
+  test("isAnyMovePossible can return true"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("a1", Some(WhiteBishop))
+
+    expectResult(true)(WhiteBishop.isAnyMovePossible(chessboard, "a1"))
+  }
 }
