@@ -18,14 +18,14 @@ abstract trait Pawn extends Piece {
   def isCorrectPromotion(move: Move): Boolean = {
     move match {
       case promotionMove: PromotionMove => promotionMove.promoteTo match {
-        case _: King | _:Pawn => false
+        case _: King | _: Pawn => false
         case _ => true
       }
       case _ => false
     }
   }
 
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
     def isCorrectForward(): Boolean = {
       if (chessboard.getPiece(move.to).isDefined || move.from.column != move.to.column)
         return false
@@ -45,14 +45,11 @@ abstract trait Pawn extends Piece {
       (move.to.column - move.from.column).abs == 1 && move.to.row - move.from.row == expectedDiff()
     }
 
-    if (super.areBasicCriteriaSatisfied(chessboard, move)){
-      val pawnCorrect = isCorrectForward() || isCorrectTake()
-      if (isLastLineMove(move))
-        pawnCorrect && isCorrectPromotion(move)
-      else
-        pawnCorrect
-    }else
-      false
+    val pawnCorrect = isCorrectForward() || isCorrectTake()
+    if (isLastLineMove(move))
+      pawnCorrect && isCorrectPromotion(move)
+    else
+      pawnCorrect
   }
 }
 

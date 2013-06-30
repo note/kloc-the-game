@@ -7,7 +7,7 @@ package net.michalsitko.kloc.game
  * Time: 8:16 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract trait Queen extends Piece{
+abstract trait Queen extends Piece {
   def isQueenMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
     if (from.sameRow(to))
       return !chessboard.somethingBetweenHorizontally(from, to)
@@ -21,16 +21,13 @@ abstract trait Queen extends Piece{
     false
   }
 
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
-    if (super.areBasicCriteriaSatisfied(chessboard, move))
-      isQueenMove(chessboard, move.from, move.to)
-    else
-      false
+  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    isQueenMove(chessboard, move.from, move.to)
   }
 }
 
-object QueenFactory extends PieceFactory{
-  def forColor(color: Color) : Queen = {
+object QueenFactory extends PieceFactory {
+  def forColor(color: Color): Queen = {
     color match {
       case White() => WhiteQueen
       case Black() => BlackQueen
@@ -38,13 +35,13 @@ object QueenFactory extends PieceFactory{
   }
 }
 
-case object WhiteQueen extends Queen{
+case object WhiteQueen extends Queen {
   def getSymbol(): Char = 'Q'
 
   def getColor(): Color = new White
 }
 
-case object BlackQueen extends Queen{
+case object BlackQueen extends Queen {
   def getSymbol(): Char = WhiteQueen.getSymbol().toLower
 
   def getColor(): Color = new Black

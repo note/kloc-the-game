@@ -8,18 +8,15 @@ package net.michalsitko.kloc.game
  * To change this template use File | Settings | File Templates.
  */
 
-abstract trait Knight extends Piece{
+abstract trait Knight extends Piece {
 
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
-    if (super.areBasicCriteriaSatisfied(chessboard, move))
-      move.to.isKnightAccessible(move.from)
-    else
-      false
+  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    move.to.isKnightAccessible(move.from)
   }
 }
 
-object KnightFactory extends PieceFactory{
-  def forColor(color: Color) : Knight = {
+object KnightFactory extends PieceFactory {
+  def forColor(color: Color): Knight = {
     color match {
       case White() => WhiteKnight
       case Black() => BlackKnight
@@ -27,13 +24,13 @@ object KnightFactory extends PieceFactory{
   }
 }
 
-case object WhiteKnight extends Knight{
+case object WhiteKnight extends Knight {
   def getSymbol(): Char = 'N'
 
   def getColor(): Color = new White
 }
 
-case object BlackKnight extends Knight{
+case object BlackKnight extends Knight {
   def getSymbol(): Char = WhiteKnight.getSymbol().toLower
 
   def getColor(): Color = new Black

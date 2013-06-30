@@ -8,21 +8,18 @@ package net.michalsitko.kloc.game
  * To change this template use File | Settings | File Templates.
  */
 
-abstract trait Bishop extends Piece{
+abstract trait Bishop extends Piece {
   def isBishopMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
     from.sameDiagonal(to) && !chessboard.somethingBetweenDiagonally(from, to)
   }
 
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
-    if (super.areBasicCriteriaSatisfied(chessboard, move))
-      isBishopMove(chessboard, move.from, move.to)
-    else
-      false
+  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    isBishopMove(chessboard, move.from, move.to)
   }
 }
 
-object BishopFactory extends PieceFactory{
-  def forColor(color: Color) : Bishop = {
+object BishopFactory extends PieceFactory {
+  def forColor(color: Color): Bishop = {
     color match {
       case White() => WhiteBishop
       case Black() => BlackBishop
@@ -30,13 +27,13 @@ object BishopFactory extends PieceFactory{
   }
 }
 
-case object WhiteBishop extends Bishop{
+case object WhiteBishop extends Bishop {
   def getSymbol(): Char = 'B'
 
   def getColor(): Color = new White
 }
 
-case object BlackBishop extends Bishop{
+case object BlackBishop extends Bishop {
   def getSymbol(): Char = WhiteBishop.getSymbol().toLower
 
   def getColor(): Color = new Black

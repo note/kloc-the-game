@@ -9,7 +9,11 @@ package net.michalsitko.kloc.game
  */
 
 abstract trait Piece extends Piece.Value with Colored{
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean
+  def checkMoveCorrect(chesssboard: Chessboard, move: Move): Boolean
+
+  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+    areBasicCriteriaSatisfied(chessboard, move) && checkMoveCorrect(chessboard, move)
+  }
 
   def getSymbol(): Char
 
