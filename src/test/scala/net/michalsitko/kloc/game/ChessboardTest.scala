@@ -136,4 +136,34 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
       expectResult(true)(chessboard.somethingBetweenDiagonally("e4", "e2"))
     }
   }
+
+  test("there can be stalemate"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("a1", Some(WhiteKing))
+    chessboard.setPiece("c2", Some(BlackQueen))
+
+    expectResult(true)(chessboard.isStalemate(White()))
+    expectResult(false)(chessboard.isStalemate(Black()))
+  }
+
+  test("there is not stalemate when any piece can move"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("a1", Some(WhiteKing))
+    chessboard.setPiece("c2", Some(BlackQueen))
+    chessboard.setPiece("h2", Some(WhitePawn))
+
+    expectResult(false)(chessboard.isStalemate(White()))
+    expectResult(false)(chessboard.isStalemate(Black()))
+  }
+
+  test("there can be stalemate2"){
+    val chessboard = new Chessboard
+    chessboard.setPiece("a1", Some(WhiteKing))
+    chessboard.setPiece("c2", Some(BlackQueen))
+    chessboard.setPiece("h2", Some(WhitePawn))
+    chessboard.setPiece("h3", Some(BlackPawn))
+
+    expectResult(true)(chessboard.isStalemate(White()))
+    expectResult(false)(chessboard.isStalemate(Black()))
+  }
 }

@@ -44,6 +44,10 @@ class Chessboard {
     }
   }
 
+  def isStalemate(color: Color): Boolean = {
+    false
+  }
+
   def somethingBetweenHorizontally(field: Field, anotherField: Field): Boolean = {
     field.nextFieldsTo(getDirectionForHorizontal(field, anotherField), anotherField).exists(getPiece(_).map(_ => true).getOrElse(false))
   }
