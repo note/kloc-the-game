@@ -15,6 +15,10 @@ abstract trait Piece extends Piece.Value with Colored{
     areBasicCriteriaSatisfied(chessboard, move) && checkMoveCorrect(chessboard, move)
   }
 
+  def isMoveAttacking(chessboard: Chessboard, move: Move): Boolean = {
+    isDestinationFieldAccessible(chessboard, move) && checkMoveCorrect(chessboard, move)
+  }
+
   def getSymbol(): Char
 
   protected def areBasicCriteriaSatisfied(chessboard: Chessboard, move: Move): Boolean = {

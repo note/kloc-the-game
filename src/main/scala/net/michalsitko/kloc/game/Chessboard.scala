@@ -124,6 +124,12 @@ class Chessboard {
     return false
   }
 
+  def isMoveAttacking(move: Move): Boolean = {
+    if (getPiece((move.from)).isDefined)
+      return getPiece(move.from).get.isMoveAttacking(this, move)
+    return false
+  }
+
   def getPiece(field: Field): Option[Piece] = {
     getPiece(field.row, field.column)
   }

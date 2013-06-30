@@ -62,9 +62,7 @@ abstract trait King extends Piece {
     for (nextField <- start.nextFields(direction)
          if (chessboard.getPiece(nextField).isDefined);
          if (chessboard.getPiece(nextField).get.getColor() != getColor());
-         //isMoveCorrect is too strong. even when piece is pinned can be attacker in the sense of check
-         //TODO: write a test for this
-         if (chessboard.isMoveCorrect(new Move(nextField, start)))
+         if (chessboard.isMoveAttacking(new Move(nextField, start)))
     ) yield nextField
   }
 
@@ -90,7 +88,7 @@ abstract trait King extends Piece {
            if Field.inRange(field.row + i) && Field.inRange(field.column + j)
            if chessboard.getPiece(Field(field.row + i, field.column + j)).isDefined
            if chessboard.getPiece(Field(field.row + i, field.column + j)).get.getColor() != getColor()
-           if chessboard.isMoveCorrect(Move(Field(field.row + i, field.column + j), field))
+           if chessboard.isMoveAttacking(Move(Field(field.row + i, field.column + j), field))
       ) yield Field(field.row + i, field.column + j)
     val otherAttackingPieces = (for (direction <- allDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
     attackingKnights ++ otherAttackingPieces
