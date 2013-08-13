@@ -15,11 +15,74 @@ class CastlingTest extends FunSuite with ShouldMatchers with MoveAssertions with
     val chessboard = new Chessboard
     allFields.map(chessboard.setPiece(_, None))
     chessboard.setPiece("e1", Some(WhiteKing))
+    chessboard.setPiece("a1", Some(WhiteRook))
+    chessboard.setPiece("h1", Some(WhiteRook))
     chessboard
   }
 
-  test("can move forward by 2 fields from start position") {
+  test("It is possible to perform a short castling") {
     val chessboard = fixture
-    expectLegal(chessboard, Move("e1", "f1"))
+    expectLegal(chessboard, Move("e1", "g1"))
+  }
+
+  test("It is possible to perform a long castling") {
+    val chessboard = fixture
+    expectLegal(chessboard, Move("e1", "c1"))
+    expectIllegal(chessboard, Move("e1", "b1"))
+    expectIllegal(chessboard, Move("e1", "d1"))
+  }
+
+  test("It is impossible to perform short castling if it is not the first move of the king") (pending)
+
+  test("It is impossible to perform short castling if it is not the first move of the rook") (pending)
+
+  test("It is impossible to perform short castling when there is some piece between") {
+    val chessboard = fixture()
+    chessboard.setPiece("g1", Some(WhiteKnight))
+    expectIllegal(chessboard, Move("e1", "g1"))
+    expectLegal(chessboard, Move("e1", "c1"))
+  }
+
+  test("It is impossible to perform long castling when there is some piece between") {
+    val chessboard = fixture()
+    chessboard.setPiece("b1", Some(WhiteKnight))
+    expectIllegal(chessboard, Move("e1", "c1"))
+    expectLegal(chessboard, Move("e1", "g1"))
+  }
+
+  test("It is impossible to perform short castling when king is checked") {
+    val chessboard = fixture()
+    chessboard.setPiece("b4", Some(BlackBishop))
+    expectIllegal(chessboard, Move("e1", "g1"))
+  }
+
+  test("It is impossible to perform long castling when king is checked") {
+    val chessboard = fixture()
+    chessboard.setPiece("b4", Some(BlackBishop))
+    expectIllegal(chessboard, Move("e1", "c1"))
+  }
+
+  test("It is impossible to perform short castling when any field king travels is checked") {
+    val chessboard = fixture()
+    chessboard.setPiece("c4", Some(BlackBishop))
+    expectIllegal(chessboard, Move("e1", "g1"))
+  }
+
+  test("It is impossible to perform long castling when any field king travels is checked") {
+    val chessboard = fixture()
+    chessboard.setPiece("g4", Some(BlackBishop))
+    expectIllegal(chessboard, Move("e1", "c1"))
+  }
+
+  test("It is possible to perform short castling when some field rook travels is attacked") {
+    val chessboard = fixture()
+    chessboard.setPiece("e4", Some(BlackBishop))
+    expectLegal(chessboard, Move("e1", "g1"))
+  }
+
+  test("It is possible to perform long castling when some field rook travels is attacked") {
+    val chessboard = fixture()
+    chessboard.setPiece("e4", Some(BlackBishop))
+    expectLegal(chessboard, Move("e1", "c1"))
   }
 }

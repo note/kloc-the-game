@@ -10,14 +10,7 @@ import org.scalatest.matchers.ShouldMatchers
  * Time: 12:08 AM
  * To change this template use File | Settings | File Templates.
  */
-class BasicTest extends FunSuite with ShouldMatchers with PrivateMethodTester with PositionGenerator{
-  private def expectLegal(chessboard: Chessboard, move: Move) {
-    expectResult(true)(chessboard.isMoveCorrect(move))
-  }
-
-  def expectIllegal(chessboard: Chessboard, move: Move) {
-    expectResult(false)(chessboard.isMoveCorrect(move))
-  }
+class BasicTest extends FunSuite with ShouldMatchers with PrivateMethodTester with PositionGenerator with MoveAssertions {
 
   def getPieceInvoker (chessboard: Chessboard) (row: Int, column: Int) : Option[Piece] = {
     val getPiece = PrivateMethod[Option[Piece]]('getPiece)
