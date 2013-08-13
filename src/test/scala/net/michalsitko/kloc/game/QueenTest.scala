@@ -10,14 +10,7 @@ import org.scalatest.matchers.ShouldMatchers
  * Time: 3:11 
  * To change this template use File | Settings | File Templates.
  */
-class QueenTest extends FunSuite with ShouldMatchers with PositionGenerator{
-  private def expectLegal(chessboard: Chessboard, move: Move) {
-    expectResult(true)(chessboard.isMoveCorrect(move))
-  }
-
-  def expectIllegal(chessboard: Chessboard, move: Move) {
-    expectResult(false)(chessboard.isMoveCorrect(move))
-  }
+class QueenTest extends FunSuite with ShouldMatchers with PositionGenerator with MoveAssertions {
 
   test("can move vertically") {
     val chessboard = getInitialPosition()

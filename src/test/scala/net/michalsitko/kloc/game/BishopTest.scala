@@ -14,14 +14,7 @@ import scala.Some
 
 //TODO: refaktoryzacja testow
 //TODO: http://doc.scalatest.org/1.9.1/index.html#org.scalatest.fixture.FunSpec, http://jlaskowski.blogspot.com/2013/06/taskassin-na-githubie-dzien-3-5-trait.html
-class BishopTest extends FunSuite with ShouldMatchers with PositionGenerator {
-  private def expectLegal(chessboard: Chessboard, move: Move) {
-    expectResult(true)(chessboard.isMoveCorrect(move))
-  }
-
-  def expectIllegal(chessboard: Chessboard, move: Move) {
-    expectResult(false)(chessboard.isMoveCorrect(move))
-  }
+class BishopTest extends FunSuite with ShouldMatchers with PositionGenerator with MoveAssertions {
 
   test("can move diagonally") {
     val chessboard = getInitialPosition()

@@ -10,14 +10,7 @@ import org.scalatest.matchers.ShouldMatchers
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-class PawnTest extends FunSuite with ShouldMatchers with PositionGenerator{
-  private def expectLegal(chessboard: Chessboard, move: Move) {
-    expectResult(true)(chessboard.isMoveCorrect(move))
-  }
-
-  def expectIllegal(chessboard: Chessboard, move: Move) {
-    expectResult(false)(chessboard.isMoveCorrect(move))
-  }
+class PawnTest extends FunSuite with ShouldMatchers with PositionGenerator with MoveAssertions {
 
   test("can move forward by 2 fields from start position") {
     expectLegal(getInitialPosition(), Move("e2", "e4"))

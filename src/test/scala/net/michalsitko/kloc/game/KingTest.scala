@@ -24,7 +24,7 @@ class KingTest extends FlatSpec with KingBehaviour {
   }
 
   "White King" should behave like king(prepareChessboardWithKing(WhiteKing), WhiteKing)
-  "BlackKing" should behave like king(prepareChessboardWithKing(BlackKing), BlackKing)
+  "Black King" should behave like king(prepareChessboardWithKing(BlackKing), BlackKing)
 }
 
 trait KingBehaviour extends ShouldMatchers with PositionGenerator {

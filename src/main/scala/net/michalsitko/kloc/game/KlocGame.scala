@@ -8,5 +8,7 @@ package net.michalsitko.kloc.game
  * To change this template use File | Settings | File Templates.
  */
 class KlocGame {
+  private val gameState = GameState
 
+  def applyMove(move: Move, gameState: GameState): Boolean = ???
 }
