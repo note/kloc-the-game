@@ -17,14 +17,15 @@ abstract trait King extends Piece {
     (rowDiff > 0 || columnDiff > 0) && rowDiff < 2 && columnDiff < 2
   }
 
-  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
-    isKingMove(chessboard, move.from, move.to) && !wouldBeChecked(chessboard, move)
+  def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
+    // TODO: move wouldBeChecked somewhere else, it is more general
+    isKingMove(chessboard, move.from, move.to) && !wouldBeChecked(chessboard, move, gameState)
   }
 
-  def isChecked(chessboard: Chessboard, field: Field): Boolean = getCheckingPieces(chessboard, field).nonEmpty
+  def isChecked(chessboard: Chessboard, field: Field, gameState: GameState = GameState.default()): Boolean = getCheckingPieces(chessboard, field, gameState).nonEmpty
 
-  def isCheckmated(chessboard: Chessboard, field: Field): Boolean = {
-    val attackers: List[Field] = getCheckingPieces(chessboard, field)
+  def isCheckmated(chessboard: Chessboard, field: Field, gameState: GameState = GameState.default()): Boolean = {
+    val attackers: List[Field] = getCheckingPieces(chessboard, field, gameState)
     if (attackers.isEmpty)
       return false
 
@@ -36,9 +37,9 @@ abstract trait King extends Piece {
     chessboard.getFieldsOfPieces(getColor()).exists((from: Field) => chessboard.isMoveCorrect(Move(from, attacker)))
   }
 
-  def wouldBeChecked(chessboard: Chessboard, move: Move): Boolean = {
+  def wouldBeChecked(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
     chessboard.withAppliedMove(move) {
-      isChecked(_, move.to)
+      isChecked(_, move.to, gameState)
     }
   }
 
@@ -52,11 +53,11 @@ abstract trait King extends Piece {
     false
   }
 
-  private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int)): List[Field] = {
+  private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int), gameState: GameState): List[Field] = {
     for (nextField <- start.nextFields(direction)
          if (chessboard.getPiece(nextField).isDefined);
          if (chessboard.getPiece(nextField).get.getColor() != getColor());
-         if (chessboard.isMoveAttacking(new Move(nextField, start)))
+         if (chessboard.isMoveAttacking(new Move(nextField, start), gameState: GameState))
     ) yield nextField
   }
 
@@ -70,15 +71,15 @@ abstract trait King extends Piece {
     King.getDirections()
   }
 
-  def getCheckingPieces(chessboard: Chessboard, field: Field) = {
+  def getCheckingPieces(chessboard: Chessboard, field: Field, gameState: GameState) = {
     val attackingKnights =
       for ((i, j) <- Knight.getDirections()
            if Field.inRange(field.row + i) && Field.inRange(field.column + j)
            if chessboard.getPiece(Field(field.row + i, field.column + j)).isDefined
            if chessboard.getPiece(Field(field.row + i, field.column + j)).get.getColor() != getColor()
-           if chessboard.isMoveAttacking(Move(Field(field.row + i, field.column + j), field))
+           if chessboard.isMoveAttacking(Move(Field(field.row + i, field.column + j), field), gameState)
       ) yield Field(field.row + i, field.column + j)
-    val otherAttackingPieces = (for (direction <- getDirections()) yield checkingPiecesInDirection(chessboard, field, direction)).flatten
+    val otherAttackingPieces = (for (direction <- getDirections()) yield checkingPiecesInDirection(chessboard, field, direction, gameState)).flatten
     attackingKnights ++ otherAttackingPieces
   }
 }

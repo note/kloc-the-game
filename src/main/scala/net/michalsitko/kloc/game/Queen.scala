@@ -23,7 +23,7 @@ abstract trait Queen extends Piece {
 
   def getDirections(): List[(Int, Int)] = King.getDirections()
 
-  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+  def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
     isQueenMove(chessboard, move.from, move.to)
   }
 }

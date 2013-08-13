@@ -11,7 +11,7 @@ package net.michalsitko.kloc.game
 abstract trait Knight extends Piece {
   def getDirections(): List[(Int, Int)] = Knight.getDirections()
 
-  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+  def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
     move.to.isKnightAccessible(move.from)
   }
 }

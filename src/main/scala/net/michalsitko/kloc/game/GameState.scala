@@ -10,3 +10,7 @@ package net.michalsitko.kloc.game
 case class GameState (shortCastlingLegal: Map[Color, Boolean], longCastlingLegal: Map[Color, Boolean], enpassantLegal: Map[Color, Option[Char]]) {
 
 }
+
+object GameState {
+  def default() = GameState(Map(White() -> true, Black() -> true), Map(White() -> true, Black() -> true), Map(White() -> None, Black() -> None))
+}

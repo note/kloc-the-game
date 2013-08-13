@@ -25,7 +25,7 @@ abstract trait Pawn extends Piece {
     }
   }
 
-  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+  def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
     def isCorrectForward(): Boolean = {
       if (chessboard.getPiece(move.to).isDefined || move.from.column != move.to.column)
         return false

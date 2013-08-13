@@ -30,7 +30,7 @@ class Chessboard {
     result
   }
 
-  def isPinned(move: Move): Boolean = {
+  def isPinned(move: Move, gameState: GameState = GameState.default()): Boolean = {
     val activeColor = getPiece(move.from).get.getColor()
     val fieldOfKing = getFieldOfKing(activeColor)
 
@@ -40,7 +40,7 @@ class Chessboard {
 
     val king = KingFactory.forColor(activeColor)
     withAppliedMove(move){
-      king.isChecked(_, fieldOfKing.get)
+      king.isChecked(_, fieldOfKing.get, gameState)
     }
   }
 
@@ -122,15 +122,15 @@ class Chessboard {
     setPiece(move.from, None)
   }
 
-  def isMoveCorrect(move: Move): Boolean = {
+  def isMoveCorrect(move: Move, gameState: GameState = GameState.default()): Boolean = {
     if (getPiece((move.from)).isDefined)
-      return getPiece(move.from).get.isMoveCorrect(this, move)
+      return getPiece(move.from).get.isMoveCorrect(this, move, gameState)
     return false
   }
 
-  def isMoveAttacking(move: Move): Boolean = {
+  def isMoveAttacking(move: Move, gameState: GameState): Boolean = {
     if (getPiece((move.from)).isDefined)
-      return getPiece(move.from).get.isMoveAttacking(this, move)
+      return getPiece(move.from).get.isMoveAttacking(this, move, gameState)
     return false
   }
 

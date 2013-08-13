@@ -9,12 +9,12 @@ package net.michalsitko.kloc.game
  */
 
 abstract trait Piece extends Piece.Value with Colored{
-  def checkMoveCorrect(chesssboard: Chessboard, move: Move): Boolean
+  def checkMoveCorrect(chesssboard: Chessboard, move: Move, gameState: GameState): Boolean
 
   def getDirections(): List[(Int, Int)]
 
-  def isMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
-    areBasicCriteriaSatisfied(chessboard, move) && checkMoveCorrect(chessboard, move)
+  def isMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
+    areBasicCriteriaSatisfied(chessboard, move, gameState) && checkMoveCorrect(chessboard, move, gameState)
   }
 
   def isAnyMovePossible(chessboard: Chessboard, field: Field): Boolean = {
@@ -26,14 +26,14 @@ abstract trait Piece extends Piece.Value with Colored{
     false
   }
 
-  def isMoveAttacking(chessboard: Chessboard, move: Move): Boolean = {
-    isDestinationFieldAccessible(chessboard, move) && checkMoveCorrect(chessboard, move)
+  def isMoveAttacking(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
+    isDestinationFieldAccessible(chessboard, move) && checkMoveCorrect(chessboard, move, gameState)
   }
 
   def getSymbol(): Char
 
-  protected def areBasicCriteriaSatisfied(chessboard: Chessboard, move: Move): Boolean = {
-    !chessboard.isPinned(move) && isDestinationFieldAccessible(chessboard, move)
+  protected def areBasicCriteriaSatisfied(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
+    !chessboard.isPinned(move, gameState) && isDestinationFieldAccessible(chessboard, move)
   }
 
   private def isDestinationFieldAccessible(chessboard: Chessboard, move: Move): Boolean = {

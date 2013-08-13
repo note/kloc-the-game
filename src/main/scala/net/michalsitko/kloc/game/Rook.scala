@@ -13,7 +13,7 @@ abstract trait Rook extends Piece {
     (from.sameRow(to) && !chessboard.somethingBetweenHorizontally(from, to)) || (from.sameColumn(to) && !chessboard.somethingBetweenVertically(from, to))
   }
 
-  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+  def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
     isRookMove(chessboard, move.from, move.to)
   }
 

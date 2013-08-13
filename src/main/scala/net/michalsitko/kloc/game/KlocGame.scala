@@ -9,6 +9,10 @@ package net.michalsitko.kloc.game
  */
 class KlocGame {
   private val gameState = GameState
+  private val chessboard = new Chessboard
 
-  def applyMove(move: Move, gameState: GameState): Boolean = ???
+  def applyMove(move: Move, gameState: GameState): Unit = {
+    if(chessboard.isMoveCorrect(move, gameState))
+      chessboard.applyMove(move)
+  }
 }

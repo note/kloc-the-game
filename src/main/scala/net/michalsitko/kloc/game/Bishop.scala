@@ -13,7 +13,7 @@ abstract trait Bishop extends Piece {
     from.sameDiagonal(to) && !chessboard.somethingBetweenDiagonally(from, to)
   }
 
-  def checkMoveCorrect(chessboard: Chessboard, move: Move): Boolean = {
+  def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
     isBishopMove(chessboard, move.from, move.to)
   }
 

@@ -27,7 +27,7 @@ class KingTest extends FlatSpec with KingBehaviour {
   "Black King" should behave like king(prepareChessboardWithKing(BlackKing), BlackKing)
 }
 
-trait KingBehaviour extends ShouldMatchers with PositionGenerator {
+trait KingBehaviour extends ShouldMatchers with PositionGenerator with MoveAssertions {
       this: FlatSpec =>
 
   def fixture(king: King):Chessboard = {
@@ -130,6 +130,8 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator {
       chessboard.setPiece("f1", Some(friendlyRook))
 
       expectResult(true)(kingBeingTested.isChecked(chessboard, "e4"))
+
+      expectIllegal(chessboard, Move("e1", "e2"))
     }
 
     it can "not be checked by own knight" in {
