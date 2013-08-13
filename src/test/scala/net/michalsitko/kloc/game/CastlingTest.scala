@@ -85,4 +85,18 @@ class CastlingTest extends FunSuite with ShouldMatchers with MoveAssertions with
     chessboard.setPiece("e4", Some(BlackBishop))
     expectLegal(chessboard, Move("e1", "c1"))
   }
+
+  test("After performed short castling rook is in correct place") {
+    val chessboard = fixture()
+    chessboard.applyMove(Move("e1", "g1"))
+    expectResult(Some(WhiteKing))(chessboard.getPiece("g1"))
+    expectResult(Some(WhiteRook))(chessboard.getPiece("f1"))
+  }
+
+  test("After performed long castling rook is in correct place") {
+    val chessboard = fixture()
+    chessboard.applyMove(Move("e1", "c1"))
+    expectResult(Some(WhiteKing))(chessboard.getPiece("c1"))
+    expectResult(Some(WhiteRook))(chessboard.getPiece("d1"))
+  }
 }
