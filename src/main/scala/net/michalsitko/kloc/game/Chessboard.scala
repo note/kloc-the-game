@@ -95,10 +95,17 @@ class Chessboard {
     fields(field.row)(field.column) = piece
   }
 
-  def applyMove(move: Move) {
-     // this method assumes that move is legal
+  /*
+  This method assumes that move is legal
+   */
+  def applyMove(move: Move, gameState: GameState = GameState.default()) {
     setPiece(move.to, getPiece(move.from))
     setPiece(move.from, None)
+
+    // handle castling
+    val castlingOption = Castling.getAppropriateCastling(move.from, move.to, gameState)
+    castlingOption.map((castling: Castling) => setPiece(castling.rookDestination, getPiece(castling.rookSource)))
+    castlingOption.map((castling: Castling) => setPiece(castling.rookSource, None))
   }
 
   def isMoveCorrect(move: Move, gameState: GameState = GameState.default()): Boolean = {

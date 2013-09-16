@@ -29,7 +29,7 @@ class CastlingTest extends FunSuite with ShouldMatchers with MoveAssertions with
     val chessboard = fixture
     expectLegal(chessboard, Move("e1", "c1"))
     expectIllegal(chessboard, Move("e1", "b1"))
-    expectIllegal(chessboard, Move("e1", "d1"))
+    expectIllegal(chessboard, Move("e1", "c2"))
   }
 
   test("It is impossible to perform short castling if it is not the first move of the king") (pending)

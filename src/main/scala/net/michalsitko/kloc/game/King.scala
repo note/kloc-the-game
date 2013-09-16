@@ -18,22 +18,20 @@ abstract trait King extends Piece {
     isRegularMove || isCastlingMove(chessboard, from, to, gameState)
   }
 
-  def isShortCastling(chessboard: Chessboard, field: Field, field1: Field): Boolean
-
-  def isLongCastling(chessboard: Chessboard, field: Field, field1: Field): Boolean
-
-  def isCorrectShortCastling(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    isShortCastling(chessboard, from, to)
-  }
-
-  def isCorrectLongCastling(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    isLongCastling(chessboard, from, to)
+  def isCorrectCastling(chessboard: Chessboard, from: Field, to: Field, castling: Castling, gameState: GameState): Boolean = {
+    !chessboard.somethingBetween(from, castling.rookSource) && !chessboard.getFieldsBetween(from, to).exists((f: Field) => wouldBeChecked(chessboard, new Move(from, f), gameState))
   }
 
   def isCastlingMove(chessboard: Chessboard, from: Field, to: Field, gameState: GameState): Boolean = {
     // TODO: checking whose turn is now this way is a at least ugly
-    (gameState.shortCastlingLegal(chessboard.getPiece(from).get.getColor()) && isCorrectShortCastling(chessboard, from, to)) ||
-    (gameState.longCastlingLegal(chessboard.getPiece(from).get.getColor()) && isCorrectLongCastling(chessboard, from, to))
+    if(isChecked(chessboard, from, gameState))
+      return false
+
+    val castling = Castling.getAppropriateCastling(from, to, gameState)
+    if(castling.isDefined)
+      isCorrectCastling(chessboard, from, to, castling.get, gameState)
+    else
+      false
   }
 
   def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
@@ -121,28 +119,12 @@ object KingFactory extends PieceFactory {
 }
 
 case object WhiteKing extends King {
-  def isLongCastling(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    from == Field.fromString("e1") && to == Field.fromString("c1")
-  }
-
-  def isShortCastling(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    from == Field.fromString("e1") && to == Field.fromString("g1")
-  }
-
   def getSymbol(): Char = 'K'
 
   def getColor(): Color = new White
 }
 
 case object BlackKing extends King {
-  def isLongCastling(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    from == Field.fromString("e8") && to == Field.fromString("c8")
-  }
-
-  def isShortCastling(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    from == Field.fromString("e8") && to == Field.fromString("g8")
-  }
-
   def getSymbol(): Char = WhiteKing.getSymbol().toLower
 
   def getColor(): Color = new Black

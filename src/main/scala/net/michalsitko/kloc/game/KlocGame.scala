@@ -13,6 +13,6 @@ class KlocGame {
 
   def applyMove(move: Move, gameState: GameState): Unit = {
     if(chessboard.isMoveCorrect(move, gameState))
-      chessboard.applyMove(move)
+      chessboard.applyMove(move, gameState)
   }
 }
