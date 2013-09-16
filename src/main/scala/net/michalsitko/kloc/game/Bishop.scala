@@ -10,7 +10,7 @@ package net.michalsitko.kloc.game
 
 abstract trait Bishop extends Piece {
   def isBishopMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    from.sameDiagonal(to) && !chessboard.somethingBetweenDiagonally(from, to)
+    from.sameDiagonal(to) && !chessboard.somethingBetween(from, to)
   }
 
   def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {

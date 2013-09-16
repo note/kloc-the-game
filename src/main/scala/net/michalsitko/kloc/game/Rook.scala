@@ -10,7 +10,7 @@ package net.michalsitko.kloc.game
 
 abstract trait Rook extends Piece {
   def isRookMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    (from.sameRow(to) && !chessboard.somethingBetweenHorizontally(from, to)) || (from.sameColumn(to) && !chessboard.somethingBetweenVertically(from, to))
+    (from.sameRow(to) || from.sameColumn(to)) && !chessboard.somethingBetween(from, to)
   }
 
   def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {

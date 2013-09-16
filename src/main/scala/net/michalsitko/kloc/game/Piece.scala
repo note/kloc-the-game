@@ -9,6 +9,16 @@ package net.michalsitko.kloc.game
  */
 
 abstract trait Piece extends Piece.Value with Colored{
+  /**
+   * Check if move is correct.
+   *
+   * Does NOT check if piece is pinned.
+   *
+   * @param chesssboard
+   * @param move
+   * @param gameState
+   * @return
+   */
   def checkMoveCorrect(chesssboard: Chessboard, move: Move, gameState: GameState): Boolean
 
   def getDirections(): List[(Int, Int)]
@@ -27,6 +37,7 @@ abstract trait Piece extends Piece.Value with Colored{
   }
 
   def isMoveAttacking(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
+    // checkMoveCorrect does not check if piece is pinned so it will work when checking if piece is checking a king
     isDestinationFieldAccessible(chessboard, move) && checkMoveCorrect(chessboard, move, gameState)
   }
 

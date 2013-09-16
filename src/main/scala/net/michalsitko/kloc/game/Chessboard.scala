@@ -48,18 +48,6 @@ class Chessboard {
     !getFieldsOfPieces(color).exists((field: Field) => getPiece(field).get.isAnyMovePossible(this, field))
   }
 
-  def somethingBetweenHorizontally(field: Field, anotherField: Field): Boolean = {
-    field.nextFieldsTo(getDirectionForHorizontal(field, anotherField), anotherField).exists(getPiece(_).map(_ => true).getOrElse(false))
-  }
-
-  def somethingBetweenVertically(field: Field, anotherField: Field): Boolean = {
-    field.nextFieldsTo(getDirectionForVertical(field, anotherField), anotherField).exists(getPiece(_).map(_ => true).getOrElse(false))
-  }
-
-  def somethingBetweenDiagonally(field: Field, anotherField: Field): Boolean = {
-    field.nextFieldsTo(getDirectionForDiagonal(field, anotherField), anotherField).exists(getPiece(_).map(_ => true).getOrElse(false))
-  }
-
   def getFieldsBetween(field: Field, anotherField: Field): List[Field] = {
     if (field.row == anotherField.row)
       return field.nextFieldsTo(getDirectionForHorizontal(field, anotherField), anotherField)
@@ -100,16 +88,7 @@ class Chessboard {
   }
 
   def somethingBetween(field: Field, anotherField: Field): Boolean = {
-    if (field.row == anotherField.row)
-      return somethingBetweenHorizontally(field, anotherField)
-
-    if (field.column == anotherField.column)
-      return somethingBetweenVertically(field, anotherField)
-
-    if (field.sameDiagonal(anotherField))
-      return somethingBetweenDiagonally(field, anotherField)
-
-    return true
+      getFieldsBetween(field, anotherField).exists(getPiece(_).isDefined)
   }
 
   def setPiece(field: Field, piece: Option[Piece]) {

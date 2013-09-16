@@ -13,8 +13,6 @@ case class Field (row: Int, column: Int){
   require(Field.inRange(row))
   require(Field.inRange(row))
 
-
-
   def nextFields(direction: (Int, Int)): List[Field] = {
     var currentRow = row + direction._1
     var currentColumn = column + direction._2

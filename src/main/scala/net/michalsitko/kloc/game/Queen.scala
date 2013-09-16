@@ -9,16 +9,7 @@ package net.michalsitko.kloc.game
  */
 abstract trait Queen extends Piece {
   def isQueenMove(chessboard: Chessboard, from: Field, to: Field): Boolean = {
-    if (from.sameRow(to))
-      return !chessboard.somethingBetweenHorizontally(from, to)
-
-    if (from.sameColumn(to))
-      return !chessboard.somethingBetweenVertically(from, to)
-
-    if (from.sameDiagonal(to))
-      return !chessboard.somethingBetweenDiagonally(from, to)
-
-    false
+    (from.sameRow(to) || from.sameColumn(to) || from.sameDiagonal(to)) && !chessboard.somethingBetween(from ,to)
   }
 
   def getDirections(): List[(Int, Int)] = King.getDirections()
@@ -36,8 +27,6 @@ object QueenFactory extends PieceFactory {
     }
   }
 }
-
-
 
 case object WhiteQueen extends Queen {
   def getSymbol(): Char = 'Q'
