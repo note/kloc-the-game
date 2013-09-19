@@ -98,7 +98,7 @@ class Chessboard {
   /*
   This method assumes that move is legal
    */
-  def applyMove(move: Move, gameState: GameState = GameState.default()) {
+  def applyMove(move: Move, gameState: GameState = GameState.default()): GameState = {
     setPiece(move.to, getPiece(move.from))
     setPiece(move.from, None)
 
@@ -106,6 +106,7 @@ class Chessboard {
     val castlingOption = Castling.getAppropriateCastling(move.from, move.to, gameState)
     castlingOption.map((castling: Castling) => setPiece(castling.rookDestination, getPiece(castling.rookSource)))
     castlingOption.map((castling: Castling) => setPiece(castling.rookSource, None))
+    gameState
   }
 
   def isMoveCorrect(move: Move, gameState: GameState = GameState.default()): Boolean = {
@@ -150,6 +151,10 @@ object Chessboard{
     } catch {
       case ex: NullPointerException => throw new FileNotFoundException()
     }
+  }
+
+  def initialPosition(): Chessboard = {
+    loadFromFile("/initial.position")
   }
 
   private def createSymbolToPieceMap(): Map[Char, Piece] = {

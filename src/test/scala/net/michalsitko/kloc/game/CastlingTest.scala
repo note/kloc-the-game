@@ -32,9 +32,27 @@ class CastlingTest extends FunSuite with ShouldMatchers with MoveAssertions with
     expectIllegal(chessboard, Move("e1", "c2"))
   }
 
-  test("It is impossible to perform short castling if it is not the first move of the king") (pending)
+  test("It is impossible to perform short castling if it is not the first move of the king") {
+    val chessboard = Chessboard.initialPosition()
+    val gameState = chessboard.applyMove(Move("e2", "e4"))
+    gameState.longCastlingLegal(White()) should be (true)
+    gameState.shortCastlingLegal(White()) should be (true)
 
-  test("It is impossible to perform short castling if it is not the first move of the rook") (pending)
+    val gameState2 = chessboard.applyMove(Move("e1", "e2"))
+    gameState.longCastlingLegal(White()) should be (false)
+    gameState.shortCastlingLegal(White()) should be (false)
+  }
+
+  test("It is impossible to perform short castling if it is not the first move of the rook") {
+    val chessboard = Chessboard.initialPosition()
+    val gameState = chessboard.applyMove(Move("a2", "a4"))
+    gameState.longCastlingLegal(White()) should be (true)
+    gameState.shortCastlingLegal(White()) should be (true)
+
+    val gameState2 = chessboard.applyMove(Move("a1", "a2"))
+    gameState.longCastlingLegal(White()) should be (false)
+    gameState.shortCastlingLegal(White()) should be (true)
+  }
 
   test("It is impossible to perform short castling when there is some piece between") {
     val chessboard = fixture()

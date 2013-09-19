@@ -5,6 +5,7 @@ import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.PrivateMethodTester.PrivateMethod
 import org.scalatest.PrivateMethodTester
+import net.michalsitko.kloc.game
 
 /**
  * Created with IntelliJ IDEA.
@@ -141,5 +142,14 @@ class ChessboardTest extends FunSuite with ShouldMatchers with PrivateMethodTest
 
     expectResult(true)(chessboard.isStalemate(White()))
     expectResult(false)(chessboard.isStalemate(Black()))
+  }
+
+  test("initialPosition() should return correct chessboard{"){
+    val chessboard = Chessboard.initialPosition()
+    chessboard.getPiece("a1") should be (Some(WhiteRook))
+    chessboard.getPiece("a2") should be (Some(WhitePawn))
+    chessboard.getPiece("c1") should be (Some(WhiteBishop))
+    chessboard.getPiece("b8") should be (Some(BlackKnight))
+    chessboard.getPiece("d8") should be (Some(BlackQueen))
   }
 }

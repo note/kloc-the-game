@@ -10,11 +10,19 @@ import org.scalatest.Assertions
  * To change this template use File | Settings | File Templates.
  */
 trait MoveAssertions extends Assertions{
+  def expectLegal(chessboard: Chessboard, move: Move, gameState: GameState) {
+    expectResult(true)(chessboard.isMoveCorrect(move, gameState))
+  }
+
   def expectLegal(chessboard: Chessboard, move: Move) {
-    expectResult(true)(chessboard.isMoveCorrect(move))
+    expectLegal(chessboard, move, GameState.default())
+  }
+
+  def expectIllegal(chessboard: Chessboard, move: Move, gameState: GameState) {
+    expectResult(false)(chessboard.isMoveCorrect(move, gameState))
   }
 
   def expectIllegal(chessboard: Chessboard, move: Move) {
-    expectResult(false)(chessboard.isMoveCorrect(move))
+    expectIllegal(chessboard, move, GameState.default())
   }
 }
