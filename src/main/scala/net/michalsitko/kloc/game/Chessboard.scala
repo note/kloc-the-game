@@ -95,10 +95,43 @@ class Chessboard {
     fields(field.row)(field.column) = piece
   }
 
+  def enpassantForGameState(move: Move){
+
+  }
+
   /*
-  This method assumes that move is legal
-   */
+     This method assumes that move is legal
+    */
+  private def nextGameState(move: Move, gameState: GameState): GameState = {
+    val activePiece = getPiece(move.from)
+
+    require(activePiece.isDefined, "applyMove assumes that move is legal")
+    val activeColor = activePiece.get.getColor()
+
+    val enpassant = activePiece match {
+      // we can use such simple condition because we assume than move is correct
+      case Some(piece: Pawn) if (move.to.row - move.from.row).abs == 2 => Some(Field.columnLetterFromInt(move.from.column))
+      case _ => None
+    }
+
+    val gameStateForOpposite = gameState.forColor(activeColor.opposite()).copy(enpassantColumn = enpassant)
+    val gameStateTmp = gameState.next(activeColor.opposite(), gameStateForOpposite)
+
+    activePiece match {
+      case Some(piece: King) => gameStateTmp.next(activeColor, gameState.forColor(activeColor).copy(shortCastlingEnabled = false, longCastlingEnabled = false))
+      case Some(piece: WhiteRook.type) if move.from.column == 0 && move.from.row == 0 => gameStateTmp.next(activeColor, gameState.forColor(activeColor).copy(longCastlingEnabled = false))
+      case Some(piece: WhiteRook.type) if move.from.column == 7 && move.from.row == 0 => gameStateTmp.next(activeColor, gameState.forColor(activeColor).copy(shortCastlingEnabled = false))
+      case Some(piece: BlackRook.type) if move.from.column == 0 && move.from.row == 7 => gameStateTmp.next(activeColor, gameState.forColor(activeColor).copy(longCastlingEnabled = false))
+      case Some(piece: BlackRook.type) if move.from.column == 7 && move.from.row == 7 => gameStateTmp.next(activeColor, gameState.forColor(activeColor).copy(shortCastlingEnabled = false))
+      case _ => gameStateTmp.copy()
+    }
+  }
+
+  /*
+    This method assumes that move is legal
+     */
   def applyMove(move: Move, gameState: GameState = GameState.default()): GameState = {
+    val newGameState = nextGameState(move, gameState)
     setPiece(move.to, getPiece(move.from))
     setPiece(move.from, None)
 
@@ -106,7 +139,8 @@ class Chessboard {
     val castlingOption = Castling.getAppropriateCastling(move.from, move.to, gameState)
     castlingOption.map((castling: Castling) => setPiece(castling.rookDestination, getPiece(castling.rookSource)))
     castlingOption.map((castling: Castling) => setPiece(castling.rookSource, None))
-    gameState
+
+    newGameState
   }
 
   def isMoveCorrect(move: Move, gameState: GameState = GameState.default()): Boolean = {

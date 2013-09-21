@@ -8,16 +8,23 @@ package net.michalsitko.kloc.game
  * To change this template use File | Settings | File Templates.
  */
 
-case class Castling(kingSource: Field, kingDestination: Field, rookSource: Field, rookDestination: Field) {
-
+trait Castling {
+  def kingSource: Field
+  def kingDestination: Field
+  def rookSource: Field
+  def rookDestination: Field
 }
+
+case class LongCastling(kingSource: Field, kingDestination: Field, rookSource: Field, rookDestination: Field) extends Castling {}
+
+case class ShortCastling(kingSource: Field, kingDestination: Field, rookSource: Field, rookDestination: Field) extends Castling {}
 
 object Castling {
   val castlingTypes = List(
-    Castling("e1", "g1", "h1", "f1"),
-    Castling("e1", "c1", "a1", "d1"),
-    Castling("e8", "g8", "h8", "f8"),
-    Castling("e8", "c8", "a8", "d8"))
+    ShortCastling("e1", "g1", "h1", "f1"),
+    LongCastling("e1", "c1", "a1", "d1"),
+    ShortCastling("e8", "g8", "h8", "f8"),
+    LongCastling("e8", "c8", "a8", "d8"))
 
   def getAppropriateCastling(from: Field, to: Field, gameState: GameState): Option[Castling] = {
     for (castlingType <- castlingTypes)

@@ -35,23 +35,46 @@ class CastlingTest extends FunSuite with ShouldMatchers with MoveAssertions with
   test("It is impossible to perform short castling if it is not the first move of the king") {
     val chessboard = Chessboard.initialPosition()
     val gameState = chessboard.applyMove(Move("e2", "e4"))
-    gameState.longCastlingLegal(White()) should be (true)
-    gameState.shortCastlingLegal(White()) should be (true)
+    gameState.forColor(White()).shortCastlingEnabled should be (true)
+    gameState.forColor(White()).longCastlingEnabled should be (true)
 
     val gameState2 = chessboard.applyMove(Move("e1", "e2"))
-    gameState.longCastlingLegal(White()) should be (false)
-    gameState.shortCastlingLegal(White()) should be (false)
+    gameState2.forColor(White()).shortCastlingEnabled should be (false)
+    gameState2.forColor(White()).longCastlingEnabled should be (false)
   }
 
   test("It is impossible to perform short castling if it is not the first move of the rook") {
     val chessboard = Chessboard.initialPosition()
     val gameState = chessboard.applyMove(Move("a2", "a4"))
-    gameState.longCastlingLegal(White()) should be (true)
-    gameState.shortCastlingLegal(White()) should be (true)
+    gameState.forColor(White()).shortCastlingEnabled should be (true)
+    gameState.forColor(White()).longCastlingEnabled should be (true)
 
     val gameState2 = chessboard.applyMove(Move("a1", "a2"))
-    gameState.longCastlingLegal(White()) should be (false)
-    gameState.shortCastlingLegal(White()) should be (true)
+    gameState2.forColor(White()).shortCastlingEnabled should be (true)
+    gameState2.forColor(White()).longCastlingEnabled should be (false)
+    gameState2.forColor(Black()).shortCastlingEnabled should be (true)
+    gameState2.forColor(Black()).longCastlingEnabled should be (true)
+  }
+
+  test("It is impossible to perform long castling if it is not the first move of the rook") {
+    val chessboard = Chessboard.initialPosition()
+    val gameState = chessboard.applyMove(Move("h2", "h4"))
+    gameState.forColor(White()).shortCastlingEnabled should be (true)
+    gameState.forColor(White()).longCastlingEnabled should be (true)
+
+    val gameState2 = chessboard.applyMove(Move("h1", "h2"))
+    gameState2.forColor(White()).shortCastlingEnabled should be (false)
+    gameState2.forColor(White()).longCastlingEnabled should be (true)
+  }
+
+  test("It is impossible to perform short castling if it is not enabled") {
+    val chessboard = fixture()
+    expectIllegal(chessboard, Move("e1", "g1"), GameState(GameStateForColor(false, true, None), GameStateForColor(true, true, None)))
+  }
+
+  test("It is impossible to perform long castling if it is not enabled") {
+    val chessboard = fixture()
+    expectIllegal(chessboard, Move("e1", "c1"), GameState(GameStateForColor(true, false, None), GameStateForColor(true, true, None)))
   }
 
   test("It is impossible to perform short castling when there is some piece between") {

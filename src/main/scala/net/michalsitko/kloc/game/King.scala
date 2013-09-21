@@ -23,15 +23,20 @@ abstract trait King extends Piece {
   }
 
   def isCastlingMove(chessboard: Chessboard, from: Field, to: Field, gameState: GameState): Boolean = {
-    // TODO: checking whose turn is now this way is a at least ugly
-    if(isChecked(chessboard, from, gameState))
-      return false
-
     val castling = Castling.getAppropriateCastling(from, to, gameState)
-    if(castling.isDefined)
-      isCorrectCastling(chessboard, from, to, castling.get, gameState)
+
+    val enabled = castling match {
+      case Some(c: ShortCastling) => gameState.forColor(chessboard.getPiece(from).get.getColor()).shortCastlingEnabled
+      case Some(c: LongCastling) => gameState.forColor(chessboard.getPiece(from).get.getColor()).longCastlingEnabled
+      case _ => false
+    }
+
+    if(enabled)
+      !isChecked(chessboard, from, gameState) && isCorrectCastling(chessboard, from, to, castling.get, gameState)
     else
       false
+
+    // TODO: checking whose turn is now this way is a at least ugly
   }
 
   def checkMoveCorrect(chessboard: Chessboard, move: Move, gameState: GameState): Boolean = {
@@ -71,10 +76,12 @@ abstract trait King extends Piece {
   }
 
   private def checkingPiecesInDirection(chessboard: Chessboard, start: Field, direction: (Int, Int), gameState: GameState): List[Field] = {
+    val noCastlingsGameState = gameState.noCastlings()
+
     for (nextField <- start.nextFields(direction)
          if (chessboard.getPiece(nextField).isDefined);
          if (chessboard.getPiece(nextField).get.getColor() != getColor());
-         if (chessboard.isMoveAttacking(new Move(nextField, start), gameState: GameState))
+         if (chessboard.isMoveAttacking(new Move(nextField, start), noCastlingsGameState))
     ) yield nextField
   }
 

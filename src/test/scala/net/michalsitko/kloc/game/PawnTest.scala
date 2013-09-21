@@ -58,12 +58,39 @@ class PawnTest extends FunSuite with ShouldMatchers with PositionGenerator with 
   }
 
   test("enpassant right after enemy pawn move"){
-    val chessboard = getTypicalPosition()
+    val chessboard = Chessboard.initialPosition()
+    val gameState = chessboard.applyMove(Move("e2", "e5"))
+    expectIllegal(chessboard, Move("e5", "d6"), gameState)
+
+    chessboard.applyMove(Move("c2", "c5"))
+    chessboard.applyMove(Move("b2", "b5"))
+
+    val gameState2 = chessboard.applyMove(Move("d7", "d5"))
+    gameState2.forColor(White()).enpassantColumn.isDefined should be (true)
+    gameState2.forColor(White()).enpassantColumn.get.toLower should be ('d')
+    expectLegal(chessboard, Move("e5", "d6"), gameState2)
+    expectLegal(chessboard, Move("c5", "d6"), gameState2)
+    expectIllegal(chessboard, Move("b5", "d6"), gameState2)
   }
 
   test("cannot enpassant later") {
-    val chessboard = getTypicalPosition()
+    val chessboard = Chessboard.initialPosition()
+    chessboard.applyMove(Move("e2", "e4"))
+    val gameState = chessboard.applyMove(Move("e4", "e5"))
+    expectIllegal(chessboard, Move("e5", "d6"), gameState)
+    chessboard.applyMove(Move("d7", "d5"))
+    val gameState2 = chessboard.applyMove(Move("d2", "d3"))
+    expectIllegal(chessboard, Move("e5", "d6"), gameState2)
+  }
 
+  test("enpassant only after enemy two field-forward move"){
+    val chessboard = Chessboard.initialPosition()
+    chessboard.applyMove(Move("e2", "e4"))
+    chessboard.applyMove(Move("d7", "d6"))
+    chessboard.applyMove(Move("e4", "e5"))
+    val gameState = chessboard.applyMove(Move("d6", "d5"))
+    gameState.forColor(White()).enpassantColumn.isDefined should be (false)
+    expectIllegal(chessboard, Move("e5", "d6"), gameState)
   }
 
   test("be promoted to any piece") {

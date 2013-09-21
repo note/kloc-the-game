@@ -199,5 +199,15 @@ trait KingBehaviour extends ShouldMatchers with PositionGenerator with MoveAsser
 
       expectResult(false)(kingBeingTested.isAnyMovePossible(chessboard, "h8"))
     }
+
+    it can "not be to close to opposite King" in {
+      val chessboard = new Chessboard
+      chessboard.setPiece("e1", Some(kingBeingTested))
+      chessboard.setPiece("c1", Some(oppositeKing))
+
+      expectIllegal(chessboard, Move("e1", "d1"))
+      expectIllegal(chessboard, Move("e1", "d2"))
+      expectLegal(chessboard, Move("e1", "e2"))
+    }
   }
 }
