@@ -8,11 +8,14 @@ package net.michalsitko.kloc.game
  * To change this template use File | Settings | File Templates.
  */
 class KlocGame {
-  private val gameState = GameState
-  private val chessboard = new Chessboard
+  private var gameState = GameState.default()
+  private val chessboard = Chessboard.initialPosition()
 
-  def applyMove(move: Move, gameState: GameState): Unit = {
-    if(chessboard.isMoveCorrect(move, gameState))
-      chessboard.applyMove(move, gameState)
+  def applyMove(move: Move): (Chessboard, GameState) = {
+    if(chessboard.isMoveCorrect(move, gameState)){
+      gameState = chessboard.applyMove(move, gameState)
+      return (chessboard, gameState)
+    }
+    throw new IncorrectMoveException()
   }
 }

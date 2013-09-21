@@ -11,4 +11,12 @@ import org.scalatest.matchers.ShouldMatchers
  * To change this template use File | Settings | File Templates.
  */
 class KlocGameTest extends FunSuite with ShouldMatchers{
+  test("Two moves in row of one color is disallowed"){
+    val game = new KlocGame
+
+    intercept[IncorrectMoveException]{
+      game.applyMove(Move("e2", "e4"))
+      game.applyMove(Move("e4", "e5"))
+    }
+  }
 }
