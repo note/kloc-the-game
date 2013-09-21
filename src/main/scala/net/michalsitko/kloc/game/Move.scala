@@ -13,6 +13,18 @@ package net.michalsitko.kloc.game
 class Move(source: Field, destination: Field){
   val from = source
   val to = destination
+
+  def invertRow(row: Int): Int = {
+    7 - row
+  }
+
+  def invert(): Move = {
+    val invertedFrom = Field(invertRow(from.row), from.column)
+    val invertedTo = Field(invertRow(to.row), to.column)
+    Move(invertedFrom, invertedTo)
+  }
+
+  override def toString: String = from + "-" + to
 }
 
 class PromotionMove(from: Field, to: Field, pieceToPromote: Piece) extends Move(from: Field, to: Field){

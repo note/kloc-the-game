@@ -105,7 +105,7 @@ class Chessboard {
   private def nextGameState(move: Move, gameState: GameState): GameState = {
     val activePiece = getPiece(move.from)
 
-    require(activePiece.isDefined, "applyMove assumes that move is legal")
+    require(activePiece.isDefined, "applyMove assumes that move is legal" + move.toString)
     val activeColor = activePiece.get.getColor()
 
     val enpassant = activePiece match {
