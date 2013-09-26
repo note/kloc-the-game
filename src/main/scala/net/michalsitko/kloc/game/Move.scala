@@ -31,6 +31,8 @@ class PromotionMove(from: Field, to: Field, pieceToPromote: Piece) extends Move(
   val promoteTo = pieceToPromote
 }
 
+
+
 object Move{
   def apply(fromStr: String, toStr: String) = {
     new Move(Field.fromString(fromStr), Field.fromString(toStr))

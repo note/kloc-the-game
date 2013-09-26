@@ -166,6 +166,25 @@ class Chessboard {
   def getFieldsOfPieces(color: Color) = {
     allFields.filter(getPiece(_).map(_.getColor() == color).getOrElse(false)).map(Field.fromString(_))
   }
+
+  def getKing(color: Color): King = {
+    //TODO: ugly
+    val field = getFieldOfKing(color).get
+    getPiece(field) match {
+      case Some(king: King) => king
+      case _ => throw new ClassCastException
+    }
+  }
+
+  def getResult(lastMoveColor: Color, gameState: GameState): Option[Result] = {
+    if(getKing(lastMoveColor.opposite()).isCheckmated(this, getFieldOfKing(lastMoveColor.opposite()).get, gameState))
+      return Some(new Winner(lastMoveColor))
+
+    if(isStalemate(lastMoveColor.opposite()))
+      return Some(Draw)
+
+    return None
+  }
 }
 
 object Chessboard{
