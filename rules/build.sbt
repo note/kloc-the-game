@@ -6,4 +6,4 @@ scalaVersion := "2.11.1"
 
 organization := "net.michalsitko"
 
-libraryDependencies += "org.scalatest" % "scalatest" % "1.9.1" % Test
+libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % Test
