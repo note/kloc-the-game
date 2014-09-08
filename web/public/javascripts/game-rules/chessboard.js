@@ -154,11 +154,19 @@ define(['underscore'], function(_){
     };
 
     var Rook = function(color) {
-        Piece.call(this, color)
+        Piece.call(this, color);
     };
 
     Rook.prototype.isLegalMove = function(chessboard, move) {
         return (move.from.sameRow(move.to) || move.from.sameColumn(move.to)) && !chessboard.somethingBetween(move.from, move.to);
+    }
+
+    var Bishop = function(color) {
+        Piece.call(this, color);
+    }
+
+    Bishop.prototype.isLegalMove = function(chessboard, move) {
+        return sameDiagonal(move.from, move.to) && !chessboard.somethingBetween(move.from, move.to);
     }
 
     var Color = Object.freeze({
@@ -171,6 +179,7 @@ define(['underscore'], function(_){
         Chessboard: Chessboard,
         Move: Move,
         Rook: Rook,
+        Bishop: Bishop,
         Color: Color
     };
 });
