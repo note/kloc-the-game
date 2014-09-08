@@ -1,45 +1,46 @@
-/**
- * Created by michal on 08/09/14.
- */
+'use strict'
 
-define(function(){
+define(['underscore'], function(_){
 
     var asciiValueOfA = 'a'.charCodeAt(0);
     var asciiValueOf1 = '1'.charCodeAt(0);
     var Field = function() {
+        var self = this;
+
         var fromPairOfInts = function(column, row) {
-            console.log("bazinga!:" + column + ", " + row);
 
             var valid = function(index) {
                 return index >= 0 && index < 8;
             }
 
             if(valid(column) && valid(row)){
-                console.log("bazinga!?:" + column + ", " + row);
-                this.column = column;
-                this.row = row;
-                return this;
+                self.column = column;
+                self.row = row;
+            }else{
+                throw new Error("Field initialization attempt with illegal values (column: " + column + ", row: " + row + ")");
             }
-
-            throw new Error("Field initialization attempt with illegal values (column: " + column + ", row: " + row + ")");
         }
 
         var fromString = function(columnAndRow) {
             if(typeof columnAndRow === 'string' && columnAndRow.length == 2){
                 var column = columnAndRow.toLowerCase().charCodeAt(0) - asciiValueOfA;
                 var row = columnAndRow.charCodeAt(1) - asciiValueOf1;
-                return fromPairOfInts(column, row);
+                fromPairOfInts(column, row);
+            }else{
+                throw new Error("Field initialization attempt with illegal value (columnAndRow:" + columnAndRow + ")");
             }
-
-            throw new Error("Field initialization attempt with illegal value (columnAndRow:" + columnAndRow + ")");
         }
 
         if(arguments.length == 1){
-            return fromString(arguments[0]);
+            fromString(arguments[0]);
         }else{
-            return fromPairOfInts(arguments[0], arguments[1])
+            fromPairOfInts(arguments[0], arguments[1])
         }
     };
+
+    Field.prototype.toString = function() {
+        return String.fromCharCode(asciiValueOfA + this.column) + (this.row + 1).toString; // row + 1 because we want to dispay row 0 as 1 and so on
+    }
 
     var Chessboard = function() {
 
@@ -54,6 +55,10 @@ define(function(){
     };
 
     var Move = function(from, to) {
+        if(_.isEqual(from, to)){
+            throw new Error("Move constructor's arguments must differ" + from + ", " + to);
+        }
+
         this.from = from;
         this.to = to;
     }
@@ -82,4 +87,4 @@ define(function(){
         Rook: Rook,
         Color: Color
     };
-})
+});

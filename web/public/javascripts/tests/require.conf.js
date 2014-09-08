@@ -12,6 +12,7 @@ require.config({
         // Libraries
         // FIXME: we don't want to depend on jQuery necessarily, but for
         // now the sbt plugin requires it
-        jquery:     'libs/jquery-1.11.1'
+        jquery:     'libs/jquery-1.11.1',
+        underscore: 'libs/underscore-1.7.0'
     }
 });
