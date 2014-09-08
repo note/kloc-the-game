@@ -38,21 +38,42 @@ define(['underscore'], function(_){
         }
     };
 
+    Field.prototype.toIndex = function() {
+        return 8 * this.row + this.column;
+    }
+
+    Field.prototype.sameRow = function(anotherField) {
+        return this.row === anotherField.row;
+    }
+
+    Field.prototype.sameColumn = function(anotherField) {
+        return this.column === anotherField.column;
+    }
+
     Field.prototype.toString = function() {
-        return String.fromCharCode(asciiValueOfA + this.column) + (this.row + 1).toString; // row + 1 because we want to dispay row 0 as 1 and so on
+        return "Field(" + String.fromCharCode(asciiValueOfA + this.column) + (this.row + 1).toString + ")"; // row + 1 because we want to dispay row 0 as 1 and so on
     }
 
     var Chessboard = function() {
-
+        this.fields = new Array(64)
     };
 
     Chessboard.prototype.setPiece = function(field, piece) {
-
+        this.fields[field.toIndex()] = piece;
     };
 
     Chessboard.prototype.getPiece = function(field) {
-
+        return this.fields[field.toIndex()];
     };
+
+    Chessboard.prototype.isLegalMove = function(move) {
+        var fromField = move.from.toIndex();
+        if(!this.fields[fromField]){
+            return false;
+        }
+
+        return this.fields[fromField].isLegalMove(this, move);
+    }
 
     var Move = function(from, to) {
         if(_.isEqual(from, to)){
@@ -63,6 +84,10 @@ define(['underscore'], function(_){
         this.to = to;
     }
 
+    Move.prototype.toString = function() {
+        return "Move(" + from + ", " + to + ")";
+    }
+
     var Piece = function(color) {
         this.color = color;
     };
@@ -71,8 +96,8 @@ define(['underscore'], function(_){
         Piece.call(this, color)
     };
 
-    Rook.prototype.isMoveLegal = function(chessboard, move) {
-
+    Rook.prototype.isLegalMove = function(chessboard, move) {
+        return move.from.sameRow(move.to) || move.from.sameColumn(move.to);
     }
 
     var Color = Object.freeze({
