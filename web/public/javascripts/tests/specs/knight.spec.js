@@ -53,7 +53,13 @@ define(['game', 'underscore', 'jquery'],
             });
 
             it("can be pinned", function() {
+                var chessboard = new Game.Chessboard();
+                chessboard.setPiece(new Game.Field("b8"), new Game.King(Game.Color.black));
+                chessboard.setPiece(new Game.Field("b7"), new Game.Knight(Game.Color.black));
+                chessboard.setPiece(new Game.Field("b1"), new Game.Rook(Game.Color.white));
 
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("b7"), new Game.Field("c5")))).toBe(false);
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c7"), new Game.Field("a5")))).toBe(false);
             });
 
             it("isAnyMovePossible can return true", function() {

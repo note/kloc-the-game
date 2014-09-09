@@ -70,7 +70,14 @@ define(['game', 'underscore'],
             });
 
 
-            it("not be checked by own knight", function(){});
+            it("not be checked by own knight", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("c2"), king);
+                chessboard.setPiece(new Game.Field("b4"), new Game.Knight(Game.Color.white)); // this rook is pinned
+
+                expect(king.isChecked(chessboard, new Game.Field("c2"))).toBe(false);
+            });
 
             it("be checkmated", function(){});
 
