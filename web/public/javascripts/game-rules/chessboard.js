@@ -179,6 +179,16 @@ define(['underscore'], function(_){
         return (columnsDiff === 2 && rowsDiff === 1) || (columnsDiff === 1 && rowsDiff === 2);
     }
 
+    var Queen = function(color) {
+        Piece.call(this, color);
+    }
+
+    Queen.prototype.isLegalMove = function(chessboard, move) {
+        var isRookLikeMove = (move.from.sameRow(move.to) || move.from.sameColumn(move.to));
+        var isBishopLikeMove = sameDiagonal(move.from, move.to);
+        return (isRookLikeMove || isBishopLikeMove) && !chessboard.somethingBetween(move.from, move.to);
+    }
+
     var Color = Object.freeze({
        white: 0,
        black: 1
@@ -191,6 +201,7 @@ define(['underscore'], function(_){
         Rook: Rook,
         Bishop: Bishop,
         Knight: Knight,
+        Queen: Queen,
         Color: Color
     };
 });
