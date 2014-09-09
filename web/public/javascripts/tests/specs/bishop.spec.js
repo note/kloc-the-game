@@ -45,7 +45,7 @@ define(['game', 'underscore', 'jquery'],
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("g2")))).toBe(false);
             });
 
-            it("cannot move other way diagonally", function() {
+            it("cannot move other way then diagonally", function() {
                 var chessboard = new Game.Chessboard();
                 chessboard.setPiece(new Game.Field("e4"), new Game.Bishop(Game.Color.black));
 

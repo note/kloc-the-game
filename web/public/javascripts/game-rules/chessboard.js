@@ -169,6 +169,16 @@ define(['underscore'], function(_){
         return sameDiagonal(move.from, move.to) && !chessboard.somethingBetween(move.from, move.to);
     }
 
+    var Knight = function(color) {
+        Piece.call(this, color);
+    }
+
+    Knight.prototype.isLegalMove = function(chessboard, move) {
+        var columnsDiff = Math.abs(move.to.column - move.from.column);
+        var rowsDiff = Math.abs(move.to.row - move.from.row);
+        return (columnsDiff === 2 && rowsDiff === 1) || (columnsDiff === 1 && rowsDiff === 2);
+    }
+
     var Color = Object.freeze({
        white: 0,
        black: 1
@@ -180,6 +190,7 @@ define(['underscore'], function(_){
         Move: Move,
         Rook: Rook,
         Bishop: Bishop,
+        Knight: Knight,
         Color: Color
     };
 });
