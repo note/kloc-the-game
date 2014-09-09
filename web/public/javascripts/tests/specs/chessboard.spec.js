@@ -14,8 +14,64 @@ define(['game', 'underscore', 'jquery'],
                 expect("setPiece" in chessboard).toBe(true)
                 expect("getPiece" in chessboard).toBe(true);
                 chessboard.setPiece(new Game.Field("a1"), new Game.Rook(Game.Color.black));
-                expect(_.isEqual(chessboard.getPiece(new Game.Field("a1")), new Game.Rook(Game.Color.black))).toBe(true);
+                expect(chessboard.getPiece(new Game.Field("a1"))).toEqual(new Game.Rook(Game.Color.black));
             });
+        });
+
+        describe("ChessboardFactory", function() {
+            it("can create chessboard from array", function(){
+                var input =
+                    ["rxxxxxxx",
+                     "xxxxxxxk",
+                     "xxxxxxxx",
+                     "xxxxxxxx",
+                     "rxxxxxxx",
+                     "xxxxxxxx",
+                     "xxxxxxxB",
+                     "xKxxxxxx"
+                    ];
+
+                var chessboard = Game.ChessboardFactory.loadFromArray(input);
+                expect("getPiece" in chessboard).toBe(true);
+                expect(chessboard.getPiece(new Game.Field("a8"))).toEqual(new Game.Rook(Game.Color.black));
+                expect(chessboard.getPiece(new Game.Field("h7"))).toEqual(new Game.King(Game.Color.black));
+                expect(chessboard.getPiece(new Game.Field("h2"))).toEqual(new Game.Bishop(Game.Color.white));
+                expect(chessboard.getPiece(new Game.Field("b1"))).toEqual(new Game.King(Game.Color.white));
+
+                expect(chessboard.getPiece(new Game.Field("b8"))).toBeUndefined();
+                expect(chessboard.getPiece(new Game.Field("c8"))).toBeUndefined();
+            });
+
+            it("throws an exception when illegal array passed to loadFromArray", function(){
+                var incorrectInput1 =
+                    ["rxxxxxxx",
+                     "xxxxxxxk",
+                     "xxxxxxxx",
+                     "xxxxxxxx",
+                     "rxxxxxxx",
+                     "xxxxxxxx",
+                     "xxxxxxxB"
+                    ];
+                var incorrectInput2 =
+                    ["rxxxxxxxx",
+                     "xxxxxxxk",
+                     "xxxxxxxx",
+                     "xxxxxxxx",
+                     "rxxxxxxx",
+                     "xxxxxxxx",
+                     "xxxxxxxB",
+                     "xKxxxxxx"
+                    ];
+
+                var createLoadFun = function(input){
+                    return function(){
+                        Game.ChessboardFactory.loadFromArray(input);
+                    }
+                };
+
+                expect(createLoadFun(incorrectInput1)).toThrow();
+                expect(createLoadFun(incorrectInput2)).toThrow();
+            })
         });
 
         describe("Method Chessboard.somethingBetween", function() {

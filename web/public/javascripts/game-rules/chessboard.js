@@ -1,8 +1,9 @@
 'use strict'
 
-define(['underscore'], function(_){
+define(['field', 'piece', 'underscore'], function(Field, PieceModule, _){
 
     var ChessboardUtil = {};
+    var PieceFactory = PieceModule.PieceFactory;
 
     function getFieldsByVector(from, to, vector) {
         var fields = [];
@@ -83,9 +84,8 @@ define(['underscore'], function(_){
         return this.fields[fromField].isLegalMove(this, move);
     }
 
-
     return {
         Chessboard: Chessboard,
-        ChessboardUtil: ChessboardUtil
+        ChessboardUtil: ChessboardUtil,
     }
 });
