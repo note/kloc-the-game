@@ -1,4 +1,4 @@
-define(['field', 'move', 'chessboard', 'color', 'rook', 'bishop', 'knight', 'queen'], function(Field, Move, ChessboardModule, Color, Rook, Bishop, Knight, Queen){
+define(['field', 'move', 'chessboard', 'color', 'rook', 'bishop', 'knight', 'queen', 'pawn'], function(Field, Move, ChessboardModule, Color, Rook, Bishop, Knight, Queen, Pawn){
     return {
         Field: Field,
         Move: Move,
@@ -8,5 +8,6 @@ define(['field', 'move', 'chessboard', 'color', 'rook', 'bishop', 'knight', 'que
         Bishop: Bishop,
         Knight: Knight,
         Queen: Queen,
+        Pawn: Pawn
     };
 });

@@ -13,6 +13,7 @@ require.config({
         bishop:     'game-rules/bishop',
         knight:     'game-rules/knight',
         queen:      'game-rules/queen',
+        pawn:      'game-rules/pawn',
         move:       'game-rules/move',
         color:      'game-rules/color',
         chessboard: 'game-rules/chessboard',
