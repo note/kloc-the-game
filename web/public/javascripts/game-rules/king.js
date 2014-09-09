@@ -3,7 +3,7 @@ define(['piece'], function(Piece){
         Piece.call(this, color);
     }
 
-    King.prototype.isLegalMove = function(chessboard, move) {
+    King.prototype.isLegalMove = function(chessboard, move, gameState) {
         return false;
     }
 

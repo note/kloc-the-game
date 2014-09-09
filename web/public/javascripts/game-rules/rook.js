@@ -3,7 +3,7 @@ define(['piece'], function(Piece){
         Piece.call(this, color);
     };
 
-    Rook.prototype.isLegalMove = function(chessboard, move) {
+    Rook.prototype.isLegalMove = function(chessboard, move, gameState) {
         return (move.from.sameRow(move.to) || move.from.sameColumn(move.to)) && !chessboard.somethingBetween(move.from, move.to);
     }
 

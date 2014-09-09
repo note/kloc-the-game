@@ -1,7 +1,19 @@
 define([], function(){
+
+    var white = {}
+    var black = {};
+
+    white.enemy = function(){
+        return black;
+    };
+
+    black.enemy = function(){
+        return white;
+    };
+
     var Color = Object.freeze({
-        white: 0,
-        black: 1
+        white: white,
+        black: black
     });
 
     return Color;

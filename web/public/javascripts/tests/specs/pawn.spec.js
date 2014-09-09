@@ -99,16 +99,73 @@ define(['game', 'underscore', 'jquery'],
                     expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e2"), new Game.Field("e4")))).toBe(false);
                 });
                 
-                it("enpassant right after enemy pawn move", function() {
+                it("enpassant right after enemy pawn move (white version)", function() {
+                    var chessboard = Game.ChessboardFactory.getInitialPosition();
 
+                    var gameState = chessboard.applyMove(new Game.Move(new Game.Field("e2"), new Game.Field("e4")), new Game.GameState());
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("a7"), new Game.Field("a6")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("e4"), new Game.Field("e5")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("f7"), new Game.Field("f5")), gameState);
+
+                    expect(gameState.forColor(Game.Color.black).enpassantProneColumn).toEqual(5);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e5"), new Game.Field("f6")), gameState)).toBe(true);
+                });
+
+                // TODO: two versions of the same test are quite ugly
+                it("enpassant right after enemy pawn move (black version)", function() {
+                    var chessboard = Game.ChessboardFactory.getInitialPosition();
+
+                    var gameState = chessboard.applyMove(new Game.Move(new Game.Field("a2"), new Game.Field("a3")), new Game.GameState());
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("e7"), new Game.Field("e5")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("a3"), new Game.Field("a4")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("e5"), new Game.Field("e4")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("f2"), new Game.Field("f4")), gameState);
+
+                    expect(gameState.forColor(Game.Color.white).enpassantProneColumn).toEqual(5);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("f3")), gameState)).toBe(true);
                 });
 
 
                 it("cannot enpassant later", function() {
+                    var chessboard = Game.ChessboardFactory.getInitialPosition();
+
+                    var gameState = chessboard.applyMove(new Game.Move(new Game.Field("e2"), new Game.Field("e4")), new Game.GameState());
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("a7"), new Game.Field("a6")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("e4"), new Game.Field("e5")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("f7"), new Game.Field("f5")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("b2"), new Game.Field("b3")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("b7"), new Game.Field("b6")), gameState);
+
+                    expect(gameState.forColor(Game.Color.black).enpassantProneColumn).toEqual(null);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e5"), new Game.Field("f6")), gameState)).toBe(false);
                 });
 
-                it("enpassant only after enemy two field-forward move", function() {});
-                        
+                it("cannot enpassant from incorrect position", function() {
+                    var chessboard = Game.ChessboardFactory.getInitialPosition();
+
+                    var gameState = chessboard.applyMove(new Game.Move(new Game.Field("e2"), new Game.Field("e4")), new Game.GameState());
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("a7"), new Game.Field("a6")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("d2"), new Game.Field("d4")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("a6"), new Game.Field("a7")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("d4"), new Game.Field("d5")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("f7"), new Game.Field("f5")), gameState);
+
+                    expect(gameState.forColor(Game.Color.black).enpassantProneColumn).toEqual(5);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("f6")), gameState)).toBe(false);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("d5"), new Game.Field("f6")), gameState)).toBe(false);
+                });
+
+                it("enpassant only after enemy two field-forward move", function() {
+                    var chessboard = Game.ChessboardFactory.getInitialPosition();
+
+                    var gameState = chessboard.applyMove(new Game.Move(new Game.Field("e2"), new Game.Field("e4")), new Game.GameState());
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("f7"), new Game.Field("f6")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("e4"), new Game.Field("e5")), gameState);
+                    gameState = chessboard.applyMove(new Game.Move(new Game.Field("f6"), new Game.Field("f5")), gameState);
+
+                    expect(gameState.forColor(Game.Color.black).enpassantProneColumn).toEqual(null);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e5"), new Game.Field("f6")), gameState)).toBe(false);
+                });
 
                 it("be promoted to any piece", function() {});
 

@@ -5,7 +5,7 @@ define(['piece', 'chessboard'], function(Piece, ChessboardModule){
         Piece.call(this, color);
     }
 
-    Bishop.prototype.isLegalMove = function(chessboard, move) {
+    Bishop.prototype.isLegalMove = function(chessboard, move, gameState) {
         return ChessboardUtil.sameDiagonal(move.from, move.to) && !chessboard.somethingBetween(move.from, move.to);
     }
 

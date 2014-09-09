@@ -1,9 +1,8 @@
 'use strict'
 
-define(['field', 'piece', 'underscore'], function(Field, PieceModule, _){
+define(['field', 'piece', 'gameState', 'underscore'], function(Field, PieceModule, GameState, _){
 
     var ChessboardUtil = {};
-    var PieceFactory = PieceModule.PieceFactory;
 
     function getFieldsByVector(from, to, vector) {
         var fields = [];
@@ -70,7 +69,9 @@ define(['field', 'piece', 'underscore'], function(Field, PieceModule, _){
         return found !== undefined;
     }
 
-    Chessboard.prototype.isLegalMove = function(move) {
+    Chessboard.prototype.isLegalMove = function(move, currentGameState) {
+        var gameState = currentGameState || new GameState();
+
         var fromField = move.from.toIndex();
         var toField = move.to.toIndex();
         if(!this.fields[fromField]){
@@ -81,11 +82,27 @@ define(['field', 'piece', 'underscore'], function(Field, PieceModule, _){
             return false;
         }
 
-        return this.fields[fromField].isLegalMove(this, move);
+        return this.fields[fromField].isLegalMove(this, move, gameState);
+    }
+
+    Chessboard.prototype.move = function(move) {
+        var activePiece = this.getPiece(move.from);
+        this.setPiece(move.from, undefined);
+        this.setPiece(move.to, activePiece);
+    };
+
+    // TODO: add comment
+    Chessboard.prototype.applyMove = function(move, gameState) {
+        var newGameState = gameState.clone();
+        var activePiece = this.getPiece(move.from);
+        newGameState.forColor(activePiece.color).enpassantProneColumn = null;
+        var nextGameState = activePiece.applyMove(this, move, newGameState);
+        this.move(move);
+        return nextGameState;
     }
 
     return {
         Chessboard: Chessboard,
-        ChessboardUtil: ChessboardUtil,
+        ChessboardUtil: ChessboardUtil
     }
 });

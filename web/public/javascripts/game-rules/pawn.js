@@ -46,11 +46,37 @@ define(['piece', 'color', 'chessboard'], function(Piece, Color, ChessboardModule
             return nextColumn && diff === this.legalDiffForTaking();
         }
         return false;
-    }
-
-    Pawn.prototype.isLegalMove = function(chessboard, move) {
-        return this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard);
     };
+
+    Pawn.prototype.isLegalRowForEnpassant = function(from) {
+        if(this.color === Color.white){
+            return from.row === 4;
+        }else{
+            return from.row === 3;
+        }
+    };
+
+    Pawn.prototype.isEnpassant = function(move, chessboard, gameState) {
+        var nextColumn = Math.abs(move.to.column - move.from.column) === 1;
+        var isLegalDiff = move.to.row - move.from.row === this.legalDiffForTaking();
+        var isLegalRow = this.isLegalRowForEnpassant(move.from);
+        if(nextColumn && isLegalDiff && isLegalRow){
+            return move.to.column === gameState.forColor(this.color.enemy()).enpassantProneColumn;
+        }
+        return false;
+    };
+
+    Pawn.prototype.isLegalMove = function(chessboard, move, gameState) {
+        return this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard) || this.isEnpassant(move, chessboard, gameState);
+    };
+
+    // TODO: add comment
+    Pawn.prototype.applyMove = function(chessboard, move, gameState) {
+        if(Math.abs(move.to.row-move.from.row) === 2){
+            gameState.forColor(chessboard.getPiece(move.from).color).enpassantProneColumn = move.from.column;
+        }
+        return gameState;
+    }
 
     return Pawn;
 });

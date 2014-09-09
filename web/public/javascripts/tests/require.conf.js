@@ -18,6 +18,7 @@ require.config({
         move:       'game-rules/move',
         color:      'game-rules/color',
         chessboard: 'game-rules/chessboard',
+        gameState:  'game-rules/gameState',
         game:       'game-rules/game',
 
         // Libraries

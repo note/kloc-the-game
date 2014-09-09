@@ -1,4 +1,4 @@
-define(['field', 'move', 'chessboard', 'color', 'rook', 'bishop', 'knight', 'queen', 'pawn', 'king'], function(Field, Move, ChessboardModule, Color, Rook, Bishop, Knight, Queen, Pawn, King){
+define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', 'knight', 'queen', 'pawn', 'king'], function(Field, Move, ChessboardModule, Color, GameState, Rook, Bishop, Knight, Queen, Pawn, King){
     var PieceFactory = {
         fromChar: function(pieceChar){
             switch (pieceChar) {
@@ -40,23 +40,40 @@ define(['field', 'move', 'chessboard', 'color', 'rook', 'bishop', 'knight', 'que
         return arrSizeOk && rowsSizesOk;
     }
 
-    var ChessboardFactory = {
-        loadFromArray: function(arr) {
-            if(!validateSize(arr)){
-                throw new Error("Cannot load chessboard from array - invalid array");
-            }
-
-            var chessboard = new ChessboardModule.Chessboard();
-            _.each(arr, function(rowString, rowIndex){
-                // need to compute realRowIndex because first element of arr refers to the last row (fields marked as a8, b8, c8...)
-                var realRowIndex = 7 - rowIndex;
-
-                _.each(rowString, function(pieceChar, columnIndex){
-                    chessboard.setPiece(new Field(columnIndex, realRowIndex), PieceFactory.fromChar(pieceChar));
-                });
-            });
-            return chessboard;
+    function loadFromArray(arr) {
+        if(!validateSize(arr)){
+            throw new Error("Cannot load chessboard from array - invalid array");
         }
+
+        var chessboard = new ChessboardModule.Chessboard();
+        _.each(arr, function(rowString, rowIndex){
+            // need to compute realRowIndex because first element of arr refers to the last row (fields marked as a8, b8, c8...)
+            var realRowIndex = 7 - rowIndex;
+
+            _.each(rowString, function(pieceChar, columnIndex){
+                chessboard.setPiece(new Field(columnIndex, realRowIndex), PieceFactory.fromChar(pieceChar));
+            });
+        });
+        return chessboard;
+    }
+
+    function getInitialPosition() {
+        var initialPositionInput =
+            ['rnbqkbnr',
+                'pppppppp',
+                'xxxxxxxx',
+                'xxxxxxxx',
+                'xxxxxxxx',
+                'xxxxxxxx',
+                'PPPPPPPP',
+                'RNBQKBNR'
+            ];
+        return loadFromArray(initialPositionInput);
+    }
+
+    var ChessboardFactory = {
+        loadFromArray: loadFromArray,
+        getInitialPosition: getInitialPosition
     };
 
     return {
@@ -65,6 +82,7 @@ define(['field', 'move', 'chessboard', 'color', 'rook', 'bishop', 'knight', 'que
         Chessboard: ChessboardModule.Chessboard,
         ChessboardFactory: ChessboardFactory,
         Color: Color,
+        GameState: GameState,
         Rook: Rook,
         Bishop: Bishop,
         Knight: Knight,
