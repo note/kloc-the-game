@@ -1,6 +1,6 @@
 'use strict'
 
-define(['field', 'piece', 'gameState', 'underscore'], function(Field, PieceModule, GameState, _){
+define(['field', 'piece', 'gameState', 'king', 'underscore'], function(Field, PieceModule, GameState, King, _){
 
     var ChessboardUtil = {};
 
@@ -69,7 +69,42 @@ define(['field', 'piece', 'gameState', 'underscore'], function(Field, PieceModul
         return found !== undefined;
     }
 
-    Chessboard.prototype.isLegalMove = function(move, currentGameState) {
+    Chessboard.prototype.withMove = function(move, fn) {
+        var pieceOnDestination = this.getPiece(move.to);
+        this.move(move);
+
+        var result = fn.call(this);
+
+        this.setPiece(move.from, this.getPiece(move.to));
+        this.setPiece(move.to, pieceOnDestination);
+        return result;
+    };
+
+    Chessboard.prototype.findKingField = function(color) {
+        var allFields = this.allFields();
+        var desiredPiece = new King(color);
+
+        return _.find(allFields, function(field){
+            return _.isEqual(this.getPiece(field), desiredPiece);
+        }, this);
+    };
+
+    Chessboard.prototype.leadsToKingBeingChecked = function(move) {
+        var activeColor = this.getPiece(move.from).color;
+        return this.withMove(move, function(){
+            var kingField = this.findKingField(activeColor);
+
+            // in real game there is always king on chessboard, however in some test there is no king
+            // TODO: consider another way of handling these situations
+            if(kingField === undefined){
+                return false;
+            }
+
+            return this.getPiece(kingField).isChecked(this, kingField);
+        });
+    };
+
+    Chessboard.prototype.canCheck = function(move, currentGameState) {
         var gameState = currentGameState || new GameState();
 
         var fromField = move.from.toIndex();
@@ -85,6 +120,10 @@ define(['field', 'piece', 'gameState', 'underscore'], function(Field, PieceModul
         return this.fields[fromField].isLegalMove(this, move, gameState);
     }
 
+    Chessboard.prototype.isLegalMove = function(move, currentGameState) {
+        return this.canCheck(move, currentGameState) && !this.leadsToKingBeingChecked(move);
+    };
+
     Chessboard.prototype.move = function(move) {
         var activePiece = this.getPiece(move.from);
         this.setPiece(move.from, undefined);
@@ -99,6 +138,20 @@ define(['field', 'piece', 'gameState', 'underscore'], function(Field, PieceModul
         var nextGameState = activePiece.applyMove(this, move, newGameState);
         this.move(move);
         return nextGameState;
+    }
+
+    Chessboard.prototype.allFields = function() {
+        return _.map(this.fields, function(piece, fieldIndex){
+            return Field.fromIndex(fieldIndex);
+        });
+    }
+
+    Chessboard.prototype.getFieldsWithPiecesOfColor = function(color) {
+        var allFields = this.allFields();
+        return _.filter(allFields, function(field){
+            var piece = this.getPiece(field);
+            return piece !== undefined && piece.color === color;
+        }, this);
     }
 
     return {

@@ -117,7 +117,34 @@ define(['game', 'underscore', 'jquery'],
                     chessboard.somethingBetween(new Game.Field("e2"), new Game.Field("d4"));
                 }
             });
-        })
+        });
+
+        describe("Method Chessboard.getFieldsWithPiecesOfColor", function(){
+            it("returns all fields with pieces of given color", function(){
+                var chessboard = new Game.Chessboard();
+                chessboard.setPiece(new Game.Field("c8"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("d7"), new Game.King(Game.Color.black));
+                chessboard.setPiece(new Game.Field("e2"), new Game.Queen(Game.Color.white));
+
+                var blackPiecesFields = chessboard.getFieldsWithPiecesOfColor(Game.Color.black);
+
+                var contains = function(seq, desiredObj){
+                    return _.find(seq, function(el){
+                        return _.isEqual(el, desiredObj);
+                    }) !== undefined;
+                };
+
+                expect(blackPiecesFields.length).toEqual(2);
+
+                expect(contains(blackPiecesFields, new Game.Field("c8"))).toBe(true);
+                expect(contains(blackPiecesFields, new Game.Field("d7"))).toBe(true);
+
+//                var whitePiecesFields = chessboard.getFieldsWithPiecesOfColor(Game.Color.white);
+//
+//                expect(whitePiecesFields.length).toEqual(1);
+//                expect(contains(whitePiecesFields, new Game.Field("e2"))).toBe(true);
+            });
+        });
 
     }
 );
