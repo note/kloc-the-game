@@ -33,7 +33,7 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'underscore'], function
 
         // TODO: it's a common idiom, it may be worth extracting to some method
         var found = _.find(directions, function(direction){
-            var move = Move.fromVector(field, direction)
+            var move = Move.fromVector(field, direction);
             return move && chessboard.isLegalMove(move, gameState);
         });
         return found !== undefined;
@@ -62,6 +62,12 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'underscore'], function
     King.prototype.isCheckmated = function(chessboard, field, gameState) {
         return this.isChecked(chessboard, field, gameState) && !this.canAvoidBeingChecked(chessboard, field, gameState);
     };
+
+    King.prototype.anyMovePossible = function(chessboard, field, passedGameState) {
+        var gameState = passedGameState || new GameState();
+
+        return this.canEscape(chessboard, field, gameState);
+    }
 
 //    King.prototype.applyMove = function(chessboard, move, gameState) {
 //        return gameState;

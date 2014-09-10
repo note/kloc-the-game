@@ -138,11 +138,37 @@ define(['game', 'underscore'],
                 expect(king.isCheckmated(chessboard, new Game.Field("a8"), new Game.GameState())).toBe(true);
             });
 
-            it("have possible moves", function(){});
+            it("can have possible moves", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a1"), king);
+                chessboard.setPiece(new Game.Field("a2"), new Game.Knight(Game.Color.white));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Knight(Game.Color.white));
 
-            it("have no possible moves", function(){});
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a1"), new Game.Field("b1")))).toBe(true);
+                expect(king.anyMovePossible(chessboard, new Game.Field("a1"))).toBe(true);
+            });
 
-            it("not be to close to opposite King", function(){});
+            it("can have no possible moves", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a1"), king);
+                chessboard.setPiece(new Game.Field("a2"), new Game.Knight(Game.Color.white));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Knight(Game.Color.white));
+                chessboard.setPiece(new Game.Field("c2"), new Game.Bishop(Game.Color.black));
+
+                expect(king.anyMovePossible(chessboard, new Game.Field("a1"))).toBe(false);
+            });
+
+            it("can not be to close to opposite King", function(){
+                var chessboard = new Game.Chessboard();
+                chessboard.setPiece(new Game.Field("c1"), new Game.King(Game.Color.white));
+                chessboard.setPiece(new Game.Field("e1"), new Game.King(Game.Color.black));
+
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c1"), new Game.Field("d1")))).toBe(false);
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c1"), new Game.Field("d2")))).toBe(false);
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c1"), new Game.Field("c2")))).toBe(true);
+            });
 
     });
 });
