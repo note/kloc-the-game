@@ -1,16 +1,16 @@
 define([], function(){
     var asciiValueOfA = 'a'.charCodeAt(0);
     var asciiValueOf1 = '1'.charCodeAt(0);
+
+    function isValid(index) {
+        return index >= 0 && index < 8;
+    }
+
     var Field = function() {
         var self = this;
 
         var fromPairOfInts = function(column, row) {
-
-            var valid = function(index) {
-                return index >= 0 && index < 8;
-            }
-
-            if(valid(column) && valid(row)){
+            if(isValid(column) && isValid(row)){
                 self.column = column;
                 self.row = row;
             }else{
@@ -57,7 +57,7 @@ define([], function(){
 
     Field.fromIndex = function(index) {
         return new Field(index % 8, Math.floor(index / 8));
-    }
+    };
 
     return Field;
 });

@@ -79,15 +79,64 @@ define(['game', 'underscore'],
                 expect(king.isChecked(chessboard, new Game.Field("c2"))).toBe(false);
             });
 
-            it("be checkmated", function(){});
+            it("be checkmated", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a6"), king);
+                chessboard.setPiece(new Game.Field("a1"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Rook(Game.Color.black));
 
-            it("be shielded against checkmate", function(){});
+                expect(king.isCheckmated(chessboard, new Game.Field("a6"), new Game.GameState())).toBe(true);
+            });
 
-            it("be shielded against checkmate 2", function(){});
+            it("is not checkmated when cas escape", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a6"), king);
+                chessboard.setPiece(new Game.Field("b6"), new Game.Pawn(Game.Color.white));
+                chessboard.setPiece(new Game.Field("a1"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Rook(Game.Color.black));
 
-            it("not be checkmated when attacker can be taken", function(){});
+                expect(king.isCheckmated(chessboard, new Game.Field("a6"), new Game.GameState())).toBe(false);
+            });
 
-            it("be checkmated 2", function(){});
+            it("be shielded against checkmate", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a6"), king);
+                chessboard.setPiece(new Game.Field("c6"), new Game.Knight(Game.Color.white));
+                chessboard.setPiece(new Game.Field("a1"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Rook(Game.Color.black));
+
+                expect(king.isCheckmated(chessboard, new Game.Field("a6"), new Game.GameState())).toBe(false);
+            });
+
+            it("not be checkmated when attacker can be taken", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a6"), king);
+                chessboard.setPiece(new Game.Field("a1"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("c2"), new Game.Knight(Game.Color.white)); //can take rook a1
+
+                expect(king.isCheckmated(chessboard, new Game.Field("a6"), new Game.GameState())).toBe(false);
+            });
+
+            it("be checkmated 2", function(){
+                var chessboard = new Game.Chessboard();
+                var king = new Game.King(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a8"), king);
+                chessboard.setPiece(new Game.Field("a7"), new Game.Bishop(Game.Color.white));
+                chessboard.setPiece(new Game.Field("d8"), new Game.Rook(Game.Color.white));
+                chessboard.setPiece(new Game.Field("e8"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("b1"), new Game.Rook(Game.Color.black));
+                chessboard.setPiece(new Game.Field("d5"), new Game.Queen(Game.Color.black));
+                chessboard.setPiece(new Game.Field("d4"), new Game.King(Game.Color.black));
+
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("d5"), new Game.Field("a8")))).toBe(false);
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("d8"), new Game.Field("d5")))).toBe(false);
+                expect(king.isCheckmated(chessboard, new Game.Field("a8"), new Game.GameState())).toBe(true);
+            });
 
             it("have possible moves", function(){});
 

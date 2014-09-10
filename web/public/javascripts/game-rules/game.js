@@ -1,4 +1,4 @@
-define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', 'knight', 'queen', 'pawn', 'king'], function(Field, Move, ChessboardModule, Color, GameState, Rook, Bishop, Knight, Queen, Pawn, King){
+define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', 'knight', 'queen', 'pawn', 'king'], function(Field, Move, Chessboard, Color, GameState, Rook, Bishop, Knight, Queen, Pawn, King){
     var PieceFactory = {
         fromChar: function(pieceChar){
             switch (pieceChar) {
@@ -45,7 +45,7 @@ define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', '
             throw new Error("Cannot load chessboard from array - invalid array");
         }
 
-        var chessboard = new ChessboardModule.Chessboard();
+        var chessboard = new Chessboard();
         _.each(arr, function(rowString, rowIndex){
             // need to compute realRowIndex because first element of arr refers to the last row (fields marked as a8, b8, c8...)
             var realRowIndex = 7 - rowIndex;
@@ -79,7 +79,7 @@ define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', '
     return {
         Field: Field,
         Move: Move,
-        Chessboard: ChessboardModule.Chessboard,
+        Chessboard: Chessboard,
         ChessboardFactory: ChessboardFactory,
         Color: Color,
         GameState: GameState,

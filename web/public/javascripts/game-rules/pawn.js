@@ -1,6 +1,4 @@
-define(['piece', 'color', 'chessboard'], function(Piece, Color, ChessboardModule){
-    var ChessboardUtil = ChessboardModule.ChessboardUtil;
-
+define(['piece', 'color'], function(Piece, Color){
     var Pawn = function(color) {
         Piece.call(this, color);
     };

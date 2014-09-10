@@ -1,12 +1,10 @@
-define(['piece', 'chessboard'], function(Piece, ChessboardModule){
-    var ChessboardUtil = ChessboardModule.ChessboardUtil;
-
+define(['piece', 'chessboardUtils'], function(Piece, ChessboardUtils){
     var Bishop = function(color) {
         Piece.call(this, color);
     }
 
     Bishop.prototype.isLegalMove = function(chessboard, move, gameState) {
-        return ChessboardUtil.sameDiagonal(move.from, move.to) && !chessboard.somethingBetween(move.from, move.to);
+        return ChessboardUtils.sameDiagonal(move.from, move.to) && !chessboard.somethingBetween(move.from, move.to);
     }
 
     return Bishop;
