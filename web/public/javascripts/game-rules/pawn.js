@@ -3,6 +3,8 @@ define(['piece', 'color'], function(Piece, Color){
         Piece.call(this, color);
     };
 
+    Pawn.prototype = Object.create(Piece.prototype);
+
     Pawn.prototype.fromStartPosition = function(from) {
         if(this.color === Color.white){
             return from.row === 1;

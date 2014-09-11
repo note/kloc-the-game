@@ -2,6 +2,8 @@
 
 define(['color', 'underscore'], function(Color, _){
     function OneColorGameState() {
+        this.shortCastlingEnabled = true;
+        this.longCastlingEnabled = true;
         this.enpassantProneColumn = null;
     }
 
@@ -17,7 +19,7 @@ define(['color', 'underscore'], function(Color, _){
             case Color.black:
                 return this.stateForBlack;
             default:
-                throw new Error("Illegal color: " + color + "!! " + Object.getOwnPropertyNames({ala: 1, basia: 3}));
+                throw new Error("Illegal color: " + color);
         }
     };
 

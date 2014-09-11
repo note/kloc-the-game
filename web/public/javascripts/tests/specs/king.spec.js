@@ -160,7 +160,7 @@ define(['game', 'underscore'],
                 expect(king.anyMovePossible(chessboard, new Game.Field("a1"))).toBe(false);
             });
 
-            it("can not be to close to opposite King", function(){
+            it("can not be to close to the opposite King", function(){
                 var chessboard = new Game.Chessboard();
                 chessboard.setPiece(new Game.Field("c1"), new Game.King(Game.Color.white));
                 chessboard.setPiece(new Game.Field("e1"), new Game.King(Game.Color.black));

@@ -3,5 +3,9 @@ define([], function() {
         this.color = color;
     };
 
+    Piece.prototype.applyMove = function(chessboard, move, gameState) {
+        return gameState;
+    };
+
     return Piece;
 });
