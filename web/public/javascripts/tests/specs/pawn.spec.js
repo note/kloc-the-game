@@ -108,7 +108,12 @@ define(['game', 'underscore', 'jquery'],
                     gameState = chessboard.applyMove(new Game.Move(new Game.Field("f7"), new Game.Field("f5")), gameState);
 
                     expect(gameState.forColor(Game.Color.black).enpassantProneColumn).toEqual(5);
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e5"), new Game.Field("f6")), gameState)).toBe(true);
+                    var enpassantMove = new Game.Move(new Game.Field("e5"), new Game.Field("f6"));
+                    expect(chessboard.isLegalMove(enpassantMove, gameState)).toBe(true);
+
+                    chessboard.applyMove(enpassantMove, gameState);
+                    expect(chessboard.getPiece(new Game.Field("f6"))).toEqual(new Game.Pawn(Game.Color.white));
+                    expect(chessboard.getPiece(new Game.Field("f5"))).toBeUndefined(); // TODO: check the same in scala
                 });
 
                 // TODO: two versions of the same test are quite ugly

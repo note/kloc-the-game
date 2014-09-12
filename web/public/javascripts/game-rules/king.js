@@ -12,11 +12,21 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
         return (rowDiff > 0 || columnDiff > 0) && (rowDiff < 2 && columnDiff < 2);
     };
 
+    King.prototype.wouldBeCheckedOnWay = function(chessboard, move) {
+        var that = this;
+        var fieldsBetween = ChessboardUtils.getFieldsBetween(move.from, move.to);
+        return _.find(fieldsBetween, function(field){
+            return chessboard.withMove(new Move(move.from, move.to), function(){
+                return that.isChecked(chessboard, field);
+            });
+        }) !== undefined;
+    };
+
     King.prototype.isShortCastling = function(chessboard, move) {
         var expectedRow = this.color === Color.white ? 0 : 7;
 
         if(move.from.column === 4 && move.to.column === 6 && move.from.row === expectedRow && move.to.row == expectedRow){
-            return !chessboard.somethingBetween(move.from, new Field(7, expectedRow));
+            return !chessboard.somethingBetween(move.from, new Field(7, expectedRow)) && !this.wouldBeCheckedOnWay(chessboard, move);
         }
         return false;
     };
@@ -25,7 +35,7 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
         var expectedRow = this.color === Color.white ? 0 : 7;
 
         if(move.from.column === 4 && move.to.column === 2 && move.from.row === expectedRow && move.to.row == expectedRow){
-            return !chessboard.somethingBetween(move.from, new Field(0, expectedRow));
+            return !chessboard.somethingBetween(move.from, new Field(0, expectedRow)) && !this.wouldBeCheckedOnWay(chessboard, move);
         }
         return false;
     };
@@ -120,6 +130,18 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
     }
 
     King.prototype.applyMove = function(chessboard, move, gameState) {
+        if(this.isShortCastling(chessboard, move)){
+            var oldRookField = new Field(7, move.from.row);
+            var newRookField = new Field(5, move.from.row);
+            chessboard.applyMove(new Move(oldRookField, newRookField), gameState);
+        }
+
+        if(this.isLongCastling(chessboard, move)){
+            var oldRookField = new Field(0, move.from.row);
+            var newRookField = new Field(3, move.from.row);
+            chessboard.applyMove(new Move(oldRookField, newRookField), gameState);
+        }
+
         gameState.forColor(this.color).shortCastlingEnabled = false;
         gameState.forColor(this.color).longCastlingEnabled = false;
         return gameState;

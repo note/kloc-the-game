@@ -1,4 +1,4 @@
-define(['piece', 'color'], function(Piece, Color){
+define(['piece', 'color', 'field'], function(Piece, Color, Field){
     var Pawn = function(color) {
         Piece.call(this, color);
     };
@@ -56,7 +56,7 @@ define(['piece', 'color'], function(Piece, Color){
         }
     };
 
-    Pawn.prototype.isEnpassant = function(move, chessboard, gameState) {
+    Pawn.prototype.isEnpassant = function(chessboard, move, gameState) {
         var nextColumn = Math.abs(move.to.column - move.from.column) === 1;
         var isLegalDiff = move.to.row - move.from.row === this.legalDiffForTaking();
         var isLegalRow = this.isLegalRowForEnpassant(move.from);
@@ -67,11 +67,16 @@ define(['piece', 'color'], function(Piece, Color){
     };
 
     Pawn.prototype.isLegalMove = function(chessboard, move, gameState) {
-        return this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard) || this.isEnpassant(move, chessboard, gameState);
+        return this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard) || this.isEnpassant(chessboard, move, gameState);
     };
 
     // TODO: add comment
     Pawn.prototype.applyMove = function(chessboard, move, gameState) {
+        if(this.isEnpassant(chessboard, move, gameState)){
+            var beatenPawnField = new Field(move.to.column, move.from.row);
+            chessboard.setPiece(beatenPawnField, undefined);
+        }
+
         if(Math.abs(move.to.row-move.from.row) === 2){
             gameState.forColor(chessboard.getPiece(move.from).color).enpassantProneColumn = move.from.column;
         }
