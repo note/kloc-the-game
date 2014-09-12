@@ -7,5 +7,9 @@ define([], function() {
         return gameState;
     };
 
+    Piece.prototype.canCheck = function(chessboard, move, gameState) {
+        return this.isLegalMove(chessboard, move, gameState);
+    }
+
     return Piece;
 });

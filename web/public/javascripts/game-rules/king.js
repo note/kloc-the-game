@@ -34,10 +34,9 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
         var isShortCastling = false,
             isLongCastling = false;
 
-//        console.log('bazinga:isCastling');
-//        if(this.isChecked(chessboard, move.from, gameState)){
-//            return false;
-//        }
+        if(this.isChecked(chessboard, move.from, gameState)){
+            return false;
+        }
 
         if(gameState.forColor(this.color).shortCastlingEnabled){
             isShortCastling = this.isShortCastling(chessboard, move);
@@ -52,10 +51,18 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
         return this.isStandardMove(chessboard, move) || this.isCastling(chessboard, move, gameState);
     };
 
+    function isKing(piece){
+        return 'symbol' in piece && piece.symbol === 'k';
+    }
+
     King.prototype.getCheckingFields = function(chessboard, field, gameState) {
         var enemyPiecesFields = chessboard.getFieldsWithPiecesOfColor(this.color.enemy());
         return _.filter(enemyPiecesFields, function(enemyPieceField){
-            return chessboard.canCheck(new Move(enemyPieceField, field), gameState);
+            if(isKing(chessboard.getPiece(enemyPieceField))){
+                return chessboard.getPiece(enemyPieceField).isStandardMove(chessboard, new Move(enemyPieceField, field));
+            }else{
+                return chessboard.canCheck(new Move(enemyPieceField, field), gameState);
+            }
         });
     }
 
@@ -116,6 +123,10 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
         gameState.forColor(this.color).shortCastlingEnabled = false;
         gameState.forColor(this.color).longCastlingEnabled = false;
         return gameState;
+    }
+
+    King.prototype.canCheck = function(chessboard, move, gameState) {
+        return this.isStandardMove(chessboard, move);
     }
 
     return King;
