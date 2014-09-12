@@ -1,4 +1,4 @@
-define(['piece', 'color', 'field'], function(Piece, Color, Field){
+define(['piece', 'color', 'field', 'chessboardUtils'], function(Piece, Color, Field, ChessboardUtils){
     var Pawn = function(color) {
         Piece.call(this, color);
     };
@@ -81,10 +81,16 @@ define(['piece', 'color', 'field'], function(Piece, Color, Field){
             gameState.forColor(chessboard.getPiece(move.from).color).enpassantProneColumn = move.from.column;
         }
         return gameState;
+    };
+
+    Pawn.prototype.vectors = function() {
+        var Vector = ChessboardUtils.Vector;
+        if(this.color === Color.white){
+            return [new Vector(-1, 1), new Vector(0, 1), new Vector(1, 1)];
+        }else{
+            return [new Vector(-1, -1), new Vector(0, -1), new Vector(1, -1)];
+        }
     }
 
     return Pawn;
 });
-/**
- * Created by michal on 09/09/14.
- */

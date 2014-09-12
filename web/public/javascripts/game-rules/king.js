@@ -83,12 +83,7 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
     };
 
     King.prototype.canEscape = function(chessboard, field, gameState) {
-        //TODO: there is vector used in another place - unify it
-        var Vector = function(column, row){
-            this.x = column;
-            this.y = row;
-        };
-
+        var Vector = ChessboardUtils.Vector;
         var directions = [new Vector(1, 1), new Vector(1, 0), new Vector(1, -1), new Vector(0, -1), new Vector(-1, -1), new Vector(-1, 0), new Vector(-1, 1), new Vector(0, 1)];
 
         // TODO: it's a common idiom, it may be worth extracting to some method

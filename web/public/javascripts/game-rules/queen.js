@@ -11,5 +11,10 @@ define(['piece', 'chessboardUtils'], function(Piece, ChessboardUtils){
         return (isRookLikeMove || isBishopLikeMove) && !chessboard.somethingBetween(move.from, move.to);
     }
 
+    Queen.prototype.vectors = function() {
+        var Vector = ChessboardUtils.Vector;
+        return [new Vector(0, 1), new Vector(0, -1), new Vector(1, 0), new Vector(-1, 0)];
+    }
+
     return Queen;
 });

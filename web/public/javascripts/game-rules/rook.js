@@ -1,4 +1,4 @@
-define(['piece', 'color'], function(Piece, Color){
+define(['piece', 'color', 'chessboardUtils', 'move'], function(Piece, Color, ChessboardUtils, Move){
     var Rook = function(color) {
         Piece.call(this, color);
     };
@@ -20,6 +20,11 @@ define(['piece', 'color'], function(Piece, Color){
         }
 
         return gameState;
+    }
+
+    Rook.prototype.vectors = function() {
+        var Vector = ChessboardUtils.Vector;
+        return [new Vector(0, 1), new Vector(0, -1), new Vector(1, 0), new Vector(-1, 0)];
     }
 
     return Rook;

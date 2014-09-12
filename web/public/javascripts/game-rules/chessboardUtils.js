@@ -11,19 +11,23 @@ define([], function() {
         return fields;
     }
 
+    function Vector(column, row){
+        this.x = column;
+        this.y = row;
+    }
+
     function verticalVector(from, to) {
-        return from.row < to.row ? {x: 0, y: 1} : {x: 0, y: -1};
+        return from.row < to.row ? new Vector(0, 1) : new Vector(0, -1);
     }
 
     function horizontalVector(from, to) {
-        return from.column < to.column ? {x: 1, y: 0} : {x: -1, y: 0};
+        return from.column < to.column ? new Vector(1, 0) : new Vector(-1, 0);
     }
 
     function diagonalVector(from, to) {
-        var vector = {};
-        vector.x = from.column < to.column ? 1 : -1;
-        vector.y = from.row < to.row ? 1 : -1;
-        return vector;
+        var x = from.column < to.column ? 1 : -1;
+        var y = from.row < to.row ? 1 : -1;
+        return new Vector(x, y);
     }
 
     var ChessboardUtils = {};
@@ -47,6 +51,8 @@ define([], function() {
 
         return [];
     };
+
+    ChessboardUtils.Vector = Vector;
 
     return ChessboardUtils;
 });

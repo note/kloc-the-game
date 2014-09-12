@@ -70,15 +70,33 @@ define(['game', 'underscore', 'jquery'],
             });
 
             it("can be pinned", function() {
+                var chessboard = new Game.Chessboard();
+                chessboard.setPiece(new Game.Field("a1"), new Game.King(Game.Color.white));
+                chessboard.setPiece(new Game.Field("a4"), new Game.Queen(Game.Color.white));
+                chessboard.setPiece(new Game.Field("a8"), new Game.Rook(Game.Color.black));
 
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a4"), new Game.Field("a2")))).toBe(true);
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a4"), new Game.Field("b4")))).toBe(false);
+                expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a4"), new Game.Field("b3")))).toBe(false);
             });
 
             it("isAnyMovePossible can return true", function() {
-
+                var chessboard = new Game.Chessboard();
+                var queen = new Game.Queen(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a1"), queen);
+                chessboard.setPiece(new Game.Field("a2"), new Game.Pawn(Game.Color.white));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Pawn(Game.Color.white));
+                expect(queen.anyMovePossible(chessboard, new Game.Field("a1"))).toBe(true);
             });
 
             it("isAnyMovePossible can return false", function() {
-
+                var chessboard = new Game.Chessboard();
+                var queen = new Game.Queen(Game.Color.white);
+                chessboard.setPiece(new Game.Field("a1"), queen);
+                chessboard.setPiece(new Game.Field("a2"), new Game.Pawn(Game.Color.white));
+                chessboard.setPiece(new Game.Field("b2"), new Game.Pawn(Game.Color.white));
+                chessboard.setPiece(new Game.Field("b1"), new Game.Bishop(Game.Color.white));
+                expect(queen.anyMovePossible(chessboard, new Game.Field("a1"))).toBe(false);
             });
         });
 

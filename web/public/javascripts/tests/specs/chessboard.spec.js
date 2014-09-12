@@ -109,14 +109,6 @@ define(['game', 'underscore', 'jquery'],
                 expect(chessboard.somethingBetween(new Game.Field("a5"), new Game.Field("c3"))).toBe(false);
                 expect(chessboard.somethingBetween(new Game.Field("c3"), new Game.Field("a5"))).toBe(false);
             });
-
-            it("throws an exception when given to fields are not neither on same column nor row nor diagonal", function(){
-                var chessboard = new Game.Chessboard();
-
-                var callSomethingBetween = function() {
-                    chessboard.somethingBetween(new Game.Field("e2"), new Game.Field("d4"));
-                }
-            });
         });
 
         describe("Method Chessboard.getFieldsWithPiecesOfColor", function(){

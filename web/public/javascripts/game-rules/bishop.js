@@ -9,5 +9,10 @@ define(['piece', 'chessboardUtils'], function(Piece, ChessboardUtils){
         return ChessboardUtils.sameDiagonal(move.from, move.to) && !chessboard.somethingBetween(move.from, move.to);
     }
 
+    Bishop.prototype.vectors = function() {
+        var Vector = ChessboardUtils.Vector;
+        return [new Vector(1, 1), new Vector(1, -1), new Vector(-1, -1), new Vector(-1, 1)];
+    }
+
     return Bishop;
 });
