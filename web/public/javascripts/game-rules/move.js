@@ -21,7 +21,18 @@ define(['field'], function(Field){
         }catch(err){
             return undefined;
         }
-    }
+    };
+
+    Move.surrender = {};
+    Move.proposeDraw = {
+        drawPropositionRelated: true
+    };
+    Move.propositionAccepted = {
+        drawPropositionRelated: true
+    };
+    Move.propositionRejected = {
+        drawPropositionRelated: true
+    };
 
     return Move;
 });

@@ -1,7 +1,7 @@
 'use strict'
 
-define(['game', 'underscore', 'jquery'],
-    function(Game, _, $){
+define(['game', 'underscore'],
+    function(Game, _){
         var white = Game.Color.white;
         var black = Game.Color.black;
 

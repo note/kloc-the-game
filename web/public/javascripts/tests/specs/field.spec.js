@@ -1,7 +1,7 @@
 'use strict'
 
-define(['game', 'underscore', 'jquery'],
-    function(Game, _, $){
+define(['game', 'underscore'],
+    function(Game, _){
 
         describe("A field", function() {
             it("can be constructed from human-readable notation", function() {
