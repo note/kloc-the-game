@@ -1,6 +1,7 @@
 define(['piece', 'color', 'chessboardUtils', 'move'], function(Piece, Color, ChessboardUtils, Move){
     var Rook = function(color) {
         Piece.call(this, color);
+        this.symbol = 'r';
     };
 
     Rook.prototype = Object.create(Piece.prototype);

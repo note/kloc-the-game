@@ -1,6 +1,7 @@
 define(['piece', 'color', 'field', 'chessboardUtils'], function(Piece, Color, Field, ChessboardUtils){
     var Pawn = function(color) {
         Piece.call(this, color);
+        this.symbol = 'p';
     };
 
     Pawn.prototype = Object.create(Piece.prototype);
@@ -66,12 +67,27 @@ define(['piece', 'color', 'field', 'chessboardUtils'], function(Piece, Color, Fi
         return false;
     };
 
+    Pawn.prototype.isCorrectPromotion = function(move){
+        var newPiece = move.promoteTo;
+        var sameColor = this.color === newPiece.color;
+        var correctPiece = newPiece.symbol !== 'k' && newPiece.symbol !== 'p';
+        return sameColor && correctPiece;
+    }
+
     Pawn.prototype.isLegalMove = function(chessboard, move, gameState) {
-        return this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard) || this.isEnpassant(chessboard, move, gameState);
+        if('promoteTo' in move){
+            return (this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard)) && this.isCorrectPromotion(move);
+        }else{
+            return this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard) || this.isEnpassant(chessboard, move, gameState);
+        }
     };
 
     // TODO: add comment
     Pawn.prototype.applyMove = function(chessboard, move, gameState) {
+        if('promoteTo' in move){
+            chessboard.setPiece(move.from, move.promoteTo);
+        }
+
         if(this.isEnpassant(chessboard, move, gameState)){
             var beatenPawnField = new Field(move.to.column, move.from.row);
             chessboard.setPiece(beatenPawnField, undefined);

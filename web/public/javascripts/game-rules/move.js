@@ -1,11 +1,14 @@
 define(['field'], function(Field){
-    var Move = function(from, to) {
+    var Move = function(from, to, promoteTo) {
         if(_.isEqual(from, to)){
             throw new Error("Move constructor's arguments must differ" + from + ", " + to);
         }
 
         this.from = from;
         this.to = to;
+        if(promoteTo){
+            this.promoteTo = promoteTo;
+        }
     };
 
     Move.prototype.toString = function() {

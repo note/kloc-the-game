@@ -174,7 +174,40 @@ define(['game', 'underscore', 'jquery'],
                     expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e5"), new Game.Field("f6")), gameState)).toBe(false);
                 });
 
-                it("be promoted to any piece", function() {});
+                it("be promoted to any piece", function() {
+                    var chessboard = new Game.Chessboard();
+                    chessboard.setPiece(new Game.Field("a7"), new Game.Pawn(white));
+
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Rook(white)))).toBe(true);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Knight(white)))).toBe(true);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Bishop(white)))).toBe(true);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Queen(white)))).toBe(true);
+
+                    // this is quite problematic case
+                    // Chessboard.isLegalMove will treat such move as legal and validation for lack of third argument should be added in another layer
+                    // it's better decision to pass it because Chessboard.isLegalMove is used in few other places (eg. in anyMovePossible) where third argument
+                    // is not actually needed (in anyMovePossible we are not interested to which piece user wants to promote his pawn)
+                    // TODO: add validation in another layer
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8")))).toBe(true);
+
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.King(white)))).toBe(false);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Pawn(white)))).toBe(false);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Queen(black)))).toBe(false);
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("b8"), new Game.Queen(white)))).toBe(false);
+
+                    chessboard.setPiece(new Game.Field("b8"), new Game.Queen(black));
+                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("b8"), new Game.Queen(white)))).toBe(true);
+                });
+
+                // TODO: add this test in scala
+                it("after being promoted another piece is actually on chessboard", function(){
+                    var chessboard = new Game.Chessboard();
+                    chessboard.setPiece(new Game.Field("a7"), new Game.Pawn(white));
+
+                    chessboard.applyMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Queen(white)), new Game.GameState());
+                    expect(chessboard.getPiece(new Game.Field("a7"))).toBeUndefined();
+                    expect(chessboard.getPiece(new Game.Field("a8"))).toEqual(new Game.Queen(white));
+                });
 
                 it("can be pinned", function() {
                     var chessboard = new Game.Chessboard();

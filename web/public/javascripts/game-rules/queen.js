@@ -1,6 +1,7 @@
 define(['piece', 'chessboardUtils'], function(Piece, ChessboardUtils){
     var Queen = function(color) {
         Piece.call(this, color);
+        this.symbol = 'q';
     }
 
     Queen.prototype = Object.create(Piece.prototype);
