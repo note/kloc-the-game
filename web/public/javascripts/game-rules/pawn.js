@@ -68,21 +68,34 @@ define(['piece', 'color', 'field', 'chessboardUtils'], function(Piece, Color, Fi
     };
 
     Pawn.prototype.isCorrectPromotion = function(move){
-        var newPiece = move.promoteTo;
-        var sameColor = this.color === newPiece.color;
-        var correctPiece = newPiece.symbol !== 'k' && newPiece.symbol !== 'p';
-        return sameColor && correctPiece;
-    }
-
-    Pawn.prototype.isLegalMove = function(chessboard, move, gameState) {
         if('promoteTo' in move){
-            return (this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard)) && this.isCorrectPromotion(move);
-        }else{
-            return this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard) || this.isEnpassant(chessboard, move, gameState);
+            var newPiece = move.promoteTo;
+            var sameColor = this.color === newPiece.color;
+            var correctPiece = newPiece.symbol !== 'k' && newPiece.symbol !== 'p';
+            return sameColor && correctPiece;
         }
+        return false;
     };
 
-    // TODO: add comment
+    Pawn.prototype.promotionRow = function(){
+        return this.color === Color.white ? 7 : 0;
+    };
+
+    Pawn.prototype.isLegalMove = function(chessboard, move, gameState, ignorePromoteTo) {
+        if(this.isGoingForward(chessboard, move) || this.isTakingEnemy(move, chessboard)){
+            if(move.to.row === this.promotionRow()){
+                if(ignorePromoteTo === false){
+                    return this.isCorrectPromotion(move);
+                }else{
+                    return true;
+                }
+            }else{
+                return true;
+            }
+        }
+        return this.isEnpassant(chessboard, move, gameState);
+    };
+
     Pawn.prototype.applyMove = function(chessboard, move, gameState) {
         if('promoteTo' in move){
             chessboard.setPiece(move.from, move.promoteTo);

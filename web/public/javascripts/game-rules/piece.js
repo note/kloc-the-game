@@ -1,4 +1,4 @@
-define(['move'], function(Move) {
+define(['move', 'funUtils'], function(Move, FunUtils) {
     var Piece = function(color) {
         this.color = color;
     };
@@ -9,11 +9,10 @@ define(['move'], function(Move) {
 
     Piece.prototype.anyMovePossible = function(chessboard, field, passedGameState) {
         var vectorsToCheck = this.vectors();
-        var found = _.find(vectorsToCheck, function(vector){
+        return FunUtils.exists(vectorsToCheck, function(vector){
             var move = Move.fromVector(field, vector);
             return move && chessboard.isLegalMove(move, passedGameState);
         });
-        return found !== undefined;
     }
 
     return Piece;

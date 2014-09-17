@@ -1,4 +1,4 @@
-define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'underscore'], function(Piece, GameState, Move, ChessboardUtils, Field, Color, _){
+define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'underscore', 'funUtils'], function(Piece, GameState, Move, ChessboardUtils, Field, Color, _, FunUtils){
     var King = function(color) {
         Piece.call(this, color);
         this.symbol = 'k'; // TODO: we dont really need it, just to make Chessboard.findKingField work
@@ -15,11 +15,11 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
     King.prototype.wouldBeCheckedOnWay = function(chessboard, move) {
         var that = this;
         var fieldsBetween = ChessboardUtils.getFieldsBetween(move.from, move.to);
-        return _.find(fieldsBetween, function(field){
+        return FunUtils.exists(fieldsBetween, function(field){
             return chessboard.withMove(new Move(move.from, move.to), function(){
                 return that.isChecked(chessboard, field);
             });
-        }) !== undefined;
+        });
     };
 
     King.prototype.isShortCastling = function(chessboard, move) {
@@ -86,19 +86,17 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
         var Vector = ChessboardUtils.Vector;
         var directions = [new Vector(1, 1), new Vector(1, 0), new Vector(1, -1), new Vector(0, -1), new Vector(-1, -1), new Vector(-1, 0), new Vector(-1, 1), new Vector(0, 1)];
 
-        // TODO: it's a common idiom, it may be worth extracting to some method
-        var found = _.find(directions, function(direction){
+        return FunUtils.exists(directions, function(direction){
             var move = Move.fromVector(field, direction);
             return move && chessboard.isLegalMove(move, gameState);
         });
-        return found !== undefined;
     };
 
     King.prototype.canBeShieldedOrBeaten = function(chessboard, kingField, gameState) {
         var checkingFields = this.getCheckingFields(chessboard, kingField, gameState);
         var friendlyPiecesFields = chessboard.getFieldsWithPiecesOfColor(this.color);
 
-        var found = _.find(checkingFields, function(checkingField) {
+        return FunUtils.exists(checkingFields, function(checkingField) {
             return _.find(friendlyPiecesFields, function(friendlyField){
                 var destinationFields = ChessboardUtils.getFieldsBetween(checkingField, kingField);
                 destinationFields.push(checkingField);
@@ -107,7 +105,6 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
                 });
             });
         });
-        return found !== undefined;
     };
 
     King.prototype.canAvoidBeingChecked = function(chessboard, field, gameState) {

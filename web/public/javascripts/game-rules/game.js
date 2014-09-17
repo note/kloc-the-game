@@ -1,4 +1,4 @@
-define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', 'knight', 'queen', 'pawn', 'king', 'chessboardFactory'], function(Field, Move, Chessboard, Color, GameState, Rook, Bishop, Knight, Queen, Pawn, King, ChessboardFactory){
+define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', 'knight', 'queen', 'pawn', 'king', 'chessboardFactory', 'funUtils'], function(Field, Move, Chessboard, Color, GameState, Rook, Bishop, Knight, Queen, Pawn, King, ChessboardFactory, FunUtils){
 
     function setResultIfFinished(){
         var checkmate = this.isCheckmate();
@@ -58,7 +58,7 @@ define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', '
     ChessGame.prototype.isLegalMove = function(move){
         var activePiece = this.chessboard.getPiece(move.from);
         if(activePiece.color === this.nextMoveColor){
-            return this.chessboard.isLegalMove(move, this.state);
+            return this.chessboard.isValidMove(move, this.state);
         }
         return false;
     };
@@ -79,9 +79,9 @@ define(['field', 'move', 'chessboard', 'color', 'gameState', 'rook', 'bishop', '
     ChessGame.prototype.isStalemate = function(){
         var color = this.nextMoveColor.enemy();
         var fields = this.chessboard.getFieldsWithPiecesOfColor(color);
-        return _.find(fields, function(field){
+        return !FunUtils.exists(fields, function(field){
             return this.chessboard.getPiece(field).anyMovePossible(this.chessboard, field, this.gameState);
-        }, this) === undefined;
+        }, this);
     }
 
     ChessGame.prototype.applyMove = function(move){

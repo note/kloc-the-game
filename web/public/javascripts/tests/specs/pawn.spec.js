@@ -179,21 +179,24 @@ define(['game', 'underscore'],
                     chessboard.setPiece(new Game.Field("a7"), new Game.Pawn(white));
 
                     expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Rook(white)))).toBe(true);
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Knight(white)))).toBe(true);
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Bishop(white)))).toBe(true);
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Queen(white)))).toBe(true);
 
                     // this is quite problematic case
-                    // Chessboard.isLegalMove will treat such move as legal and validation for lack of third argument should be added in another layer
-                    // it's better decision to pass it because Chessboard.isLegalMove is used in few other places (eg. in anyMovePossible) where third argument
+                    // Chessboard.isLegalMove treats such move as legal, isValidMove as illegal
+                    // Chessboard.isLegalMove is used in few other places (eg. in anyMovePossible) where third argument
                     // is not actually needed (in anyMovePossible we are not interested to which piece user wants to promote his pawn)
-                    // TODO: add validation in another layer
+                    // In all outside calls isValidMove should be used because it executes full validation
                     expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8")))).toBe(true);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8")))).toBe(false);
 
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.King(white)))).toBe(false);
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Pawn(white)))).toBe(false);
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Queen(black)))).toBe(false);
-                    expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("b8"), new Game.Queen(white)))).toBe(false);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Rook(white)))).toBe(true);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Knight(white)))).toBe(true);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Bishop(white)))).toBe(true);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Queen(white)))).toBe(true);
+
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.King(white)))).toBe(false);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Pawn(white)))).toBe(false);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("a8"), new Game.Queen(black)))).toBe(false);
+                    expect(chessboard.isValidMove(new Game.Move(new Game.Field("a7"), new Game.Field("b8"), new Game.Queen(white)))).toBe(false);
 
                     chessboard.setPiece(new Game.Field("b8"), new Game.Queen(black));
                     expect(chessboard.isLegalMove(new Game.Move(new Game.Field("a7"), new Game.Field("b8"), new Game.Queen(white)))).toBe(true);

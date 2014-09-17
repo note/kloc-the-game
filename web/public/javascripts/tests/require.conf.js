@@ -22,6 +22,7 @@ require.config({
         chessboardFactory: 'game-rules/chessboardFactory',
         gameState:         'game-rules/gameState',
         game:              'game-rules/game',
+        funUtils:          'game-rules/funUtils',
 
         // Libraries
         // FIXME: we don't want to depend on jQuery necessarily, but for

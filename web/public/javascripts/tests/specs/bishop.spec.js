@@ -15,7 +15,6 @@ define(['game', 'underscore'],
             it("can move diagonally", function() {
                 chessboard.setPiece(new Game.Field("e4"), new Game.Bishop(black));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("h7")))).toBe(true);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("f3")))).toBe(true);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("c2")))).toBe(true);
@@ -26,7 +25,6 @@ define(['game', 'underscore'],
                 chessboard.setPiece(new Game.Field("e4"), new Game.Bishop(black));
                 chessboard.setPiece(new Game.Field("c2"), new Game.Rook(white));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("c2")))).toBe(true);
             });
 
@@ -34,7 +32,6 @@ define(['game', 'underscore'],
                 chessboard.setPiece(new Game.Field("e4"), new Game.Bishop(black));
                 chessboard.setPiece(new Game.Field("c2"), new Game.Rook(black));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("c2")))).toBe(false);
             });
 
@@ -43,7 +40,6 @@ define(['game', 'underscore'],
                 chessboard.setPiece(new Game.Field("d3"), new Game.Rook(black));
                 chessboard.setPiece(new Game.Field("f3"), new Game.Rook(white));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("c2")))).toBe(false);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("b1")))).toBe(false);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("g2")))).toBe(false);
@@ -52,7 +48,6 @@ define(['game', 'underscore'],
             it("cannot move other way then diagonally", function() {
                 chessboard.setPiece(new Game.Field("e4"), new Game.Bishop(black));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("e6")))).toBe(false);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("b4")))).toBe(false);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("c5")))).toBe(false);

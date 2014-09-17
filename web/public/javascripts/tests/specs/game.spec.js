@@ -9,6 +9,19 @@ define(['game', 'underscore'],
             game.applyMove(move);
         }
 
+        function justBeforePawnPromotion(){
+            var game = new Game.ChessGame();
+            applyMove(game, "a2", "a4");
+            applyMove(game, "g8", "h6");
+            applyMove(game, "a4", "a5");
+            applyMove(game, "h6", "g8");
+            applyMove(game, "a5", "a6");
+            applyMove(game, "g8", "h6");
+            applyMove(game, "a6", "b7");
+            applyMove(game, "h6", "g8");
+            return game;
+        }
+
         describe("Game", function() {
             it("starts with white's move", function(){
                 var game = new Game.ChessGame();
@@ -130,6 +143,19 @@ define(['game', 'underscore'],
                 expect(game.result).toEqual(null);
                 game.applyMove(Game.Move.propositionAccepted);
                 expect(game.result).toEqual(null);
+            });
+        });
+
+        describe("Pawn promotion move", function(){
+            it("should be valid", function(){
+                var game = justBeforePawnPromotion();
+
+                expect(game.isLegalMove(new Game.Move(new Game.Field("b7"), new Game.Field("a8")))).toBe(false);
+                expect(game.isLegalMove(new Game.Move(new Game.Field("b7"), new Game.Field("c8")))).toBe(false);
+                expect(game.isLegalMove(new Game.Move(new Game.Field("b7"), new Game.Field("a8"), new Game.King(Game.Color.white)))).toBe(false);
+                expect(game.isLegalMove(new Game.Move(new Game.Field("b7"), new Game.Field("a8"), new Game.Pawn(Game.Color.white)))).toBe(false);
+                expect(game.isLegalMove(new Game.Move(new Game.Field("b7"), new Game.Field("a8"), new Game.Queen(Game.Color.black)))).toBe(false);
+                expect(game.isLegalMove(new Game.Move(new Game.Field("b7"), new Game.Field("a8"), new Game.Queen(Game.Color.white)))).toBe(true);
             });
         });
     }

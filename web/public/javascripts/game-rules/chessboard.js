@@ -1,6 +1,6 @@
 'use strict'
 
-define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'], function(ChessboardUtils, Field, PieceModule, GameState, King, _){
+define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 'funUtils'], function(ChessboardUtils, Field, PieceModule, GameState, King, _, FunUtils){
 
     /* private methods */
 
@@ -40,10 +40,9 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
     };
 
     Chessboard.prototype.somethingBetween = function(from, to) {
-        var found = _.find(ChessboardUtils.getFieldsBetween(from, to), function(field) {
+        return FunUtils.exists(ChessboardUtils.getFieldsBetween(from, to), function(field) {
             return this.getPiece(field) !== undefined;
         }, this);
-        return found !== undefined;
     }
 
     Chessboard.prototype.withMove = function(move, fn) {
@@ -76,7 +75,8 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
      * @param currentGameState
      * @returns {*}
      */
-    Chessboard.prototype.canMove = function(move, currentGameState) {
+    Chessboard.prototype.canMove = function(move, currentGameState, ignorePromoteToProperty) {
+        var ignorePromoteTo = ignorePromoteToProperty === undefined ? true : ignorePromoteToProperty;
         var gameState = currentGameState || new GameState();
 
         var fromField = move.from.toIndex();
@@ -89,7 +89,7 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
             return false;
         }
 
-        return this.fields[fromField].isLegalMove(this, move, gameState);
+        return this.fields[fromField].isLegalMove(this, move, gameState, ignorePromoteTo);
     }
 
     /**
@@ -101,6 +101,10 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
      */
     Chessboard.prototype.isLegalMove = function(move, currentGameState) {
         return this.canMove(move, currentGameState) && !leadsToKingBeingChecked.call(this, move);
+    };
+
+    Chessboard.prototype.isValidMove = function(move, currentGameState) {
+        return this.canMove(move, currentGameState, false) && !leadsToKingBeingChecked.call(this, move);
     };
 
     Chessboard.prototype.move = function(move) {
