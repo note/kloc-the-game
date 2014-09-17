@@ -2,6 +2,31 @@
 
 define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'], function(ChessboardUtils, Field, PieceModule, GameState, King, _){
 
+    /* private methods */
+
+    function leadsToKingBeingChecked(move) {
+        var activeColor = this.getPiece(move.from).color;
+        return this.withMove(move, function(){
+            var kingField = this.findKingField(activeColor);
+
+            // in real game there is always king on chessboard, however in some test there is no king
+            // TODO: consider another way of handling these situations
+            if(kingField === undefined){
+                return false;
+            }
+
+            return this.getPiece(kingField).isChecked(this, kingField);
+        });
+    }
+
+    function getAllFields() {
+        return _.map(this.fields, function(piece, fieldIndex){
+            return Field.fromIndex(fieldIndex);
+        });
+    }
+
+    /* public methods */
+
     var Chessboard = function() {
         this.fields = new Array(64)
     };
@@ -33,7 +58,7 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
     };
 
     Chessboard.prototype.findKingField = function(color) {
-        var allFields = this.allFields();
+        var allFields = getAllFields.call(this);
         var desiredPiece = new King(color);
 
         return _.find(allFields, function(field){
@@ -41,23 +66,17 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
         }, this);
     };
 
-    Chessboard.prototype.leadsToKingBeingChecked = function(move) {
-        var activeColor = this.getPiece(move.from).color;
-        return this.withMove(move, function(){
-            var kingField = this.findKingField(activeColor);
-
-            // in real game there is always king on chessboard, however in some test there is no king
-            // TODO: consider another way of handling these situations
-            if(kingField === undefined){
-                return false;
-            }
-
-            return this.getPiece(kingField).isChecked(this, kingField);
-        });
-    };
-
-    // TODO: canCheck is not a good name
-    Chessboard.prototype.canCheck = function(move, currentGameState) {
+    /**
+     * This methods checks if given move is legal but ignores if given move leads to king being checked. So this method
+     * is useful if we want to check if a piece checks enemy king. The crucial observation is that piece checks king
+     * even if it (attacking piece) is pinned. Besides of checking if king is under check only method Chessboard.isLegalMove
+     * should be used.
+     *
+     * @param move
+     * @param currentGameState
+     * @returns {*}
+     */
+    Chessboard.prototype.canMove = function(move, currentGameState) {
         var gameState = currentGameState || new GameState();
 
         var fromField = move.from.toIndex();
@@ -73,8 +92,15 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
         return this.fields[fromField].isLegalMove(this, move, gameState);
     }
 
+    /**
+     * Returns true if given move for given game state is legal, returns false otherwise.
+     *
+     * @param move
+     * @param currentGameState
+     * @returns true if given move for given game state is legal, returns false otherwise
+     */
     Chessboard.prototype.isLegalMove = function(move, currentGameState) {
-        return this.canCheck(move, currentGameState) && !this.leadsToKingBeingChecked(move);
+        return this.canMove(move, currentGameState) && !leadsToKingBeingChecked.call(this, move);
     };
 
     Chessboard.prototype.move = function(move) {
@@ -83,24 +109,30 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore'],
         this.setPiece(move.to, activePiece);
     };
 
-    // TODO: add comment
+    /**
+     * This method apply given move for chessboard object. This method does NOT check if given move is correct.
+     *
+     * By applying move we mean getting new game state and mutating chessboard according to move.
+     *
+     * @param move
+     * @param gameState
+     * @returns new game state
+     */
     Chessboard.prototype.applyMove = function(move, gameState) {
-        var newGameState = gameState.clone();
-        var activePiece = this.getPiece(move.from);
-        newGameState.forColor(activePiece.color).enpassantProneColumn = null;
-        var nextGameState = activePiece.applyMove(this, move, newGameState);
+        function getNextState() {
+            var newGameState = gameState.clone();
+            var activePiece = this.getPiece(move.from);
+            newGameState.forColor(activePiece.color).enpassantProneColumn = null;
+            var nextGameState = activePiece.applyMove(this, move, newGameState);
+            return nextGameState;
+        }
+        var nextGameState = getNextState.call(this);
         this.move(move);
         return nextGameState;
     }
 
-    Chessboard.prototype.allFields = function() {
-        return _.map(this.fields, function(piece, fieldIndex){
-            return Field.fromIndex(fieldIndex);
-        });
-    }
-
     Chessboard.prototype.getFieldsWithPiecesOfColor = function(color) {
-        var allFields = this.allFields();
+        var allFields = getAllFields.call(this);
         return _.filter(allFields, function(field){
             var piece = this.getPiece(field);
             return piece !== undefined && piece.color === color;

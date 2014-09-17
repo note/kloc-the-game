@@ -7,11 +7,6 @@ define(['move'], function(Move) {
         return gameState;
     };
 
-    // TODO: probably to remove
-    Piece.prototype.canCheck = function(chessboard, move, gameState) {
-        return this.isLegalMove(chessboard, move, gameState);
-    }
-
     Piece.prototype.anyMovePossible = function(chessboard, field, passedGameState) {
         var vectorsToCheck = this.vectors();
         var found = _.find(vectorsToCheck, function(vector){

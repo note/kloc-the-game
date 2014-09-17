@@ -71,7 +71,7 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
             if(isKing(chessboard.getPiece(enemyPieceField))){
                 return chessboard.getPiece(enemyPieceField).isStandardMove(chessboard, new Move(enemyPieceField, field));
             }else{
-                return chessboard.canCheck(new Move(enemyPieceField, field), gameState);
+                return chessboard.canMove(new Move(enemyPieceField, field), gameState);
             }
         });
     }
@@ -140,10 +140,6 @@ define(['piece', 'gameState', 'move', 'chessboardUtils', 'field', 'color', 'unde
         gameState.forColor(this.color).shortCastlingEnabled = false;
         gameState.forColor(this.color).longCastlingEnabled = false;
         return gameState;
-    }
-
-    King.prototype.canCheck = function(chessboard, move, gameState) {
-        return this.isStandardMove(chessboard, move);
     }
 
     return King;

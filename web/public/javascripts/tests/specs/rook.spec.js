@@ -15,7 +15,6 @@ define(['game', 'underscore'],
             it("can move vertically", function() {
                 chessboard.setPiece(new Game.Field("c2"), new Game.Rook(black));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("c1")))).toBe(true);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("c7")))).toBe(true);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("c8")))).toBe(true);
@@ -26,7 +25,6 @@ define(['game', 'underscore'],
 
                 var someLegalDestinations = ["a2", "b2", "d2", "h2"];
                 someLegalDestinations.forEach(function(destination){
-                    // TODO: use matchers
                     expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field(destination)))).toBe(true);
                 })
             });
@@ -35,7 +33,6 @@ define(['game', 'underscore'],
                 chessboard.setPiece(new Game.Field("c2"), new Game.Rook(black));
                 chessboard.setPiece(new Game.Field("c4"), new Game.Rook(white));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("c4")))).toBe(true);
             });
 
@@ -43,7 +40,6 @@ define(['game', 'underscore'],
                 chessboard.setPiece(new Game.Field("c2"), new Game.Rook(black));
                 chessboard.setPiece(new Game.Field("c4"), new Game.Rook(black));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("c4")))).toBe(false);
             });
 
@@ -52,7 +48,6 @@ define(['game', 'underscore'],
                 chessboard.setPiece(new Game.Field("c4"), new Game.Rook(black));
                 chessboard.setPiece(new Game.Field("e2"), new Game.Rook(white));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("c5")))).toBe(false);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("c8")))).toBe(false);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("f2")))).toBe(false);
@@ -62,7 +57,6 @@ define(['game', 'underscore'],
                 chessboard.setPiece(new Game.Field("c2"), new Game.Rook(black));
                 chessboard.setPiece(new Game.Field("c4"), new Game.Rook(white));
 
-                // TODO: use matchers
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("b3")))).toBe(false);
                 expect(chessboard.isLegalMove(new Game.Move(new Game.Field("c2"), new Game.Field("b4")))).toBe(false);
             });
