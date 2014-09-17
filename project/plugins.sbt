@@ -8,4 +8,4 @@ addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.7.0-SNAPSHOT")
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.4")
 
-//addSbtPlugin("com.joescii" % "sbt-jasmine-plugin" % "1.2.3")
+addSbtPlugin("com.joescii" % "sbt-jasmine-plugin" % "1.3.0")
