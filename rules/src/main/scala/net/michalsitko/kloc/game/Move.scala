@@ -11,8 +11,8 @@ package net.michalsitko.kloc.game
 }*/
 
 class Move(source: Field, destination: Field){
-  val from = source
-  val to = destination
+  def from = source
+  def to = destination
 
   def invertRow(row: Int): Int = {
     7 - row
