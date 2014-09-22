@@ -62,7 +62,6 @@ object Room {
 
 class RoomActor(table: ChessTable) extends Actor {
   val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
-  table.setActor(this.context.self)
 
   override def receive: Actor.Receive = {
     case MoveMessage(userId, move) =>

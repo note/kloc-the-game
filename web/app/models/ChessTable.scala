@@ -5,7 +5,7 @@ import scala.collection.mutable.Map
 import models.Player
 import models.User
 import models.TimeControl
-import akka.actor.{Cancellable, ActorRef}
+import akka.actor.{Cancellable}
 import scala.concurrent.duration._
 import play.libs.Akka
 import net.michalsitko.kloc.game.White
@@ -35,7 +35,6 @@ class ChessTable (timeLimitMs: Int) {
   private val players = Map[User, Player]()
   private var currentState = ChessTableState.WaitingForPlayers
   private var noTimeLeftTask: Option[Cancellable] = None
-  private var roomActor: ActorRef = _
 
   val game = new KlocGame
 
@@ -57,18 +56,12 @@ class ChessTable (timeLimitMs: Int) {
     }
   }
 
-  def setActor(actor: ActorRef){
-    this.roomActor = actor
-  }
-
   def start() = {
-    noTimeLeftTask = Some(white.startTimer(roomActor))
+    noTimeLeftTask = Some(white.startTimer(this))
   }
 
   def timeExceeded(user: User) = {
-    println("bazinga chessTable.timeExceeded1")
     players.get(user).foreach{player =>
-      println("bazinga chessTable.timeExceeded2")
       game.status = game.status.copy(result = Some(new Winner(player.color.opposite())))
       updateState()
     }
@@ -107,7 +100,7 @@ class ChessTable (timeLimitMs: Int) {
     try{
       game.applyMove(move)
       player.stopTimer(noTimeLeftTask)
-      noTimeLeftTask = Some(player.opponent.startTimer(roomActor))
+      noTimeLeftTask = Some(player.opponent.startTimer(this))
     }catch{
       case e: IncorrectMoveException =>
     }
@@ -136,10 +129,12 @@ case class Player(user: User, timeControl: TimeControl, color: Color){
     requestedStart = true
   }
 
-  def startTimer(actor: ActorRef): Cancellable = {
+  def startTimer(table: ChessTable): Cancellable = {
     timerStarted = System.nanoTime()
     println("bazinga startTimer: " + millisecondsLeft)
-    val res = Akka.system.scheduler.scheduleOnce(millisecondsLeft milliseconds, actor, NoTimeLeft(user))
+    val res = Akka.system.scheduler.scheduleOnce(millisecondsLeft milliseconds){
+      table.timeExceeded(user)
+    }
     println("bazinga startTimer2: " + millisecondsLeft)
     res
   }
