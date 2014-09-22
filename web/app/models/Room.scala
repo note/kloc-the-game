@@ -60,14 +60,24 @@ object Room {
   def getRoomNames() = rooms.keys
 }
 
-class RoomActor extends Actor {
+class RoomActor(table: ChessTable) extends Actor {
   val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
+  table.setActor(this.context.self)
 
   override def receive: Actor.Receive = {
     case MoveMessage(userId, move) =>
       notifyAll(MoveMessage(userId, move))
     case Join(playerName) =>
       sender() ! Connected(roomEnumerator)
+    case NoTimeLeft(user: User) =>
+      table.timeExceeded(user)
+      println("bazinga RoomActor.receive timeexceeded")
+    case _ =>
+      println("bazinga RoomActor.receive unknown message")
+  }
+
+  override def postStop() {
+    println("bazinga stopped actor")
   }
 
   private def notifyAll(moveMessage: MoveMessage) = {

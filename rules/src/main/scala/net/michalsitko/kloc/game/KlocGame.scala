@@ -11,7 +11,7 @@ class KlocGame (customChessboard: Chessboard){
   private var gameState = GameState.default()
   private val chessboard = customChessboard
   var status = GameStatus(chessboard, None)
-  private var whoseTurn: Color = White()
+  var whoseTurn: Color = White()
   private var proposal: Option[Color] = None
   var propositionRejectedInThisTurn = false
 

@@ -8,5 +8,6 @@ package net.michalsitko.kloc.game
  * To change this template use File | Settings | File Templates.
  */
 case class GameStatus (chessboard: Chessboard, result: Option[Result]){
+  // TODO: change to parameterless method
   def isFinished(): Boolean = result.isDefined
 }
