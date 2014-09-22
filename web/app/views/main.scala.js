@@ -1,7 +1,7 @@
 "use strict"
 
 require(['jquery'], function($) {
-    var createTableURL = '@routes.Application.createTable()';
+    var createRoomUrl = '@routes.Application.createRoom()';
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
 
     function createGameWebsocket(url){
@@ -19,16 +19,16 @@ require(['jquery'], function($) {
     $(document).ready(function() {
         console.log("ready!");
 
-        $('#create-table').click(function(){
-            var tableName = $('#new-table-name').val();
-            $.get(createTableURL, {name: tableName}, function(data){
+        $('#create-room').click(function(){
+            var roomName = $('#new-room-name').val();
+            $.get(createRoomUrl, {name: roomName}, function(data){
                 console.log(data);
                 var wsUrl = data.url;
                 createGameWebsocket(wsUrl);
             });
         });
 
-        $(".join-table").click(function(){
+        $(".join-room").click(function(){
             var url = $(this).attr("href");
             var socket = createGameWebsocket(url);
             $("#game-panel").show();

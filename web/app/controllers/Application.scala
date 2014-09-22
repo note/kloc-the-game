@@ -5,32 +5,32 @@ import play.api.mvc._
 import net.michalsitko.kloc.game.Chessboard
 import play.api.libs.iteratee.{Input, Enumerator, Iteratee}
 import play.api.libs.json._
-import models.Table
+import models.Room
 import scala.concurrent.Future
 
 object Application extends Controller {
 
   def index = Action { implicit request =>
-    Ok(views.html.index("Your new application is ready.", Table.getTableNames().map((name: Int) => (name, routes.Application.joinTable(name).webSocketURL()))))
+    Ok(views.html.index("Your new application is ready.", Room.getRoomNames().map((name: Int) => (name, routes.Application.joinRoom(name).webSocketURL()))))
   }
 
-  def createTable = Action { implicit request =>
+  def createRoom = Action { implicit request =>
     request.getQueryString("name") match {
-      case Some(tableName) =>
-        val tableId = Table.newTable(tableName)
-        val webSocketUrl = routes.Application.joinTable(tableId).webSocketURL()
-        Ok(Json.obj("tableId" -> tableId, "url" -> webSocketUrl))
+      case Some(roomName) =>
+        val roomId = Room.newRoom(roomName)
+        val webSocketUrl = routes.Application.joinRoom(roomId).webSocketURL()
+        Ok(Json.obj("roomId" -> roomId, "url" -> webSocketUrl))
       case _ =>
-        Ok(Json.obj("errors" -> JsArray(List(JsString("No table name")))))
+        Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))
     }
   }
 
-  def joinTable(tableId: Int) = WebSocket.tryAccept[JsValue] { request =>
-    Table.getTableById(tableId) match {
-      case Some(table) =>
-        table.join()
+  def joinRoom(roomId: Int) = WebSocket.tryAccept[JsValue] { request =>
+    Room.getRoomById(roomId) match {
+      case Some(room) =>
+        room.join()
       case _ =>
-        Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("No table name")))))))
+        Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))))
     }
   }
 

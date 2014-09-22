@@ -19,7 +19,7 @@ import models.Join
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 
-class Table (actor: ActorRef) {
+class Room (actor: ActorRef) {
   def join() = {
     implicit val timeout = Timeout(1 second)
     (actor ? Join("player1")).map {
@@ -33,20 +33,20 @@ class Table (actor: ActorRef) {
 
         Right((in, enumerator))
       case _ =>
-        Right((Iteratee.ignore[JsValue], Enumerator[JsValue](JsObject(Seq("error" -> JsString("cannot connect to table")))).andThen(Enumerator.enumInput(Input.EOF))))
+        Right((Iteratee.ignore[JsValue], Enumerator[JsValue](JsObject(Seq("error" -> JsString("cannot connect to room")))).andThen(Enumerator.enumInput(Input.EOF))))
     }
   }
 }
 
-object Table {
-  var tables = Map[Int, Table]()
+object Room {
+  var rooms = Map[Int, Room]()
   var nextId = 0;
 
-  def newTable(name: String) = {
-    val roomActor = Akka.system.actorOf(Props[TableActor])
-    val tableId = useNextId()
-    tables += (tableId -> new Table(roomActor))
-    tableId
+  def newRoom(name: String) = {
+    val roomActor = Akka.system.actorOf(Props[RoomActor])
+    val roomId = useNextId()
+    rooms += (roomId -> new Room(roomActor))
+    roomId
   }
 
   def useNextId() = {
@@ -55,19 +55,19 @@ object Table {
     res
   }
 
-  def getTableById(id: Int) = tables.get(id)
+  def getRoomById(id: Int) = rooms.get(id)
 
-  def getTableNames() = tables.keys
+  def getRoomNames() = rooms.keys
 }
 
-class TableActor extends Actor {
-  val (tableEnumerator, tableChannel) = Concurrent.broadcast[JsValue]
+class RoomActor extends Actor {
+  val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
 
   override def receive: Actor.Receive = {
     case MoveMessage(userId, move) =>
       notifyAll(MoveMessage(userId, move))
     case Join(playerName) =>
-      sender() ! Connected(tableEnumerator)
+      sender() ! Connected(roomEnumerator)
   }
 
   private def notifyAll(moveMessage: MoveMessage) = {
@@ -78,7 +78,7 @@ class TableActor extends Actor {
         "to" -> JsString(moveMessage.move.to.toString)
       )
     )
-    tableChannel.push(msg)
+    roomChannel.push(msg)
   }
 }
 

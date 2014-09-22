@@ -1,11 +1,11 @@
-@(message: String, tables: Iterable[(Int, String)])
+@(message: String, rooms: Iterable[(Int, String)])
 
 @main("Welcome to Play") {
 
 <p>@message</p>
 
-<input type="text" id="new-table-name" />
-<button id="create-table">New Room</button>
+<input type="text" id="new-room-name" />
+<button id="create-room">New Room</button>
 
 <div id="game-panel" style="display: none">
     <p>From: <input type="text" id="from" /></p>
@@ -14,8 +14,8 @@
 </div>
 
 <ul>
-@for(table <- tables) {
-    <li><a href="@table._2" class="join-table">@table._1</a></li>
+@for(room <- rooms) {
+    <li><a href="@room._2" class="join-room">@room._1</a></li>
 }
 </ul>
 

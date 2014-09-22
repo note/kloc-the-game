@@ -4,9 +4,9 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /createTable                controllers.Application.createTable
+GET     /createRoom                 controllers.Application.createRoom
 GET     /mainJs                     controllers.Application.mainJs
-GET     /joinTable                  controllers.Application.joinTable(tableId: Int)
+GET     /joinRoom                   controllers.Application.joinRoom(roomId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
