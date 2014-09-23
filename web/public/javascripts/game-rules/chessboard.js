@@ -19,16 +19,16 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 
         });
     }
 
-    function getAllFields() {
-        return _.map(this.fields, function(piece, fieldIndex){
-            return Field.fromIndex(fieldIndex);
-        });
-    }
-
     /* public methods */
 
     var Chessboard = function() {
         this.fields = new Array(64)
+    };
+
+    Chessboard.prototype.getAllFields = function() {
+        return _.map(this.fields, function(piece, fieldIndex){
+            return Field.fromIndex(fieldIndex);
+        });
     };
 
     Chessboard.prototype.setPiece = function(field, piece) {
@@ -57,7 +57,7 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 
     };
 
     Chessboard.prototype.findKingField = function(color) {
-        var allFields = getAllFields.call(this);
+        var allFields = this.getAllFields();
         var desiredPiece = new King(color);
 
         return _.find(allFields, function(field){
@@ -136,7 +136,7 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 
     }
 
     Chessboard.prototype.getFieldsWithPiecesOfColor = function(color) {
-        var allFields = getAllFields.call(this);
+        var allFields = this.getAllFields();
         return _.filter(allFields, function(field){
             var piece = this.getPiece(field);
             return piece !== undefined && piece.color === color;

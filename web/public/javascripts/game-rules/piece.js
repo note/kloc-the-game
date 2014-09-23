@@ -1,4 +1,4 @@
-define(['move', 'funUtils'], function(Move, FunUtils) {
+define(['move', 'funUtils', 'color'], function(Move, FunUtils, Color) {
     var Piece = function(color) {
         this.color = color;
     };
@@ -14,6 +14,10 @@ define(['move', 'funUtils'], function(Move, FunUtils) {
             return move && chessboard.isLegalMove(move, passedGameState);
         });
     }
+
+    Piece.prototype.toString = function() {
+        return this.color == Color.white ? this.symbol.toUpperCase() : this.symbol.toLowerCase();
+    };
 
     return Piece;
 });
