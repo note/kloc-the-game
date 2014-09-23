@@ -12,34 +12,13 @@ import play.api.libs.concurrent.Execution.Implicits._
 import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.duration._
-import scala.concurrent.Future
-import models.MoveMessage
-import models.Connected
-import models.Join
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import scala.util.Random
 import play.api.libs.json.Reads._
-import play.api.libs.functional.syntax._
-import play.api.libs.json
 
 class Room (actor: ActorRef) {
   implicit val timeout = Timeout(1 second)
-
-  // TODO: probably to remove
-//  implicit val userReads: Reads[User] = (
-//    (JsPath \ "userId").read[String]
-//    )(Room.getUserById _)
-//
-//  implicit val moveReads: Reads[Move] = (
-//    (JsPath \ "from").read[String] and
-//      (JsPath \ "to").read[String]
-//    )(Move.apply _)
-//
-//  implicit val moveMessage: Reads[MoveMessage] = (
-//    (JsPath).read[User] and
-//      (JsPath).read(Move)
-//    )(MoveMessage.apply _)
 
   def join(userId: String, color: Color) = {
     val user = Room.getUserById(userId)
@@ -50,8 +29,6 @@ class Room (actor: ActorRef) {
           (event \ "type").as[String] match {
             case "move" =>
               actor ! MoveMessage(user, Move((event \ "from").as[String], (event \ "to").as[String]))
-            case "start" =>
-              actor ! Start(user)
           }
         }).map { _ =>
           println("Disconnected")
@@ -107,8 +84,6 @@ class RoomActor(table: ChessTable) extends Actor {
     case Join(user, color) =>
       table.addPlayer(user, color)
       sender() ! Connected(roomEnumerator)
-    case Start(user) =>
-      table.requestStart(user)
     case MoveMessage(user, move) =>
       val res = table.move(user, move)
       if(res.isDefined){
@@ -146,7 +121,6 @@ class RoomActor(table: ChessTable) extends Actor {
 class ClientMessage(user: User)
 
 case class Join(user: User, color: Color)
-case class Start(user: User)
 case class MoveMessage(user: User, move: Move)
 case class MoveNotification(user: User, move: Move, gameStatus: GameStatus, playersMillisecondsLeft: Map[String, Long])
 

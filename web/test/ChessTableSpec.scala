@@ -1,17 +1,13 @@
 import akka.actor.Props
 import models._
 import models.User
-import net.michalsitko.kloc.game.Black
-import net.michalsitko.kloc.game.White
-import net.michalsitko.kloc.game.{Winner, Black, White, Color}
+import net.michalsitko.kloc.game.{Winner, Black, White}
 
-import org.specs2.execute.Failure
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
 import play.api.libs.concurrent.Akka
 import play.api.test._
-import play.api.test.Helpers._
 
 
 /**
@@ -58,7 +54,7 @@ class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessage
       table.addPlayer(user3, null) must throwA[IllegalArgumentException]
     }
 
-    "is ready when 2 players has been added" in new WithApplication {
+    "starts after 2 players has been added" in new WithApplication {
       val table = new ChessTable(120 * 1000)
       val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
       table.state must equalTo(ChessTableState.WaitingForPlayers)
@@ -71,21 +67,6 @@ class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessage
       val user2 = User("bob2", "dfad2")
       table.addPlayer(user2, Black())
 
-      table.state must equalTo(ChessTableState.Ready)
-    }
-
-    "starts when both players requested start" in new WithApplication {
-      val table = new ChessTable(120 * 1000)
-      val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
-      val user1 = User("bob", "dfad")
-      table.addPlayer(user1, White())
-      val user2 = User("bob2", "dfad2")
-      table.addPlayer(user2, Black())
-      table.requestStart(user1)
-      table.state must equalTo(ChessTableState.Ready)
-      table.requestStart(user1)
-      table.state must equalTo(ChessTableState.Ready)
-      table.requestStart(user2)
       table.state must equalTo(ChessTableState.Started)
     }
 
@@ -99,9 +80,6 @@ class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessage
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
       table.addPlayer(user2, Black())
-
-      table.requestStart(user1)
-      table.requestStart(user2)
 
       table.state must equalTo(ChessTableState.Started)
       table.game.status.isFinished() must equalTo(false)

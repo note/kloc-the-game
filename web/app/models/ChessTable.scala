@@ -2,19 +2,12 @@ package models
 
 import net.michalsitko.kloc.game._
 import scala.collection.mutable.Map
-import models.Player
-import models.User
-import models.TimeControl
-import akka.actor.{Cancellable}
+import akka.actor.Cancellable
 import scala.concurrent.duration._
 import play.libs.Akka
 import net.michalsitko.kloc.game.White
 import scala.Some
-import models.Player
-import models.User
 import net.michalsitko.kloc.game.Black
-import models.TimeControl
-import models.NoTimeLeft
 import net.michalsitko.kloc.game.IncorrectMoveException
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -25,7 +18,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object ChessTableState extends Enumeration {
   type ChessTableState = Value
-  val WaitingForPlayers, Ready, Started, Finished = Value
+  val WaitingForPlayers, Started, Finished = Value
 }
 
 // make constructor private
@@ -47,9 +40,6 @@ class ChessTable (timeLimitMs: Int) {
       case ChessTableState.WaitingForPlayers if players.size == 2 =>
         white.opponent = black
         black.opponent = white
-        start()
-        ChessTableState.Started
-      case ChessTableState.Ready if players.forall{case (user, player) => player.getRequestedStart} =>
         start()
         ChessTableState.Started
       case ChessTableState.Started if game.status.isFinished() => ChessTableState.Finished
@@ -81,13 +71,6 @@ class ChessTable (timeLimitMs: Int) {
       case Black() => black = player
     }
     updateState()
-  }
-
-  def requestStart(user: User){
-    players.get(user).foreach{ player =>
-      player.requestStart()
-      updateState()
-    }
   }
 
   def move(user: User, move: Move): Option[GameStatus] = {
@@ -135,10 +118,6 @@ case class Player(user: User, timeControl: TimeControl, color: Color){
 
   def setMsLeft(msLeft: Int) {
     millisecondsLeft = msLeft
-  }
-
-  def requestStart(): Unit = {
-    requestedStart = true
   }
 
   def startTimer(table: ChessTable): Cancellable = {
