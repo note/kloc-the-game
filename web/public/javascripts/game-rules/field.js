@@ -52,7 +52,7 @@ define([], function(){
     };
 
     Field.prototype.toString = function() {
-        return "Field(" + String.fromCharCode(asciiValueOfA + this.column) + (this.row + 1).toString() + ")"; // row + 1 because we want to dispay row 0 as 1 and so on
+        return String.fromCharCode(asciiValueOfA + this.column) + (this.row + 1).toString(); // row + 1 because we want to dispay row 0 as 1 and so on
     };
 
     Field.fromIndex = function(index) {

@@ -37,9 +37,6 @@ require(['jquery', 'cookie', 'game', 'underscore'], function($, __notUsed, Game,
 
 
         var canvas = $("#chessboard-canvas").get(0);
-        var canvasCtx = canvas.getContext("2d");
-        var img = $("#pieces-image").get(0);
-//        renderer.drawPieceImage(renderer.getPieceImageFn(new Pawn(black)), new Game.Field("c6"));
 
         var chessboardCanvas = $("#chessboard-canvas").get(0);
         var chessboardContext = chessboardCanvas.getContext('2d');
@@ -54,42 +51,78 @@ require(['jquery', 'cookie', 'game', 'underscore'], function($, __notUsed, Game,
             }
         }
 
-        function drawPiece(piece, field){
-            var srcForPiece = piece.attr("src");
-            var marginTop = Math.floor((fieldSize - piece.height())/2);
-            var top = playerColor === white ? 7 - field.row : field.row;
-            var topPos = top * fieldSize + marginTop;
-            var marginLeft = Math.floor((fieldSize - piece.width())/2);
-            var left = playerColor === white ? field.column : 7 - field.column;
-            var leftPos = left * fieldSize + marginLeft;
-            var html = '<div style="width: ' + fieldSize + 'px; height: ' + fieldSize + '; top:' + topPos + 'px; left: ' + leftPos + 'px; position: absolute;"><img src="' + srcForPiece + '"</div>';
-            $("#pieces-layer").append(html);
+        function drag(event){
+            console.log(event.originalEvent.target.id);
+            event.originalEvent.dataTransfer.setData("from", event.originalEvent.target.id);
         }
 
-        drawPiece($("#black-king"), new Game.Field("b7"));
-        drawPiece($("#black-queen"), new Game.Field("c7"));
-        drawPiece($("#black-rook"), new Game.Field("d7"));
-        drawPiece($("#black-bishop"), new Game.Field("e7"));
-        drawPiece($("#black-knight"), new Game.Field("f7"));
-        drawPiece($("#black-pawn"), new Game.Field("g7"));
+        function drop(event){
+            console.log("ondrop");
+            console.log(event.originalEvent.dataTransfer.getData("from"));
+            console.log(event.target.id);
+        }
 
-        drawPiece($("#white-king"), new Game.Field("b6"));
-        drawPiece($("#white-queen"), new Game.Field("c6"));
-        drawPiece($("#white-rook"), new Game.Field("d6"));
-        drawPiece($("#white-bishop"), new Game.Field("e6"));
-        drawPiece($("#white-knight"), new Game.Field("f6"));
-        drawPiece($("#white-pawn"), new Game.Field("g6"));
+        function dragover(event){
+            console.log("ondragover");
+            var dt = event.originalEvent.dataTransfer;
+            dt.dropEffect = "move";
+            event.preventDefault();
+        }
 
-//        console.log("here12");
-//        var game = new Game.ChessGame()
-//        var allFields = game.chessboard.getAllFields()
-//        _.each(allFields, function(field){
-//            var piece = game.chessboard.getPiece(field);
-//            if(piece !== undefined)
-////                renderer.drawPieceImage(renderer.getPieceImageFn(piece), field);
-//        });
-//
-//        canvasCtx.drawImage(img, 0, 0, pieceWidth, pieceHeight, 0, 0, pieceWidth, pieceHeight);
+        function drawPiece(piece, field){
+            var pieces = {
+                k: '#black-king',
+                q: '#black-queen',
+                r: '#black-rook',
+                b: '#black-bishop',
+                n: '#black-knight',
+                p: '#black-pawn',
+
+                K: '#white-king',
+                Q: '#white-queen',
+                R: '#white-rook',
+                B: '#white-bishop',
+                N: '#white-knight',
+                P: '#white-pawn',
+            }
+
+            var top = playerColor === white ? 7 - field.row : field.row;
+            var topPos = top * fieldSize;
+
+            var left = playerColor === white ? field.column : 7 - field.column;
+            var leftPos = left * fieldSize;
+            var newEl = $(document.createElement('div'));
+            var attrs = {
+                style: 'width: ' + fieldSize + 'px; height: ' + fieldSize + 'px; top: ' + topPos + 'px; left:' + leftPos + 'px; position: absolute',
+                id: 'droppable_' + field.toString()
+            }
+            newEl.attr(attrs);
+
+            if(piece !== undefined){
+                var pieceElement = $(pieces[piece.toString()]);
+                var srcForPiece = pieceElement.attr("src");
+                var marginTop = Math.floor((fieldSize - pieceElement.height())/2);
+                var pieceTopPos = topPos + marginTop;
+                var marginLeft = Math.floor((fieldSize - pieceElement.width())/2);
+                var pieceLeftPos = leftPos + marginLeft;
+                newEl.html('<img src="' + srcForPiece + '" draggable="true" id="' + field.toString() + '" style="position: absolute; top:' + marginTop + 'px; left:' + marginLeft + 'px;" />');
+            }
+
+            newEl.bind('drop', drop);
+            newEl.bind('dragover', dragover);
+            $("#pieces-layer").append(newEl);
+
+            if(piece !== undefined)
+                $("#pieces-layer").find("#" + field.toString()).bind('dragstart', drag);
+        }
+
+
+        var game = new Game.ChessGame()
+        var allFields = game.chessboard.getAllFields()
+        _.each(allFields, function(field){
+            var piece = game.chessboard.getPiece(field);
+            drawPiece(piece, field);
+        });
 
 //        $("#send-introduce").click(function(){
 //            var playerName = $("#player-name").val();
