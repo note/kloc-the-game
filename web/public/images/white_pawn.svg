@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="55.383869"
+   height="75.910744"
+   id="svg1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="white_pawn.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="918"
+     inkscape:window-height="740"
+     id="namedview7"
+     showgrid="false"
+     inkscape:zoom="3.1089143"
+     inkscape:cx="27.691935"
+     inkscape:cy="37.955372"
+     inkscape:window-x="0"
+     inkscape:window-y="22"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <metadata
+     id="metadata3">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title />
+        <dc:description />
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li />
+            <rdf:li>game</rdf:li>
+            <rdf:li>chess</rdf:li>
+            <rdf:li>symbols</rdf:li>
+            <rdf:li>board</rdf:li>
+            <rdf:li>recreation</rdf:li>
+            <rdf:li>fonts</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://www.openclipart.org">
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date />
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3" />
+  <g
+     transform="translate(-921.42487,-223.23889)"
+     id="layer1">
+    <path
+       d="m 972.16114,293.98563 c -1e-4,-9.03698 -2.453,-15.79321 -7.3587,-20.26867 -1.63536,-1.54921 -3.65793,-3.01234 -6.06768,-4.3894 -3.3567,-1.97953 -5.035,-3.78694 -5.0349,-5.4222 -10e-5,-0.86067 0.86055,-1.80739 2.58199,-2.84019 2.66796,-1.46314 4.26019,-3.18448 4.77671,-5.16402 0.17202,-0.77458 0.25809,-1.7213 0.25819,-2.84018 -10e-5,-3.95906 -2.02266,-7.05746 -6.0677,-9.29519 l -2.32379,-1.6783 c -0.43045,-0.43032 -0.64561,-0.9037 -0.6455,-1.42011 -1.1e-4,-1.46312 0.51628,-2.92626 1.54919,-4.38939 0.68843,-0.94672 1.0327,-2.0656 1.0328,-3.3566 -10e-5,-2.23771 -1.20503,-3.87298 -3.61479,-4.90579 -0.77471,-0.25821 -1.5493,-0.3873 -2.3238,-0.3873 -2.40998,0 -4.1313,1.07584 -5.164,3.22749 -0.34436,0.68854 -0.51651,1.37708 -0.51641,2.0656 -10e-5,0.77461 0.55935,2.23773 1.67831,4.38941 0.68843,1.20492 0.98966,2.3238 0.90372,3.35658 -1.4e-4,1.0328 -0.9899,2.0656 -2.96931,3.09841 -3.95918,2.32379 -5.93872,5.4222 -5.93859,9.29519 -1.3e-4,3.3566 1.67817,6.02467 5.03488,8.0042 1.63516,1.11885 2.4528,2.0656 2.45291,2.84019 -1.1e-4,1.63526 -1.67841,3.44267 -5.03491,5.4222 -6.19678,3.78692 -10.15585,8.3915 -11.87718,13.81369 -0.94673,3.01232 -1.4201,6.62713 -1.4201,10.84438 l 46.08866,0 m -50.60716,5.164 c -0.0861,-1.0328 -0.12911,-3.01232 -0.12911,-5.93859 0,-10.58618 3.09841,-18.50431 9.2952,-23.75437 2.0656,-1.72134 4.69053,-3.39964 7.87509,-5.0349 -3.27053,-1.0328 -5.46522,-3.52875 -6.58409,-7.48781 -0.43032,-1.291 -0.6455,-2.62503 -0.6455,-4.0021 0,-5.76645 2.92626,-9.89766 8.7788,-12.39357 -1.37717,-2.49595 -2.06571,-4.94883 -2.0656,-7.35871 -1.1e-4,-3.95906 1.93639,-6.88532 5.80948,-8.77878 1.63517,-0.77461 3.39954,-1.16191 5.2931,-1.16191 4.3893,0 7.61679,1.6783 9.6825,5.0349 0.94663,1.46314 1.42,3.0984 1.4201,4.90579 -10e-5,2.3238 -0.77471,4.77671 -2.3238,7.35871 5.93849,2.40986 8.90779,6.54105 8.9079,12.39357 -1.1e-4,4.56155 -1.67841,8.0042 -5.03491,10.328 -0.68863,0.51641 -1.46324,0.90371 -2.3238,1.16191 7.7459,3.95906 12.78079,8.99396 15.10471,15.10467 1.46302,3.78694 2.19459,8.34847 2.19469,13.6846 -10e-5,2.84019 -0.0431,4.81972 -0.12911,5.93859 l -55.12565,0"
+       id="path1688"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" />
+  </g>
+  <path
+     style="fill:#ffffff"
+     d="M 5.0158505,67.338619 C 5.573414,57.866265 8.9795007,52.349721 18.061226,46.210154 c 3.096283,-2.093194 4.341977,-3.28102 4.849447,-4.624158 0.550492,-1.457004 0.03457,-2.118672 -4.210624,-5.400115 C 18.104716,35.725701 17.19975,34.581416 16.689013,33.643024 15.930723,32.249796 15.7604,31.546427 15.7604,29.8082 c 0,-3.699629 2.021577,-6.843525 5.925364,-9.21495 3.260529,-1.980666 3.549408,-3.176052 1.722885,-7.12932 -1.632273,-3.5328417 -1.700974,-4.4086136 -0.493685,-6.2932282 1.145761,-1.7885653 2.470393,-2.477081 4.750557,-2.4692373 2.928878,0.010075 5.558892,2.3165944 5.558892,4.8751413 0,0.7864432 -0.418405,2.0779252 -1.132738,3.4964012 -0.623005,1.237124 -1.217917,2.870772 -1.322026,3.63033 -0.221919,1.619079 0.174409,2.089798 3.902214,4.634661 3.510811,2.396727 4.980157,5.00875 4.983869,8.85972 0.0032,3.305905 -0.94003,4.775759 -4.701264,7.326166 -1.259853,0.854275 -2.381627,1.790335 -2.492832,2.080131 -0.798547,2.08098 0.580577,3.935177 5.091937,6.845978 1.77636,1.14614 4.127251,2.865126 5.224197,3.81997 4.526567,3.940176 7.102064,9.84223 7.702264,17.650631 l 0.20869,2.714996 -22.933469,0 -22.9334714,0 0.1940669,-3.296971 0,0 z"
+     id="path2984"
+     inkscape:connector-curvature="0" />
+</svg>

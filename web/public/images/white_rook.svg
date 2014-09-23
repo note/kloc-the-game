@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="64.808144"
+   height="75.781631"
+   id="svg1">
+  <metadata
+     id="metadata3">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title></dc:title>
+        <dc:description />
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li />
+            <rdf:li>game</rdf:li>
+            <rdf:li>chess</rdf:li>
+            <rdf:li>symbols</rdf:li>
+            <rdf:li>board</rdf:li>
+            <rdf:li>recreation</rdf:li>
+            <rdf:li>fonts</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://www.openclipart.org">
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date />
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3" />
+  <g
+     transform="translate(-412.72685,-223.368)"
+     id="layer1">
+    <path
+       d="m 430.41352,249.05887 0,22.85068 29.43479,0 0,-22.85068 -29.43479,0 m -15.23379,50.09076 -2.45288,-2.4529 0,-8.90789 13.16819,-13.2973 0,-25.81997 -11.3608,-9.94069 0,-11.74809 3.74391,-3.61479 11.61898,0 2.19469,2.19469 0,3.3566 3.74391,0 0,-3.3566 2.1947,-2.19469 14.20098,0 2.19471,2.19469 0,3.3566 3.61479,0 0,-3.3566 2.32381,-2.19469 11.61899,0 3.74388,3.61479 0,11.74809 -11.36078,9.94069 0,25.81997 13.16818,13.2973 0,8.90789 -2.4529,2.4529 -59.90236,0 m 2.06562,-10.19888 0,5.03488 55.77114,0 0,-5.03488 -55.77114,0 m 12.65178,-12.78091 -8.5206,8.2624 47.50877,0 -8.52058,-8.2624 -30.46759,0 m 10.32801,-47.37966 0,3.3566 -1.93652,1.80741 -8.39149,0 -1.93649,-1.80741 0,-3.6148 -7.22961,0 -1.6783,1.80741 0,7.2296 8.7788,7.10048 34.59877,0 8.7788,-7.10048 0,-7.2296 -1.6783,-1.80741 -7.22959,0 0,3.6148 -1.93649,1.80741 -8.39151,0 -1.93649,-1.80741 0,-3.3566 -9.81158,0"
+       id="path1705"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" />
+  </g>
+  <path
+     d="m 10.831022,17.592625 -4.2761931,-3.4721 -0.091656,-3.482564 C 6.3734399,7.2284929 6.3898655,7.1362438 7.2457434,6.2428996 8.1007456,5.3504696 8.1963263,5.3304029 11.592089,5.3304029 l 3.472118,0 0,1.7706238 c 0,1.5888083 0.107162,1.8681109 1.043603,2.7200104 l 1.043603,0.9493869 4.230052,0.0094 c 4.088831,0.0091 4.263035,-0.01834 5.218015,-0.8219032 0.87907,-0.7396875 0.987963,-1.0228269 0.987963,-2.5688675 l 0,-1.7375528 4.816629,0 4.816629,0 0,1.7375528 c 0,1.5460406 0.108893,1.82918 0.987964,2.5688688 0.954977,0.8035619 1.129182,0.8310019 5.218015,0.8219039 l 4.230051,-0.0094 1.043603,-0.9493866 C 49.636776,8.9691376 49.743937,8.689835 49.743937,7.1010267 l 0,-1.7706238 3.472118,0 c 3.395762,0 3.491343,0.020067 4.346346,0.9124967 0.855877,0.8933442 0.872302,0.9855933 0.782571,4.3950614 l -0.09166,3.482564 -4.276194,3.4721 -4.276194,3.4721 -17.296855,0 -17.296857,0 -4.276193,-3.4721 z"
+     id="path2984"
+     style="fill:#ffffff" />
+  <path
+     d="m 17.954184,37.120155 0,-11.238801 14.449888,0 14.449887,0 0,11.238801 0,11.238801 -14.449887,0 -14.449888,0 0,-11.238801 z"
+     id="path2986"
+     style="fill:#ffffff" />
+  <path
+     d="m 13.29811,56.853528 4.174412,-3.995992 14.93155,0 14.93155,0 4.174412,3.995992 4.174412,3.995991 -23.280374,0 -23.2803743,0 4.1744123,-3.995991 0,0 z"
+     id="path2988"
+     style="fill:#ffffff" />
+  <path
+     d="m 4.7887315,68.107136 0,-2.408315 27.6153405,0 27.61534,0 0,2.408315 0,2.408314 -27.61534,0 -27.6153405,0 0,-2.408314 z"
+     id="path2990"
+     style="fill:#ffffff" />
+</svg>
