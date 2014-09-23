@@ -4,6 +4,11 @@
 
 <p>@message</p>
 
+<div id="introduce">
+    <p>Nickname: <input type="text" id="player-name" /></p>
+    <button id="send-introduce">OK</button>
+</div>
+
 <input type="text" id="new-room-name" />
 <button id="create-room">New Room</button>
 
@@ -15,7 +20,7 @@
 
 <ul>
 @for(room <- rooms) {
-    <li><a href="@room._2" class="join-room">@room._1</a></li>
+    <li><a href="@room._2" class="join-room white">@room._1</a> black: <a href="@room._2" class="join-room black">@room._1</a></li>
 }
 </ul>
 

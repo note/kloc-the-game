@@ -25,7 +25,8 @@
 
         // Libraries
         jquery:     'libs/jquery-1.11.1',
-        underscore: 'libs/underscore-1.7.0'
+        underscore: 'libs/underscore-1.7.0',
+        cookie:     'libs/jquery.cookie'
     };
 
     if(window.EnvJasmine){

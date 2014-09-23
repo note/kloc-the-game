@@ -2,6 +2,7 @@ package controllers
 
 import play.api._
 import play.api.mvc._
+import net.michalsitko.kloc.game.Color
 import net.michalsitko.kloc.game.Chessboard
 import play.api.libs.iteratee.{Input, Enumerator, Iteratee}
 import play.api.libs.json._
@@ -25,12 +26,32 @@ object Application extends Controller {
     }
   }
 
+  def registerUser = Action { request =>
+    request.getQueryString("playerName") match {
+      case Some(playerName) =>
+        val userId = Room.registerUser(playerName)
+        Ok(Json.obj("userId" -> JsString(userId)))
+      case None =>
+        Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))
+    }
+
+  }
+
   def joinRoom(roomId: Int) = WebSocket.tryAccept[JsValue] { request =>
-    Room.getRoomById(roomId) match {
-      case Some(room) =>
-        room.join()
-      case _ =>
-        Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))))
+    println("bazinga44")
+    val userId = request.cookies.get("userId")
+    val colorStr = request.getQueryString("color")
+    val color = colorStr.flatMap(Color.fromString(_))
+    if(userId.isDefined && color.isDefined){
+      Room.getRoomById(roomId) match {
+        case Some(room) =>
+          room.join(userId.get.value, color.get)
+        case _ =>
+          Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))))
+      }
+    }else{
+      println("Bad formatted request")
+      Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("Bad formatted request")))))))
     }
   }
 

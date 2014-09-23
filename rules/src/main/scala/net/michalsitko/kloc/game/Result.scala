@@ -9,6 +9,14 @@ package net.michalsitko.kloc.game
  */
 class Result
 
-class Winner(val color: Color) extends Result
+class Winner(val color: Color) extends Result {
+  override def toString(): String = {
+    color.toString
+  }
+}
 
-object Draw extends Result
+object Draw extends Result {
+  override def toString(): String = {
+    "draw"
+  }
+}

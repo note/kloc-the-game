@@ -1,6 +1,7 @@
 "use strict"
 
-require(['jquery'], function($) {
+require(['jquery', 'cookie'], function($) {
+    var registerUserUrl = '@routes.Application.registerUser()';
     var createRoomUrl = '@routes.Application.createRoom()';
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
 
@@ -13,29 +14,52 @@ require(['jquery'], function($) {
         };
 
         socket.onmessage = receiveMessage;
+        socket.onclose = function(){
+            console.log("websocket closed");
+        }
+        socket.onerror = function(){
+            console.log("websocket onerror");
+        }
         return socket;
     }
 
     $(document).ready(function() {
         console.log("ready!");
 
+        $("#send-introduce").click(function(){
+            var playerName = $("#player-name").val();
+            $.get(registerUserUrl, {"playerName": playerName}, function(data){
+                console.log(data);
+                $.cookie("userId", data.userId);
+            });
+        });
+
         $('#create-room').click(function(){
             var roomName = $('#new-room-name').val();
             $.get(createRoomUrl, {name: roomName}, function(data){
                 console.log(data);
-                var wsUrl = data.url;
-                createGameWebsocket(wsUrl);
+//                var wsUrl = data.url;
+//                createGameWebsocket(wsUrl);
             });
         });
 
         $(".join-room").click(function(){
-            var url = $(this).attr("href");
+            var that = this;
+
+            function createUrl(baseUrl) {
+                var params = {
+                    color: $(that).hasClass("white") ? "w" : "b"
+                };
+                return [baseUrl, "&", $.param(params)].join("");
+            }
+
+            var url = createUrl($(this).attr("href"));
             var socket = createGameWebsocket(url);
             $("#game-panel").show();
             $("#send-move").click(function(){
                 var fromStr = $("#from").val();
                 var toStr = $("#to").val();
-                var moveMessage = {player: "player1", "from": fromStr, "to": toStr};
+                var moveMessage = {type: "move", from: fromStr, to: toStr};
                 socket.send(JSON.stringify(moveMessage));
             });
         });

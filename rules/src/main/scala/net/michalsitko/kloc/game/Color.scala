@@ -11,10 +11,29 @@ sealed abstract class Color () {
   def opposite(): Color
 }
 
+object Color {
+  val whiteStr = "w"
+  val blackStr = "b"
+
+  def fromString(input: String): Option[Color] = {
+    input match {
+      case Color.whiteStr => Some(White())
+      case Color.blackStr => Some(Black())
+      case _ => None
+    }
+  }
+}
+
 case class White() extends Color (){
   def opposite(): Color = return Black()
+  override def toString(): String = {
+    Color.whiteStr
+  }
 }
 
 case class Black() extends Color (){
   def opposite(): Color = return White()
+  override def toString(): String = {
+    Color.blackStr
+  }
 }

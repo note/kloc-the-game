@@ -47,7 +47,8 @@ class ChessTable (timeLimitMs: Int) {
       case ChessTableState.WaitingForPlayers if players.size == 2 =>
         white.opponent = black
         black.opponent = white
-        ChessTableState.Ready
+        start()
+        ChessTableState.Started
       case ChessTableState.Ready if players.forall{case (user, player) => player.getRequestedStart} =>
         start()
         ChessTableState.Started
@@ -57,6 +58,7 @@ class ChessTable (timeLimitMs: Int) {
   }
 
   def start() = {
+    println("chesstable start")
     noTimeLeftTask = Some(white.startTimer(this))
   }
 
@@ -88,26 +90,36 @@ class ChessTable (timeLimitMs: Int) {
     }
   }
 
-  def move(user: User, move: Move) = {
+  def move(user: User, move: Move): Option[GameStatus] = {
     val player = players.get(user)
-    player.foreach{player =>
+    player.map{player =>
       if(player.color == game.whoseTurn)
         applyMove(player, move)
-    }
+      else
+        None
+    }.getOrElse(None)
   }
 
-  private def applyMove(player: Player, move: Move) = {
+  private def applyMove(player: Player, move: Move): Option[GameStatus] = {
     try{
       game.applyMove(move)
       player.stopTimer(noTimeLeftTask)
       noTimeLeftTask = Some(player.opponent.startTimer(this))
+      Some(game.status)
     }catch{
+      // TODO: this case is really suspicious with js validation - add some logging
       case e: IncorrectMoveException =>
+        player.startTimer(this)
+        None
     }
   }
 
   def canStart(): Boolean = {
     players.size == 2
+  }
+
+  def getTimes(): Map[String, Long] = {
+    players.map(mapItem => (mapItem._1.name, mapItem._2.getMsLeft))
   }
 
   def state = currentState
