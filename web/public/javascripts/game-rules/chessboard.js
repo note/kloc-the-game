@@ -23,6 +23,7 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 
 
     var Chessboard = function() {
         this.fields = new Array(64)
+        this.observers = []
     };
 
     Chessboard.prototype.getAllFields = function() {
@@ -31,7 +32,22 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 
         });
     };
 
+    Chessboard.prototype.notifyObservers = function(field, piece) {
+        _.each(this.observers, function(observer){
+            observer.update(field, piece);
+        });
+    };
+
+    Chessboard.prototype.addObserver = function (observer) {
+        this.observers.push(observer);
+    };
+
     Chessboard.prototype.setPiece = function(field, piece) {
+        this._setPiece(field, piece);
+        this.notifyObservers(field, piece);
+    };
+
+    Chessboard.prototype._setPiece = function(field, piece) {
         this.fields[field.toIndex()] = piece;
     };
 
@@ -51,8 +67,9 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 
 
         var result = fn.call(this);
 
-        this.setPiece(move.from, this.getPiece(move.to));
-        this.setPiece(move.to, pieceOnDestination);
+        // _setPiece is called instead of setPiece because withMove should not notify observers
+        this._setPiece(move.from, this.getPiece(move.to));
+        this._setPiece(move.to, pieceOnDestination);
         return result;
     };
 
