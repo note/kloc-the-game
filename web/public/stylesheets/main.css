@@ -1,3 +1,21 @@
 .piece-template{
     display: none;
 }
+
+#table{
+    display: none;
+}
+
+#chessboard-canvas{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 0;
+}
+
+#pieces-layer{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+}

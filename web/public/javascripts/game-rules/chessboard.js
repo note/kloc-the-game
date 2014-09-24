@@ -63,7 +63,9 @@ define(['chessboardUtils', 'field', 'piece', 'gameState', 'king', 'underscore', 
 
     Chessboard.prototype.withMove = function(move, fn) {
         var pieceOnDestination = this.getPiece(move.to);
-        this.move(move);
+        var activePiece = this.getPiece(move.from);
+        this._setPiece(move.from, undefined);
+        this._setPiece(move.to, activePiece);
 
         var result = fn.call(this);
 

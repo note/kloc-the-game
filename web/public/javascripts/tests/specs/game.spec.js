@@ -36,6 +36,7 @@ define(['game', 'underscore'],
                 var game = new Game.ChessGame();
                 applyMove(game, "e2", "e4");
                 expect(game.isLegalMove(new Game.Move(new Game.Field("e4"), new Game.Field("e5")))).toBe(false);
+                expect(game.isLegalMove(new Game.Move(new Game.Field("g2"), new Game.Field("g4")))).toBe(false);
                 applyMove(game, "a7", "a5");
                 expect(game.isLegalMove(new Game.Move(new Game.Field("a5"), new Game.Field("a4")))).toBe(false);
                 applyMove(game, "e4", "e5");
