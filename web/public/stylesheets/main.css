@@ -2,20 +2,30 @@
     display: none;
 }
 
-#table{
+#main{
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#game-panel{
     display: none;
+}
+
+#table{
+    position: relative;
 }
 
 #chessboard-canvas{
     position: absolute;
-    left: 0px;
     top: 0px;
+    left: 0px;
     z-index: 0;
 }
 
 #pieces-layer{
     position: absolute;
-    left: 0px;
     top: 0px;
+    left: 0px;
     z-index: 2;
 }

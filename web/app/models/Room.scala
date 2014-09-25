@@ -3,7 +3,6 @@ package models
 
 import akka.actor.{ActorRef, Actor, Props}
 import net.michalsitko.kloc.game.{GameStatus, Color, Move}
-import play.api.libs.concurrent.Akka
 import play.api.libs.iteratee.{Input, Enumerator, Iteratee, Concurrent}
 import play.api.libs.json._
 import scala.collection.mutable.Map
@@ -16,6 +15,8 @@ import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import scala.util.Random
 import play.api.libs.json.Reads._
+import models.ChessTableState.ChessTableState
+import play.api.libs.concurrent.Akka
 
 class Room (actor: ActorRef) {
   implicit val timeout = Timeout(1 second)
@@ -23,7 +24,7 @@ class Room (actor: ActorRef) {
   def join(userId: String, color: Color) = {
     val user = Room.getUserById(userId)
     (actor ? Join(user, color)).map {
-      case Connected(enumerator) =>
+      case Connected(enumerator, state) =>
         val in = Iteratee.foreach[JsValue](event => {
           println("websocket received something" + event.toString())
           (event \ "type").as[String] match {
@@ -32,6 +33,16 @@ class Room (actor: ActorRef) {
           }
         }).map { _ =>
           println("Disconnected")
+        }
+
+        if(state == ChessTableState.Started){
+          // RoomActor reacts to this message by sending start message to clients
+          // we should be sure that client has been already established
+          // This is just best effort - it does not guarantee anything
+          // TODO: think about alternatives
+          Akka.system.scheduler.scheduleOnce(1000 milliseconds){
+            actor ! Started()
+          }
         }
 
         Right((in, enumerator))
@@ -83,11 +94,15 @@ class RoomActor(table: ChessTable) extends Actor {
   override def receive: Actor.Receive = {
     case Join(user, color) =>
       table.addPlayer(user, color)
-      sender() ! Connected(roomEnumerator)
+      sender() ! Connected(roomEnumerator, table.state)
+    case Started() =>
+      val colors = table.getColors
+      val startObj = JsObject(Seq("type" -> JsString("start"), "times" -> MoveNotification.mapToJsObject(table.getTimes()), "colors" -> JsObject(colors.map(mapItem => (mapItem._1, JsString(mapItem._2.toString))).toSeq)))
+      notifyAll(startObj)
     case MoveMessage(user, move) =>
       val res = table.move(user, move)
       if(res.isDefined){
-        notifyAll(MoveNotification(user, move, res.get, table.getTimes()))
+        notifyAll(MoveNotification.toJsObject(MoveNotification(user, move, res.get, table.getTimes())))
       }else{
         println("bazinga incorrect move")
       }
@@ -99,20 +114,7 @@ class RoomActor(table: ChessTable) extends Actor {
     println("bazinga stopped actor")
   }
 
-  private def notifyAll(moveMessage: MoveNotification) = {
-    def mapTo(m: Map[String, Long]): JsObject = {
-      JsObject(m.map(mapItem => (mapItem._1, JsNumber(mapItem._2))).toSeq)
-    }
-
-    // TODO: add toJson method to Move (or something else and more idiomatic)
-    val msg = JsObject(
-      Seq(
-        "from" -> JsString(moveMessage.move.from.toString),
-        "to" -> JsString(moveMessage.move.to.toString),
-        "result" -> JsString(moveMessage.gameStatus.toString),
-        "times" -> mapTo(moveMessage.playersMillisecondsLeft)
-      )
-    )
+  private def notifyAll(msg: JsObject) = {
     roomChannel.push(msg)
   }
 }
@@ -122,8 +124,30 @@ class ClientMessage(user: User)
 
 case class Join(user: User, color: Color)
 case class MoveMessage(user: User, move: Move)
-case class MoveNotification(user: User, move: Move, gameStatus: GameStatus, playersMillisecondsLeft: Map[String, Long])
 
-case class Connected(enumerator: Enumerator[JsValue])
+
+case class MoveNotification(user: User, move: Move, gameStatus: GameStatus, playersMillisecondsLeft: Map[String, Long])
+object MoveNotification{
+  def mapToJsObject(m: Map[String, Long]): JsObject = {
+    JsObject(m.map(mapItem => (mapItem._1, JsNumber(mapItem._2))).toSeq)
+  }
+
+  def toJsObject(moveNotification: MoveNotification): JsObject = {
+    JsObject(
+      Seq(
+      "type" -> JsString("move"),
+      "from" -> JsString(moveNotification.move.from.toString),
+      "to" -> JsString(moveNotification.move.to.toString),
+      "result" -> JsString(moveNotification.gameStatus.toString),
+      "times" -> mapToJsObject(moveNotification.playersMillisecondsLeft),
+      "userId" -> JsString(moveNotification.user.id)
+      )
+    )
+  }
+}
+
+case class Connected(enumerator: Enumerator[JsValue], tableState: ChessTableState)
+
+case class Started()
 
 

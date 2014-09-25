@@ -2,8 +2,6 @@
 
 @main("Welcome to Play") {
 
-<p>@message</p>
-
 <!--<img src="@routes.Assets.at("images/pieces.svg")" style="position: absolute; left: 0px; top: 0px; z-index: 4;" />-->
 
 <img src="@routes.Assets.at("images/black_king.svg")" id="black-king" class="piece-template" />
@@ -20,31 +18,41 @@
 <img src="@routes.Assets.at("images/white_knight.svg")" id="white-knight" class="piece-template" />
 <img src="@routes.Assets.at("images/white_pawn.svg")" id="white-pawn" class="piece-template" />
 
-<div id="table">
-<canvas id="chessboard-canvas" width="800" height="800">
-</canvas>
-<div id="pieces-layer"></div>
+
+<div id="main">
+    <div id="introduce">
+        <p>Nickname: <input type="text" id="player-name" /></p>
+        <button id="send-introduce">OK</button>
+    </div>
+
+    <input type="text" id="new-room-name" />
+    <button id="create-room">New Room</button>
+
+    <ul>
+    @for(room <- rooms) {
+        <li><a href="@room._2" class="join-room white">@room._1</a> black: <a href="@room._2" class="join-room black">@room._1</a></li>
+    }
+    </ul>
+
+    <div id="game-panel" style="display: none">
+        <div id="hud">
+            <div class="team">
+                <p id="bottom_player">Player1</p>
+                <p id="bottom_time">3:11</p>
+            </div>
+
+            <div class="team">
+                <p id="top_player">Player2</p>
+                <p id="top_time">4:29</p>
+            </div>
+        </div>
+
+        <div id="table">
+            <canvas id="chessboard-canvas" width="800" height="800">
+            </canvas>
+            <div id="pieces-layer"></div>
+        </div>
+    </div>
 </div>
-
-
-<div id="introduce">
-    <p>Nickname: <input type="text" id="player-name" /></p>
-    <button id="send-introduce">OK</button>
-</div>
-
-<input type="text" id="new-room-name" />
-<button id="create-room">New Room</button>
-
-<div id="game-panel" style="display: none">
-    <p>From: <input type="text" id="from" /></p>
-    <p>To: <input type="text" id="to" /></p>
-    <button id="send-move">Send move</button>
-</div>
-
-<ul>
-@for(room <- rooms) {
-    <li><a href="@room._2" class="join-room white">@room._1</a> black: <a href="@room._2" class="join-room black">@room._1</a></li>
-}
-</ul>
 
 }

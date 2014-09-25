@@ -1979,3 +1979,422 @@ Application started (Dev)
 2014-09-24 14:29:35,294 - [INFO] - from play in play-akka.actor.default-dispatcher-1624 
 Starting application default Akka system.
 
+2014-09-24 14:44:24,466 - [INFO] - from play in play-internal-execution-context-223 
+Shutdown application default Akka system.
+
+2014-09-24 14:44:24,511 - [INFO] - from play in play-internal-execution-context-223 
+Application started (Dev)
+
+2014-09-24 14:44:45,622 - [INFO] - from play in play-internal-execution-context-223 
+Application started (Dev)
+
+2014-09-24 14:45:29,581 - [INFO] - from play in play-internal-execution-context-223 
+Application started (Dev)
+
+2014-09-24 14:45:38,454 - [INFO] - from play in play-internal-execution-context-223 
+Application started (Dev)
+
+2014-09-24 14:46:15,165 - [INFO] - from play in play-internal-execution-context-227 
+Application started (Dev)
+
+2014-09-24 14:53:29,096 - [ERROR] - from application in New I/O worker #6 
+
+
+! @6jjahpa1d - Internal server error, for (GET) [/] ->
+
+play.PlayExceptions$CompilationException: Compilation error[Expected '}' but found 'EOF']
+	at play.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27) ~[na:na]
+	at play.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27) ~[na:na]
+	at scala.Option.map(Option.scala:145) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1$$anonfun$play$PlayReloader$$anon$$taskFailureHandler$1.apply(PlayReloader.scala:234) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$play$PlayReloader$$anon$$taskFailureHandler$1.apply(PlayReloader.scala:229) ~[na:na]
+	at scala.Option.map(Option.scala:145) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1.play$PlayReloader$$anon$$taskFailureHandler(PlayReloader.scala:229) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:89) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:89) ~[na:na]
+	at scala.util.Either$LeftProjection.map(Either.scala:377) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1.reload(PlayReloader.scala:89) ~[na:na]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:122) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library-2.11.1.jar:na]
+
+2014-09-24 14:53:43,860 - [INFO] - from play in play-internal-execution-context-232 
+Application started (Dev)
+
+2014-09-24 14:55:15,904 - [INFO] - from play in play-internal-execution-context-234 
+Application started (Dev)
+
+2014-09-24 15:06:15,798 - [INFO] - from play in play-internal-execution-context-235 
+Application started (Dev)
+
+2014-09-24 15:27:42,744 - [INFO] - from play in play-internal-execution-context-235 
+Application started (Dev)
+
+2014-09-24 15:30:55,714 - [INFO] - from play in play-internal-execution-context-235 
+Application started (Dev)
+
+2014-09-24 15:31:09,163 - [INFO] - from play in play-internal-execution-context-235 
+Application started (Dev)
+
+2014-09-24 15:41:58,403 - [INFO] - from play in play-internal-execution-context-241 
+Application started (Dev)
+
+2014-09-24 16:15:40,830 - [ERROR] - from application in New I/O worker #8 
+
+
+! @6jjb2jpde - Internal server error, for (GET) [/] ->
+
+play.PlayExceptions$CompilationException: Compilation error[reference to Akka is ambiguous;
+it is imported twice in the same scope by
+import play.api.libs.concurrent.Akka
+and import play.libs.Akka]
+	at play.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27) ~[na:na]
+	at play.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27) ~[na:na]
+	at scala.Option.map(Option.scala:145) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1$$anonfun$play$PlayReloader$$anon$$taskFailureHandler$1.apply(PlayReloader.scala:234) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$play$PlayReloader$$anon$$taskFailureHandler$1.apply(PlayReloader.scala:229) ~[na:na]
+	at scala.Option.map(Option.scala:145) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1.play$PlayReloader$$anon$$taskFailureHandler(PlayReloader.scala:229) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:89) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:89) ~[na:na]
+	at scala.util.Either$LeftProjection.map(Either.scala:377) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1.reload(PlayReloader.scala:89) ~[na:na]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:122) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library-2.11.1.jar:na]
+
+2014-09-24 16:15:43,088 - [ERROR] - from application in New I/O worker #6 
+
+
+! @6jjb2k2mb - Internal server error, for (GET) [/] ->
+
+play.PlayExceptions$CompilationException: Compilation error[reference to Akka is ambiguous;
+it is imported twice in the same scope by
+import play.api.libs.concurrent.Akka
+and import play.libs.Akka]
+	at play.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27) ~[na:na]
+	at play.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27) ~[na:na]
+	at scala.Option.map(Option.scala:145) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1$$anonfun$play$PlayReloader$$anon$$taskFailureHandler$1.apply(PlayReloader.scala:234) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$play$PlayReloader$$anon$$taskFailureHandler$1.apply(PlayReloader.scala:229) ~[na:na]
+	at scala.Option.map(Option.scala:145) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1.play$PlayReloader$$anon$$taskFailureHandler(PlayReloader.scala:229) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:89) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:89) ~[na:na]
+	at scala.util.Either$LeftProjection.map(Either.scala:377) ~[scala-library-2.11.1.jar:na]
+	at play.PlayReloader$$anon$1.reload(PlayReloader.scala:89) ~[na:na]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:122) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:120) ~[play_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library-2.11.1.jar:na]
+
+2014-09-24 16:16:19,259 - [INFO] - from play in play-internal-execution-context-241 
+Application started (Dev)
+
+2014-09-24 16:16:54,328 - [INFO] - from play in play-internal-execution-context-241 
+Application started (Dev)
+
+2014-09-24 16:17:15,715 - [INFO] - from play in play-internal-execution-context-243 
+Application started (Dev)
+
+2014-09-24 16:18:41,115 - [INFO] - from play in play-akka.actor.default-dispatcher-1781 
+Starting application default Akka system.
+
+2014-09-24 17:03:41,646 - [INFO] - from play in play-internal-execution-context-243 
+Shutdown application default Akka system.
+
+2014-09-24 17:03:41,687 - [INFO] - from play in play-internal-execution-context-243 
+Application started (Dev)
+
+2014-09-24 17:04:47,432 - [INFO] - from play in play-akka.actor.default-dispatcher-1791 
+Starting application default Akka system.
+
+2014-09-24 17:07:09,919 - [INFO] - from play in play-internal-execution-context-249 
+Shutdown application default Akka system.
+
+2014-09-24 17:07:09,961 - [INFO] - from play in play-internal-execution-context-249 
+Application started (Dev)
+
+2014-09-24 17:07:15,280 - [INFO] - from play in play-akka.actor.default-dispatcher-1816 
+Starting application default Akka system.
+
+2014-09-24 17:07:18,047 - [ERROR] - from application in play-akka.actor.default-dispatcher-1818 
+
+
+! @6jjb9e559 - Internal server error, for (GET) [/joinRoom?roomId=0&color=w] ->
+
+play.api.Application$$anon$1: Execution exception[[NoSuchElementException: key not found: Zo3MGnCwgcFAolRixdmN]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:23) [scala-library-2.11.1.jar:na]
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41) [akka-actor_2.11-2.3.4.jar:na]
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:393) [akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: java.util.NoSuchElementException: key not found: Zo3MGnCwgcFAolRixdmN
+	at scala.collection.MapLike$class.default(MapLike.scala:228) ~[scala-library-2.11.1.jar:na]
+	at scala.collection.AbstractMap.default(Map.scala:59) ~[scala-library-2.11.1.jar:na]
+	at scala.collection.mutable.HashMap.apply(HashMap.scala:65) ~[scala-library-2.11.1.jar:na]
+	at models.Room$.getUserById(Room.scala:87) ~[classes/:na]
+	at models.Room.join(Room.scala:25) ~[classes/:na]
+	at controllers.Application$$anonfun$joinRoom$1.apply(Application.scala:48) ~[classes/:na]
+	at controllers.Application$$anonfun$joinRoom$1.apply(Application.scala:40) ~[classes/:na]
+	at scala.Function1$$anonfun$andThen$1.apply(Function1.scala:55) ~[scala-library-2.11.1.jar:na]
+	at play.core.Router$Routes$TaggingInvoker$$anonfun$call$62.apply(Router.scala:479) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.Router$Routes$TaggingInvoker$$anonfun$call$62.apply(Router.scala:479) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$15.apply(PlayDefaultUpstreamHandler.scala:214) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$15.apply(PlayDefaultUpstreamHandler.scala:214) ~[play_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library-2.11.1.jar:na]
+	... 6 common frames omitted
+
+2014-09-24 17:07:21,624 - [ERROR] - from application in play-akka.actor.default-dispatcher-1807 
+
+
+! @6jjb9eacn - Internal server error, for (GET) [/joinRoom?roomId=0&color=b] ->
+
+play.api.Application$$anon$1: Execution exception[[NoSuchElementException: key not found: qyKsUJfLilFSErCIsODD]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:23) [scala-library-2.11.1.jar:na]
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41) [akka-actor_2.11-2.3.4.jar:na]
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:393) [akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: java.util.NoSuchElementException: key not found: qyKsUJfLilFSErCIsODD
+	at scala.collection.MapLike$class.default(MapLike.scala:228) ~[scala-library-2.11.1.jar:na]
+	at scala.collection.AbstractMap.default(Map.scala:59) ~[scala-library-2.11.1.jar:na]
+	at scala.collection.mutable.HashMap.apply(HashMap.scala:65) ~[scala-library-2.11.1.jar:na]
+	at models.Room$.getUserById(Room.scala:87) ~[classes/:na]
+	at models.Room.join(Room.scala:25) ~[classes/:na]
+	at controllers.Application$$anonfun$joinRoom$1.apply(Application.scala:48) ~[classes/:na]
+	at controllers.Application$$anonfun$joinRoom$1.apply(Application.scala:40) ~[classes/:na]
+	at scala.Function1$$anonfun$andThen$1.apply(Function1.scala:55) ~[scala-library-2.11.1.jar:na]
+	at play.core.Router$Routes$TaggingInvoker$$anonfun$call$62.apply(Router.scala:479) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.Router$Routes$TaggingInvoker$$anonfun$call$62.apply(Router.scala:479) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$15.apply(PlayDefaultUpstreamHandler.scala:214) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$15.apply(PlayDefaultUpstreamHandler.scala:214) ~[play_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library-2.11.1.jar:na]
+	... 6 common frames omitted
+
+2014-09-24 17:08:21,550 - [INFO] - from play in play-internal-execution-context-256 
+Shutdown application default Akka system.
+
+2014-09-24 17:08:21,607 - [INFO] - from play in play-internal-execution-context-256 
+Application started (Dev)
+
+2014-09-24 17:08:44,242 - [INFO] - from play in play-akka.actor.default-dispatcher-1828 
+Starting application default Akka system.
+
+2014-09-24 17:17:44,538 - [INFO] - from play in play-internal-execution-context-264 
+Shutdown application default Akka system.
+
+2014-09-24 17:17:44,582 - [INFO] - from play in play-internal-execution-context-264 
+Application started (Dev)
+
+2014-09-24 17:18:00,091 - [INFO] - from play in play-akka.actor.default-dispatcher-1864 
+Starting application default Akka system.
+
+2014-09-24 17:19:35,219 - [INFO] - from play in play-internal-execution-context-264 
+Shutdown application default Akka system.
+
+2014-09-24 17:19:35,267 - [INFO] - from play in play-internal-execution-context-264 
+Application started (Dev)
+
+2014-09-25 10:27:54,157 - [INFO] - from play in play-akka.actor.default-dispatcher-1880 
+Starting application default Akka system.
+
+2014-09-25 10:40:25,529 - [INFO] - from play in play-internal-execution-context-267 
+Shutdown application default Akka system.
+
+2014-09-25 10:40:25,683 - [INFO] - from play in play-internal-execution-context-267 
+Application started (Dev)
+
+2014-09-25 10:40:38,266 - [INFO] - from play in play-akka.actor.default-dispatcher-1880 
+Starting application default Akka system.
+
+2014-09-25 10:41:36,695 - [INFO] - from play in play-internal-execution-context-267 
+Shutdown application default Akka system.
+
+2014-09-25 10:41:36,747 - [INFO] - from play in play-internal-execution-context-267 
+Application started (Dev)
+
+2014-09-25 10:41:55,215 - [INFO] - from play in play-akka.actor.default-dispatcher-1900 
+Starting application default Akka system.
+
+2014-09-25 10:49:23,690 - [INFO] - from play in play-internal-execution-context-272 
+Shutdown application default Akka system.
+
+2014-09-25 10:49:23,732 - [INFO] - from play in play-internal-execution-context-272 
+Application started (Dev)
+
+2014-09-25 10:49:31,396 - [INFO] - from play in play-akka.actor.default-dispatcher-1912 
+Starting application default Akka system.
+
+2014-09-25 10:53:31,888 - [INFO] - from play in play-internal-execution-context-274 
+Shutdown application default Akka system.
+
+2014-09-25 10:53:31,930 - [INFO] - from play in play-internal-execution-context-274 
+Application started (Dev)
+
+2014-09-25 10:53:43,684 - [INFO] - from play in play-akka.actor.default-dispatcher-1919 
+Starting application default Akka system.
+
+2014-09-25 11:17:53,508 - [INFO] - from play in play-internal-execution-context-277 
+Shutdown application default Akka system.
+
+2014-09-25 11:17:53,561 - [INFO] - from play in play-internal-execution-context-277 
+Application started (Dev)
+
+2014-09-25 11:18:14,729 - [INFO] - from play in play-akka.actor.default-dispatcher-1932 
+Starting application default Akka system.
+
+2014-09-25 11:50:17,358 - [INFO] - from play in play-internal-execution-context-281 
+Shutdown application default Akka system.
+
+2014-09-25 11:50:17,410 - [INFO] - from play in play-internal-execution-context-281 
+Application started (Dev)
+
+2014-09-25 11:51:06,295 - [INFO] - from play in play-akka.actor.default-dispatcher-1942 
+Starting application default Akka system.
+
+2014-09-25 11:53:14,998 - [INFO] - from play in play-internal-execution-context-285 
+Shutdown application default Akka system.
+
+2014-09-25 11:53:15,046 - [INFO] - from play in play-internal-execution-context-285 
+Application started (Dev)
+
+2014-09-25 11:53:23,927 - [INFO] - from play in play-akka.actor.default-dispatcher-1955 
+Starting application default Akka system.
+
+2014-09-25 12:44:26,836 - [INFO] - from play in play-internal-execution-context-287 
+Shutdown application default Akka system.
+
+2014-09-25 12:44:26,878 - [INFO] - from play in play-internal-execution-context-287 
+Application started (Dev)
+
+2014-09-25 12:44:38,422 - [INFO] - from play in play-akka.actor.default-dispatcher-1961 
+Starting application default Akka system.
+
+2014-09-25 12:47:22,527 - [INFO] - from play in play-internal-execution-context-289 
+Shutdown application default Akka system.
+
+2014-09-25 12:47:22,587 - [INFO] - from play in play-internal-execution-context-289 
+Application started (Dev)
+
+2014-09-25 12:47:35,953 - [INFO] - from play in play-akka.actor.default-dispatcher-1973 
+Starting application default Akka system.
+
+2014-09-25 13:21:35,968 - [INFO] - from play in play-internal-execution-context-289 
+Shutdown application default Akka system.
+
+2014-09-25 13:21:36,015 - [INFO] - from play in play-internal-execution-context-289 
+Application started (Dev)
+
+2014-09-25 13:21:47,552 - [INFO] - from play in play-akka.actor.default-dispatcher-1981 
+Starting application default Akka system.
+
+2014-09-25 13:22:34,921 - [INFO] - from play in play-internal-execution-context-289 
+Shutdown application default Akka system.
+
+2014-09-25 13:22:34,996 - [INFO] - from play in play-internal-execution-context-289 
+Application started (Dev)
+
+2014-09-25 13:22:59,103 - [INFO] - from play in play-akka.actor.default-dispatcher-1990 
+Starting application default Akka system.
+
+2014-09-25 13:27:01,399 - [INFO] - from play in play-internal-execution-context-296 
+Shutdown application default Akka system.
+
+2014-09-25 13:27:01,443 - [INFO] - from play in play-internal-execution-context-296 
+Application started (Dev)
+
+2014-09-25 13:27:13,931 - [INFO] - from play in play-akka.actor.default-dispatcher-1995 
+Starting application default Akka system.
+
+2014-09-25 13:28:42,984 - [INFO] - from play in play-internal-execution-context-297 
+Shutdown application default Akka system.
+
+2014-09-25 13:28:43,044 - [INFO] - from play in play-internal-execution-context-297 
+Application started (Dev)
+
+2014-09-25 13:28:58,457 - [INFO] - from play in play-akka.actor.default-dispatcher-2007 
+Starting application default Akka system.
+
+2014-09-25 13:42:45,563 - [INFO] - from play in play-internal-execution-context-303 
+Shutdown application default Akka system.
+
+2014-09-25 13:42:45,607 - [INFO] - from play in play-internal-execution-context-303 
+Application started (Dev)
+
+2014-09-25 13:42:53,757 - [INFO] - from play in play-akka.actor.default-dispatcher-2031 
+Starting application default Akka system.
+
+2014-09-25 14:17:08,455 - [INFO] - from play in play-internal-execution-context-311 
+Shutdown application default Akka system.
+
+2014-09-25 14:17:08,499 - [INFO] - from play in play-internal-execution-context-311 
+Application started (Dev)
+
+2014-09-25 14:17:22,524 - [INFO] - from play in play-akka.actor.default-dispatcher-2062 
+Starting application default Akka system.
+
+2014-09-25 14:18:00,288 - [INFO] - from play in play-internal-execution-context-317 
+Shutdown application default Akka system.
+
+2014-09-25 14:18:00,338 - [INFO] - from play in play-internal-execution-context-317 
+Application started (Dev)
+
+2014-09-25 14:18:16,606 - [INFO] - from play in play-akka.actor.default-dispatcher-2066 
+Starting application default Akka system.
+

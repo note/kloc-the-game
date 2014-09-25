@@ -105,6 +105,10 @@ class ChessTable (timeLimitMs: Int) {
     players.map(mapItem => (mapItem._1.name, mapItem._2.getMsLeft))
   }
 
+  def getColors(): Map[String, Color] = {
+    players.map(mapItem => (mapItem._1.name, mapItem._2.color))
+  }
+
   def state = currentState
 }
 
