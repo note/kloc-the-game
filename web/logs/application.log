@@ -1583,3 +1583,297 @@ Application started (Dev)
 2014-09-30 23:41:46,087 - [INFO] - from play in play-akka.actor.default-dispatcher-719 
 Starting application default Akka system.
 
+2014-09-30 23:44:11,387 - [ERROR] - from application in play-internal-execution-context-331 
+
+
+! @6jl501lof - Internal server error, for (GET) [/joinRoom?roomId=1&color=b] ->
+
+play.api.Application$$anon$1: Execution exception[[AskTimeoutException: Ask timed out on [Actor[akka://application/user/$c#-414361799]] after [1000 ms]]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: akka.pattern.AskTimeoutException: Ask timed out on [Actor[akka://application/user/$c#-414361799]] after [1000 ms]
+	at akka.pattern.PromiseActorRef$$anonfun$1.apply$mcV$sp(AskSupport.scala:333) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.Scheduler$$anon$7.run(Scheduler.scala:117) ~[akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:599) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:109) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:597) ~[scala-library-2.11.1.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(Scheduler.scala:467) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.executeBucket$1(Scheduler.scala:419) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.nextTick(Scheduler.scala:423) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.run(Scheduler.scala:375) ~[akka-actor_2.11-2.3.4.jar:na]
+	at java.lang.Thread.run(Thread.java:744) ~[na:1.7.0_51]
+
+2014-09-30 23:44:25,026 - [ERROR] - from application in play-internal-execution-context-336 
+
+
+! @6jl502g35 - Internal server error, for (GET) [/joinRoom?roomId=1&color=b] ->
+
+play.api.Application$$anon$1: Execution exception[[AskTimeoutException: Ask timed out on [Actor[akka://application/user/$c#-414361799]] after [1000 ms]]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: akka.pattern.AskTimeoutException: Ask timed out on [Actor[akka://application/user/$c#-414361799]] after [1000 ms]
+	at akka.pattern.PromiseActorRef$$anonfun$1.apply$mcV$sp(AskSupport.scala:333) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.Scheduler$$anon$7.run(Scheduler.scala:117) ~[akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:599) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:109) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:597) ~[scala-library-2.11.1.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(Scheduler.scala:467) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.executeBucket$1(Scheduler.scala:419) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.nextTick(Scheduler.scala:423) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.run(Scheduler.scala:375) ~[akka-actor_2.11-2.3.4.jar:na]
+	at java.lang.Thread.run(Thread.java:744) ~[na:1.7.0_51]
+
+2014-09-30 23:45:24,807 - [ERROR] - from application in play-internal-execution-context-331 
+
+
+! @6jl5060eb - Internal server error, for (GET) [/joinRoom?roomId=1&color=b] ->
+
+play.api.Application$$anon$1: Execution exception[[AskTimeoutException: Ask timed out on [Actor[akka://application/user/$c#-414361799]] after [1000 ms]]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: akka.pattern.AskTimeoutException: Ask timed out on [Actor[akka://application/user/$c#-414361799]] after [1000 ms]
+	at akka.pattern.PromiseActorRef$$anonfun$1.apply$mcV$sp(AskSupport.scala:333) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.Scheduler$$anon$7.run(Scheduler.scala:117) ~[akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:599) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:109) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:597) ~[scala-library-2.11.1.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(Scheduler.scala:467) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.executeBucket$1(Scheduler.scala:419) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.nextTick(Scheduler.scala:423) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.run(Scheduler.scala:375) ~[akka-actor_2.11-2.3.4.jar:na]
+	at java.lang.Thread.run(Thread.java:744) ~[na:1.7.0_51]
+
+2014-09-30 23:56:31,718 - [INFO] - from play in play-internal-execution-context-331 
+Shutdown application default Akka system.
+
+2014-09-30 23:56:31,775 - [INFO] - from play in play-internal-execution-context-331 
+Application started (Dev)
+
+2014-09-30 23:56:34,206 - [INFO] - from play in play-akka.actor.default-dispatcher-746 
+Starting application default Akka system.
+
+2014-10-01 00:12:29,785 - [INFO] - from play in play-internal-execution-context-342 
+Shutdown application default Akka system.
+
+2014-10-01 00:12:29,827 - [INFO] - from play in play-internal-execution-context-342 
+Application started (Dev)
+
+2014-10-01 00:12:32,882 - [INFO] - from play in play-akka.actor.default-dispatcher-764 
+Starting application default Akka system.
+
+2014-10-01 00:15:15,598 - [INFO] - from play in play-internal-execution-context-345 
+Shutdown application default Akka system.
+
+2014-10-01 00:15:15,658 - [INFO] - from play in play-internal-execution-context-345 
+Application started (Dev)
+
+2014-10-01 00:15:19,037 - [INFO] - from play in play-akka.actor.default-dispatcher-771 
+Starting application default Akka system.
+
+2014-10-01 00:15:57,876 - [ERROR] - from application in play-internal-execution-context-352 
+
+
+! @6jl546852 - Internal server error, for (GET) [/joinRoom?roomId=0&color=b] ->
+
+play.api.Application$$anon$1: Execution exception[[AskTimeoutException: Ask timed out on [Actor[akka://application/user/$b#-616469282]] after [1000 ms]]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: akka.pattern.AskTimeoutException: Ask timed out on [Actor[akka://application/user/$b#-616469282]] after [1000 ms]
+	at akka.pattern.PromiseActorRef$$anonfun$1.apply$mcV$sp(AskSupport.scala:333) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.Scheduler$$anon$7.run(Scheduler.scala:117) ~[akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:599) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:109) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:597) ~[scala-library-2.11.1.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(Scheduler.scala:467) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.executeBucket$1(Scheduler.scala:419) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.nextTick(Scheduler.scala:423) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.run(Scheduler.scala:375) ~[akka-actor_2.11-2.3.4.jar:na]
+	at java.lang.Thread.run(Thread.java:744) ~[na:1.7.0_51]
+
+2014-10-01 00:16:09,334 - [ERROR] - from application in play-internal-execution-context-354 
+
+
+! @6jl546p3l - Internal server error, for (GET) [/joinRoom?roomId=0&color=b] ->
+
+play.api.Application$$anon$1: Execution exception[[AskTimeoutException: Ask timed out on [Actor[akka://application/user/$b#-616469282]] after [1000 ms]]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:235) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: akka.pattern.AskTimeoutException: Ask timed out on [Actor[akka://application/user/$b#-616469282]] after [1000 ms]
+	at akka.pattern.PromiseActorRef$$anonfun$1.apply$mcV$sp(AskSupport.scala:333) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.Scheduler$$anon$7.run(Scheduler.scala:117) ~[akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:599) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:109) ~[scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:597) ~[scala-library-2.11.1.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(Scheduler.scala:467) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.executeBucket$1(Scheduler.scala:419) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.nextTick(Scheduler.scala:423) ~[akka-actor_2.11-2.3.4.jar:na]
+	at akka.actor.LightArrayRevolverScheduler$$anon$8.run(Scheduler.scala:375) ~[akka-actor_2.11-2.3.4.jar:na]
+	at java.lang.Thread.run(Thread.java:744) ~[na:1.7.0_51]
+
+2014-10-01 00:35:31,799 - [INFO] - from play in play-internal-execution-context-362 
+Shutdown application default Akka system.
+
+2014-10-01 00:35:31,847 - [INFO] - from play in play-internal-execution-context-362 
+Application started (Dev)
+
+2014-10-01 00:35:39,259 - [INFO] - from play in play-akka.actor.default-dispatcher-795 
+Starting application default Akka system.
+
+2014-10-01 00:36:10,904 - [INFO] - from play in play-internal-execution-context-366 
+Shutdown application default Akka system.
+
+2014-10-01 00:36:10,965 - [INFO] - from play in play-internal-execution-context-366 
+Application started (Dev)
+
+2014-10-01 00:36:16,177 - [INFO] - from play in play-akka.actor.default-dispatcher-802 
+Starting application default Akka system.
+
+2014-10-01 00:37:07,766 - [INFO] - from play in play-internal-execution-context-370 
+Shutdown application default Akka system.
+
+2014-10-01 00:37:07,826 - [INFO] - from play in play-internal-execution-context-370 
+Application started (Dev)
+
+2014-10-01 00:37:16,121 - [INFO] - from play in play-internal-execution-context-374 
+Application started (Dev)
+
+2014-10-01 00:37:18,651 - [INFO] - from play in play-akka.actor.default-dispatcher-811 
+Starting application default Akka system.
+
+2014-10-01 00:41:11,011 - [INFO] - from play in play-internal-execution-context-375 
+Shutdown application default Akka system.
+
+2014-10-01 00:41:11,067 - [INFO] - from play in play-internal-execution-context-375 
+Application started (Dev)
+
+2014-10-01 00:41:15,211 - [INFO] - from play in play-akka.actor.default-dispatcher-801 
+Starting application default Akka system.
+
+2014-10-01 00:41:48,331 - [INFO] - from play in play-internal-execution-context-384 
+Shutdown application default Akka system.
+
+2014-10-01 00:41:48,389 - [INFO] - from play in play-internal-execution-context-384 
+Application started (Dev)
+
+2014-10-01 00:41:51,662 - [INFO] - from play in play-akka.actor.default-dispatcher-816 
+Starting application default Akka system.
+
+2014-10-01 00:42:49,956 - [INFO] - from play in play-internal-execution-context-382 
+Shutdown application default Akka system.
+
+2014-10-01 00:42:49,992 - [INFO] - from play in play-internal-execution-context-382 
+Application started (Dev)
+
+2014-10-01 00:42:55,362 - [INFO] - from play in play-akka.actor.default-dispatcher-828 
+Starting application default Akka system.
+

@@ -188,9 +188,6 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
         var that = this;
         return function() {
             console.log("onopen game");
-
-            var drawer = new Drawer(color, 70, 0.7, $("#pieces-layer"), $("#chessboard-canvas"));
-            var webGame = new WebGame(that.ws, drawer);
             $('#game-panel').show();
         };
     };
@@ -272,21 +269,21 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
         event.preventDefault();
     }
 
+    WebGame.prototype.addPlayer = function(playerName, color){
+        this.playerNameEl(color).html(playerName);
+        this.playerNamesToColor [playerName]= color;
+        this.colorToPlayerNames [color]= playerName;
+    };
+
     WebGame.prototype.onStartMessage = function(event, startMessage) {
         var that = event.data;
         for (var playerName in startMessage.colors){
             var color = Game.Color.fromString(startMessage.colors[playerName]);
-            that.playerNameEl(color).html(playerName);
-            that.playerNamesToColor [playerName]= color;
-            that.colorToPlayerNames [color]= playerName;
+            that.addPlayer(playerName, color);
         }
-//        for (var playerName in startMessage.colors){
-//            var color = Game.Color.fromString(startMessage.colors[playerName]);
-//            that.playerTimeEl(color).html(formatTime(startMessage.times[playerName]));
-//        }
         that.updateTimes(startMessage.times);
         that.refreshHud();
-    }
+    };
 
     WebGame.prototype.onMoveMessage = function(event, moveMessage) {
         var that = event.data;
@@ -300,13 +297,13 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
         that.game.applyMove(move);
         that.updateTimes(moveMessage.times);
         that.refreshHud();
-    }
+    };
 
     WebGame.prototype.onOwnMoveMessage = function (event, moveMessage) {
         var that = event.data;
         that.updateTimes(moveMessage.times);
         that.refreshHud();
-    }
+    };
 
     WebGame.prototype.updateTimes = function(times){
         this.times = times;
@@ -382,6 +379,7 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
                 console.log(data);
                 if(data && data.userId){
                     $.cookie("userId", data.userId);
+                    $.cookie("userName", userName);
                     $("#login-panel").hide();
                     activateRoomsPanel();
                 }
@@ -403,6 +401,12 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
                             $("#rooms-panel").hide();
                             var url = getJoinRoomURL(data.roomId);
                             var socket = new ChessGameWebSocket(url, color);
+                            var drawer = new Drawer(color, 70, 0.7, $("#pieces-layer"), $("#chessboard-canvas"));
+                            var webGame = new WebGame(socket.ws, drawer);
+                            var userName = $.cookie('userName');
+                            webGame.addPlayer(userName);
+                            webGame.playerTimeEl(white).html(formatTime(timeLimitInSeconds * 1000));
+                            webGame.playerTimeEl(black).html(formatTime(timeLimitInSeconds * 1000));
                         }
                     });
                 }
@@ -414,6 +418,8 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
             var url = $(this).attr("href");
             var color = $(this).hasClass("white") ? white : black;
             var socket = new ChessGameWebSocket(url, color);
+            var drawer = new Drawer(color, 70, 0.7, $("#pieces-layer"), $("#chessboard-canvas"));
+            var webGame = new WebGame(socket.ws, drawer);
         });
     });
 
