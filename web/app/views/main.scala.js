@@ -8,17 +8,20 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
     var createRoomUrl = '@routes.Application.createRoom()';
     var loggedInUrl = '@routes.Application.isUserLoggedIn()';
     var listRoomsUrl = '@routes.Application.listRooms().webSocketURL()';
-    var joinRoomUrl = '@routes.Application.joinRoom(3).webSocketURL()';
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
 
     var white = Game.Color.white;
     var black = Game.Color.black;
 
+    function getJoinRoomURL(roomId){
+        return jsRoutes.controllers.Application.joinRoom(roomId).webSocketURL();
+    }
+
     var TableModel = Backbone.Model.extend({
         defaults: {
             white: null,
             black: null,
-            url: "someurl"
+            url: null
         }
     });
 
@@ -27,9 +30,14 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
     });
 
     var RoomModel = Backbone.Model.extend({
-        fromArray: function(tables){
+        fromArray: function(roomId, tables){
+            _.each(tables, function(table){
+                table.url = getJoinRoomURL(roomId);
+            });
+
             var tableCollection = new TableCollection(tables);
             this.set('tablesCollection', tableCollection);
+            this.set('roomId', roomId);
         }
     });
 
@@ -41,7 +49,7 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
             var rooms = [];
             for(var roomId in data.rooms){
                 var roomModel = new RoomModel();
-                roomModel.fromArray(data.rooms[roomId]);
+                roomModel.fromArray(roomId, data.rooms[roomId]);
                 rooms.push(roomModel);
             }
             this.reset(rooms);
@@ -141,7 +149,7 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
             switch(message.type){
                 case "start":
                     console.log('start message arrived');
-                    $(that).trigger("/start", [message]);
+                    $(that.ws).trigger("/start", [message]);
                     break;
                 case "move":
                     var times = message.times;
@@ -150,9 +158,9 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
                     }
 
                     if(message.userId === $.cookie('userId')){
-                        $(that).trigger('/ownMove', [message]);
+                        $(that.ws).trigger('/ownMove', [message]);
                     }else{
-                        $(that).trigger('/move', [message]);
+                        $(that.ws).trigger('/move', [message]);
                     }
                     break;
             }
@@ -232,13 +240,6 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
 
     WebGame.prototype.playerTimeEl = function(color){
         return color === this.drawer.color ? $(this.bottomTimeId) : $(this.topTimeId);
-    }
-
-    WebGame.drag = function (event) {
-        var draggedEl = event.originalEvent.target;
-        var parentId = $(draggedEl).parent().attr("id");
-        event.originalEvent.dataTransfer.setData("from", parentId);
-        console.log("ondrag: " + parentId);
     }
 
     WebGame.prototype.getDropFn = function (field) {
@@ -385,15 +386,18 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
         $('#create-room').click(function(){
             $.get(createRoomUrl, function(data){
                 console.log(data);
-                if(data && data.url){
-                    var socket = new ChessGameWebSocket(data.url, white); // TODO hardcoded
+                if(data && data.roomId !== undefined){
+                    $("#rooms-panel").hide();
+                    var url = getJoinRoomURL(data.roomId);
+                    var socket = new ChessGameWebSocket(url, white); // TODO hardcoded
                 }
             });
         });
 
-        $(".join-room").click(function(){
+        $('body').on('click', '.join-room', function(){
+            $("#rooms-panel").hide();
             var url = $(this).attr("href");
-            var color = $(that).hasClass("white") ? white : black;
+            var color = $(this).hasClass("white") ? white : black;
             var socket = new ChessGameWebSocket(url, color);
         });
     });

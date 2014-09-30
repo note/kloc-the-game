@@ -73,6 +73,14 @@ class ChessTable (timeLimitMs: Int) {
     updateState()
   }
 
+  def userLeft(user: User) = {
+    players.remove(user)
+  }
+
+  def getPlayers = {
+    players
+  }
+
   def move(user: User, move: Move): Option[GameStatus] = {
     val player = players.get(user)
     player.map{player =>

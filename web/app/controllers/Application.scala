@@ -22,8 +22,7 @@ object Application extends Controller {
 
   def createRoom = Action { implicit request =>
         val roomId = Room.newRoom()
-        val webSocketUrl = routes.Application.joinRoom(roomId).webSocketURL()
-        Ok(Json.obj("roomId" -> roomId, "url" -> webSocketUrl))
+        Ok(Json.obj("roomId" -> roomId))
   }
 
   def logInUser = Action { request =>

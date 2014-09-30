@@ -1,6 +1,10 @@
-@(message: String, rooms: Iterable[(Int, String)])
+@(message: String, rooms: Iterable[(Int, String)])(implicit request: RequestHeader)
 
 @main("Welcome to Play") {
+
+@helper.javascriptRouter("jsRoutes")(
+    routes.javascript.Application.joinRoom
+)
 
 <!--<img src="@routes.Assets.at("images/pieces.svg")" style="position: absolute; left: 0px; top: 0px; z-index: 4;" />-->
 
@@ -32,22 +36,14 @@
             <% if(white) { %>
                 <div class="room-white-player place-occupied"><%= white %></div>
             <% }else { %>
-                <div class="room-white-player place-free"><a href="<%= url %>">Join</a></div>
+                <div class="room-white-player place-free white"><a href="<%= url %>" class="join-room">Join</a></div>
             <% } %>
 
             <% if(black) { %>
                 <div class="room-black-player place-occupied"><%= black %></div>
             <% }else { %>
-                <div class="room-black-player place-free"><a href="<%= url %>">Join</a></div>
+                <div class="room-black-player place-free black join-room"><a href="<%= url %>" class="join-room">Join</a></div>
             <% } %>
-        </script>
-
-        <script id="room-template" type="text/html">
-            <li>
-                <% for(var i=0; i < fields.length; ++i) { %>
-                    <%= render(fields[i]) %>
-                <% } %>
-            </li>
         </script>
 
         <button id="create-room">New Room</button>

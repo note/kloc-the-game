@@ -1,4 +1,6 @@
-define(['jquery'], function($){
+define(['jquery', 'color'], function($, Color){
+    var white = Color.white;
+
     function Drawer(perspectiveColor, fieldSize, scale, piecesLayer, chessboardCanvas){
         this.color = perspectiveColor;
         this.fieldSize = fieldSize;
@@ -21,6 +23,13 @@ define(['jquery'], function($){
             N: '#white-knight',
             P: '#white-pawn',
         }
+    }
+
+    function drag (event) {
+        var draggedEl = event.originalEvent.target;
+        var parentId = $(draggedEl).parent().attr("id");
+        event.originalEvent.dataTransfer.setData("from", parentId);
+        console.log("ondrag: " + parentId);
     }
 
     Drawer.prototype.drawChessboard = function(){
@@ -73,7 +82,7 @@ define(['jquery'], function($){
             };
             var img = $(document.createElement('img'));
             img.attr(imgAttrs);
-            img.bind('dragstart', WebGame.drag);
+            img.bind('dragstart', drag);
             newEl.append(img);
 //            newEl.html('<img src="' + srcForPiece + '" draggable="true" style="position: absolute; top:' + marginTop + 'px; left:' + marginLeft + 'px;" />');
         }
@@ -83,7 +92,7 @@ define(['jquery'], function($){
         this.piecesLayer.append(newEl);
 
         if(piece !== undefined)
-            this.piecesLayer.find("#" + field.toString()).bind('dragstart', webGame.drag);
+            this.piecesLayer.find("#" + field.toString()).bind('dragstart', drag);
     };
 
     Drawer.prototype.drawPiece = function(field, piece) {
@@ -105,10 +114,12 @@ define(['jquery'], function($){
             };
             var img = $(document.createElement('img'));
             img.attr(imgAttrs);
-            img.bind('dragstart', WebGame.drag);
+            img.bind('dragstart', drag);
             fieldEl.html(img);
         }else{
             fieldEl.html("");
         }
     };
+
+    return Drawer;
 });

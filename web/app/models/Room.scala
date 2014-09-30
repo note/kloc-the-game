@@ -1,7 +1,7 @@
 package models
 
 
-import akka.actor.{ActorRef, Actor, Props}
+import akka.actor.{PoisonPill, ActorRef, Actor, Props}
 import net.michalsitko.kloc.game.{GameStatus, Color, Move}
 import play.api.libs.iteratee.{Input, Enumerator, Iteratee, Concurrent}
 import play.api.libs.json._
@@ -19,7 +19,7 @@ import models.ChessTableState.ChessTableState
 import play.api.libs.concurrent.Akka
 import scala.concurrent._
 
-class Room (actor: ActorRef) {
+class Room (actor: ActorRef, roomId: Int) {
   implicit val timeout = Timeout(1 second)
 
   def join(userId: String, color: Color) = {
@@ -34,8 +34,11 @@ class Room (actor: ActorRef) {
               actor ! MoveMessage(user, Move((event \ "from").as[String], (event \ "to").as[String]))
           }
         }).map { _ =>
-          RoomsRepository.refreshNeeded()
           println("Disconnected")
+          actor ! RoomLeft(roomId, user)
+          println("Disconnected2")
+          RoomsRepository.refreshNeeded()
+          println("Disconnected3")
         }
 
         if(state == ChessTableState.Started){
@@ -73,8 +76,12 @@ object Room {
     val table = new ChessTable(120 * 60 * 1000)
     val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
     val roomId = useNextId()
-    rooms += (roomId -> new Room(roomActor))
+    rooms += (roomId -> new Room(roomActor, roomId))
     roomId
+  }
+
+  def removeRoom(roomId: Int) = {
+    rooms.remove(roomId)
   }
 
   def useNextId() = {
@@ -111,6 +118,12 @@ class RoomActor(table: ChessTable) extends Actor {
     case Join(user, color) =>
       table.addPlayer(user, color)
       sender() ! Connected(roomEnumerator, table.state)
+    case RoomLeft(roomId, user) =>
+      table.userLeft(user)
+      if(table.getPlayers.size == 0){
+        Room.removeRoom(roomId)
+        self ! PoisonPill
+      }
     case Started() =>
       val colors = table.getColors
       val startObj = JsObject(Seq("type" -> JsString("start"), "times" -> MoveNotification.mapToJsObject(table.getTimes().toMap), "colors" -> JsObject(colors.map(mapItem => (mapItem._1, JsString(mapItem._2.toString))).toSeq)))
@@ -142,6 +155,7 @@ class RoomActor(table: ChessTable) extends Actor {
 class ClientMessage(user: User)
 
 case class Join(user: User, color: Color)
+case class RoomLeft(roomId: Int, user: User)
 case class MoveMessage(user: User, move: Move)
 
 
