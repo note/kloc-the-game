@@ -56,21 +56,20 @@
 
     <div id="game-panel" style="display: none">
         <div id="hud">
-            <div class="team">
-                <p id="bottom_player">-</p>
-                <p id="bottom_time">3:11</p>
-            </div>
-
-            <div class="team">
-                <p id="top_player">-</p>
-                <p id="top_time">4:29</p>
-            </div>
+            <p>
+                <span id="bottom_player">-</span>
+                <span id="bottom_time">0:00</span>
+            </p>
         </div>
 
         <div id="table">
             <canvas id="chessboard-canvas" width="560" height="560">
             </canvas>
             <div id="pieces-layer"></div>
+            <p id="top_player_hud">
+                <span id="top_player">-</span>
+                <span id="top_time">0:00</span>
+            </p>
         </div>
     </div>
 </div>

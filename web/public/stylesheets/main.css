@@ -29,3 +29,12 @@
     left: 0px;
     z-index: 2;
 }
+
+#top_player, #bottom_player{
+    margin-right: 30px;
+}
+
+#top_player_hud{
+    position: absolute;
+    top: 580px;
+}

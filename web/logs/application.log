@@ -1877,3 +1877,85 @@ Application started (Dev)
 2014-10-01 00:42:55,362 - [INFO] - from play in play-akka.actor.default-dispatcher-828 
 Starting application default Akka system.
 
+2014-10-01 00:48:39,612 - [INFO] - from play in play-internal-execution-context-390 
+Shutdown application default Akka system.
+
+2014-10-01 00:48:39,651 - [INFO] - from play in play-internal-execution-context-390 
+Application started (Dev)
+
+2014-10-01 00:48:42,644 - [INFO] - from play in play-akka.actor.default-dispatcher-842 
+Starting application default Akka system.
+
+2014-10-01 00:55:06,779 - [INFO] - from play in play-internal-execution-context-394 
+Shutdown application default Akka system.
+
+2014-10-01 00:55:06,827 - [INFO] - from play in play-internal-execution-context-394 
+Application started (Dev)
+
+2014-10-01 00:55:09,667 - [INFO] - from play in play-akka.actor.default-dispatcher-861 
+Starting application default Akka system.
+
+2014-10-01 00:59:23,515 - [INFO] - from play in play-internal-execution-context-403 
+Shutdown application default Akka system.
+
+2014-10-01 00:59:23,555 - [INFO] - from play in play-internal-execution-context-403 
+Application started (Dev)
+
+2014-10-01 00:59:23,624 - [INFO] - from play in play-akka.actor.default-dispatcher-870 
+Starting application default Akka system.
+
+2014-10-01 00:59:23,744 - [ERROR] - from application in play-akka.actor.default-dispatcher-870 
+
+
+! @6jl59of0k - Internal server error, for (GET) [/joinRoom?roomId=0&color=w] ->
+
+play.api.Application$$anon$1: Execution exception[[NoSuchElementException: key not found: bWHSBys7nKIXIat7LgV6]]
+	at play.api.Application$class.handleError(Application.scala:296) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.api.DefaultApplication.handleError(Application.scala:402) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:229) [play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$messageReceived$2.applyOrElse(PlayDefaultUpstreamHandler.scala:227) [play_2.11-2.3.4.jar:2.3.4]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure$$anonfun$recover$1.apply(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.util.Try$.apply(Try.scala:191) [scala-library-2.11.1.jar:na]
+	at scala.util.Failure.recover(Try.scala:215) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:324) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32) [scala-library-2.11.1.jar:na]
+	at play.api.libs.iteratee.Execution$trampoline$.execute(Execution.scala:46) [play-iteratees_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.Promise$class.complete(Promise.scala:55) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:23) [scala-library-2.11.1.jar:na]
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41) [akka-actor_2.11-2.3.4.jar:na]
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:393) [akka-actor_2.11-2.3.4.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
+Caused by: java.util.NoSuchElementException: key not found: bWHSBys7nKIXIat7LgV6
+	at scala.collection.MapLike$class.default(MapLike.scala:228) ~[scala-library-2.11.1.jar:na]
+	at scala.collection.AbstractMap.default(Map.scala:59) ~[scala-library-2.11.1.jar:na]
+	at scala.collection.mutable.HashMap.apply(HashMap.scala:65) ~[scala-library-2.11.1.jar:na]
+	at models.Room$.getUserById(Room.scala:110) ~[classes/:na]
+	at models.Room.join(Room.scala:26) ~[classes/:na]
+	at controllers.Application$$anonfun$joinRoom$1.apply(Application.scala:56) ~[classes/:na]
+	at controllers.Application$$anonfun$joinRoom$1.apply(Application.scala:48) ~[classes/:na]
+	at scala.Function1$$anonfun$andThen$1.apply(Function1.scala:55) ~[scala-library-2.11.1.jar:na]
+	at play.core.Router$Routes$TaggingInvoker$$anonfun$call$62.apply(Router.scala:479) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.Router$Routes$TaggingInvoker$$anonfun$call$62.apply(Router.scala:479) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$15.apply(PlayDefaultUpstreamHandler.scala:214) ~[play_2.11-2.3.4.jar:2.3.4]
+	at play.core.server.netty.PlayDefaultUpstreamHandler$$anonfun$15.apply(PlayDefaultUpstreamHandler.scala:214) ~[play_2.11-2.3.4.jar:2.3.4]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library-2.11.1.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library-2.11.1.jar:na]
+	... 6 common frames omitted
+
+2014-10-01 01:03:18,039 - [INFO] - from play in play-internal-execution-context-411 
+Shutdown application default Akka system.
+
+2014-10-01 01:03:18,086 - [INFO] - from play in play-internal-execution-context-411 
+Application started (Dev)
+
+2014-10-01 01:03:21,159 - [INFO] - from play in play-akka.actor.default-dispatcher-889 
+Starting application default Akka system.
+
