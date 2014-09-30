@@ -29,7 +29,8 @@
         jquery:     'libs/jquery-1.11.1',
         underscore: 'libs/underscore-min',
         cookie:     'libs/jquery.cookie',
-        sprintf:    'libs/sprintf.min'
+        sprintf:    'libs/sprintf.min',
+        backbone:   'libs/backbone-min'
     };
 
     if(window.EnvJasmine){

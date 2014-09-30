@@ -2,7 +2,7 @@
 
 "use strict"
 
-require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer'], function($, __notUsed, Game, _, SprintfModule, Drawer) {
+require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbone'], function($, __notUsed, Game, _, SprintfModule, Drawer, Backbone) {
     var sprintf = SprintfModule.sprintf;
     var registerUserUrl = '@routes.Application.logInUser()';
     var createRoomUrl = '@routes.Application.createRoom()';
@@ -14,9 +14,84 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer'], functio
     var white = Game.Color.white;
     var black = Game.Color.black;
 
-    // TODO: add memoization
-    var roomTemplate = _.template($('#room-template').html());
-    var tableTemplate = _.template($('#table-template').html());
+    var TableModel = Backbone.Model.extend({
+        defaults: {
+            white: null,
+            black: null,
+            url: "someurl"
+        }
+    });
+
+    var TableCollection = Backbone.Collection.extend({
+        model: TableModel
+    });
+
+    var RoomModel = Backbone.Model.extend({
+        fromArray: function(tables){
+            var tableCollection = new TableCollection(tables);
+            this.set('tablesCollection', tableCollection);
+        }
+    });
+
+    var RoomCollection = Backbone.Collection.extend({
+        model: RoomModel,
+
+        fromMessage: function(msg){
+            var data = JSON.parse(msg.data);
+            var rooms = [];
+            for(var roomId in data.rooms){
+                var roomModel = new RoomModel();
+                roomModel.fromArray(data.rooms[roomId]);
+                rooms.push(roomModel);
+            }
+            this.reset(rooms);
+        }
+    });
+
+    var roomsCollection = new RoomCollection();
+
+    var RoomsView = Backbone.View.extend({
+        el: '#rooms-list',
+
+        render: function() {
+            this.$el.html('');
+
+            roomsCollection.forEach(function(room){
+                var roomView = new RoomView({model: room});
+                this.$el.append(roomView.render().el);
+            }, this);
+            return this;
+        },
+
+        initialize: function() {
+            this.listenTo(roomsCollection, 'reset', this.render);
+        }
+
+    });
+
+    var RoomView = Backbone.View.extend({
+        tagName: 'li',
+
+        render: function() {
+            var roomModel = this.model;
+            roomModel.get('tablesCollection').forEach(function(table){
+                var tableView  = new TableView({model: table});
+                this.$el.append(tableView.render().el);
+            }, this);
+            return this;
+        }
+    });
+
+    var TableView = Backbone.View.extend({
+        template: _.template($('#table-template').html()),
+
+        render: function() {
+            this.$el.html(this.template(this.model.attributes));
+            return this;
+        }
+    });
+
+    var roomsView = new RoomsView();
 
     function RoomsWebsocket(url){
         this.ws = new WS(url);
@@ -32,19 +107,7 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer'], functio
 
     RoomsWebsocket.prototype.onmessage = function(msg){
         console.log("onmessage listrooms: " + msg.data);
-        var data = JSON.parse(msg.data);
-
-        var roomsList = $('#rooms-list');
-        roomsList.html('');
-
-        for(var roomId in data.rooms){
-            var templateData = {
-                fields: data.rooms[roomId],
-                render: tableTemplate
-            };
-            var roomItem = roomTemplate(templateData);
-            roomsList.append(roomItem);
-        }
+        roomsCollection.fromMessage(msg);
     };
 
     RoomsWebsocket.prototype.onclose = function(){
