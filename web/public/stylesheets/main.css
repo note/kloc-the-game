@@ -8,7 +8,7 @@
     margin-right: auto;
 }
 
-#game-panel{
+#login-panel, #rooms-panel, #game-panel{
     display: none;
 }
 

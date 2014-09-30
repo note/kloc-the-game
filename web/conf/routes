@@ -7,7 +7,9 @@ GET     /                           controllers.Application.index
 GET     /createRoom                 controllers.Application.createRoom
 GET     /mainJs                     controllers.Application.mainJs
 GET     /joinRoom                   controllers.Application.joinRoom(roomId: Int)
-GET     /registerUser               controllers.Application.registerUser()
+GET     /logInUser                  controllers.Application.logInUser
+GET     /logged                     controllers.Application.isUserLoggedIn
+GET     /listRooms                  controllers.Application.listRooms()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

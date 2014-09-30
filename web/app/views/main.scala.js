@@ -1,19 +1,69 @@
+@()(implicit request: RequestHeader)
+
 "use strict"
 
-require(['jquery', 'cookie', 'game', 'underscore', 'sprintf'], function($, __notUsed, Game, _, SprintfModule) {
+require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer'], function($, __notUsed, Game, _, SprintfModule, Drawer) {
     var sprintf = SprintfModule.sprintf;
-    var registerUserUrl = '@routes.Application.registerUser()';
+    var registerUserUrl = '@routes.Application.logInUser()';
     var createRoomUrl = '@routes.Application.createRoom()';
+    var loggedInUrl = '@routes.Application.isUserLoggedIn()';
+    var listRoomsUrl = '@routes.Application.listRooms().webSocketURL()';
+    var joinRoomUrl = '@routes.Application.joinRoom(3).webSocketURL()';
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
 
     var white = Game.Color.white;
     var black = Game.Color.black;
 
-    function ChessGameWebSocket(url){
+    // TODO: add memoization
+    var roomTemplate = _.template($('#room-template').html());
+    var tableTemplate = _.template($('#table-template').html());
+
+    function RoomsWebsocket(url){
         this.ws = new WS(url);
+        this.ws.onmessage = this.onmessage;
+        this.ws.onclose = this.onclose;
+        this.ws.onerror = this.onerror;
+        this.ws.onopen = this.onopen;
+    }
+
+    RoomsWebsocket.prototype.onopen = function(){
+        console.log("listrooms open")
+    }
+
+    RoomsWebsocket.prototype.onmessage = function(msg){
+        console.log("onmessage listrooms: " + msg.data);
+        var data = JSON.parse(msg.data);
+
+        var roomsList = $('#rooms-list');
+        roomsList.html('');
+
+        for(var roomId in data.rooms){
+            var templateData = {
+                fields: data.rooms[roomId],
+                render: tableTemplate
+            };
+            var roomItem = roomTemplate(templateData);
+            roomsList.append(roomItem);
+        }
+    };
+
+    RoomsWebsocket.prototype.onclose = function(){
+
+    };
+
+    RoomsWebsocket.prototype.onerror = function(){
+
+    };
+
+    function ChessGameWebSocket(url, color){
+        var params = {color: color.toString()};
+        var fullUrl = [url, "&", $.param(params)].join("");
+        this.ws = new WS(fullUrl);
+
         this.ws.onmessage = this.getReceiveMessage();
         this.ws.onclose = this.onclose;
         this.ws.onerror = this.onerror;
+        this.ws.onopen = this.getOnOpenFun(color);
     }
 
     ChessGameWebSocket.prototype.getReceiveMessage = function(){
@@ -56,6 +106,17 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf'], function($, __not
 
     ChessGameWebSocket.prototype.onerror = function () {
         console.log("websocket onerror");
+    };
+
+    ChessGameWebSocket.prototype.getOnOpenFun = function(color) {
+        var that = this;
+        return function() {
+            console.log("onopen game");
+
+            var drawer = new Drawer(color, 70, 0.7, $("#pieces-layer"), $("#chessboard-canvas"));
+            var webGame = new WebGame(that.ws, drawer);
+            $('#game-panel').show();
+        };
     };
 
     var refreshTimeMs = 1000;
@@ -208,170 +269,69 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf'], function($, __not
     };
 
     //// -----------------------------------
-    function Drawer(perspectiveColor, fieldSize, scale, piecesLayer, chessboardCanvas){
-        this.color = perspectiveColor;
-        this.fieldSize = fieldSize;
-        this.piecesLayer = piecesLayer;
-        this.chessboardCanvas = chessboardCanvas;
-        this.scale = scale;
-
-        this.piecesToElements = {
-            k: '#black-king',
-            q: '#black-queen',
-            r: '#black-rook',
-            b: '#black-bishop',
-            n: '#black-knight',
-            p: '#black-pawn',
-
-            K: '#white-king',
-            Q: '#white-queen',
-            R: '#white-rook',
-            B: '#white-bishop',
-            N: '#white-knight',
-            P: '#white-pawn',
-        }
+    function loggedIn(userId){
+        var loggedInPromise = new Promise(function(resolve, reject){
+            $.get(loggedInUrl, {userId: userId}, function(data){
+                if(data.result === true){
+                    resolve();
+                }else{
+                    reject();
+                }
+            });
+        });
+        return loggedInPromise;
     }
 
-    Drawer.prototype.drawChessboard = function(){
-        var canvas = this.chessboardCanvas.get(0);
-        var chessboardContext = canvas.getContext('2d');
-        for(var row = 0; row < 8; ++row){
-            for(var column = 0; column < 8; ++column){
-                chessboardContext.beginPath();
-                chessboardContext.rect(column * this.fieldSize, row * this.fieldSize, this.fieldSize, this.fieldSize);
-                chessboardContext.fillStyle = column % 2 == row % 2 ? '#fff' : '#a1a1a1';
-                chessboardContext.fill();
-            }
-        }
-    };
-
-    Drawer.prototype.update = function(field, piece) {
-        this.drawPiece(field, piece);
+    function activateRoomsPanel(){
+        $("#rooms-panel").show();
+        var socket = new RoomsWebsocket(listRoomsUrl);
     }
-
-    Drawer.prototype.getRow = function(field) {
-        return this.color === white ? 7 - field.row : field.row;
-    }
-
-    Drawer.prototype.getColumn = function(field) {
-        return this.color === white ? field.column : 7 - field.column;
-    }
-
-    Drawer.prototype.drawField = function(field, piece, webGame) {
-        var topPos = this.getRow(field) * this.fieldSize;
-        var leftPos = this.getColumn(field) * this.fieldSize;
-        var newEl = $(document.createElement('div'));
-        var attrs = {
-            style: 'width: ' + this.fieldSize + 'px; height: ' + this.fieldSize + 'px; top: ' + topPos + 'px; left:' + leftPos + 'px; position: absolute',
-            id: field.toString()
-        }
-        newEl.attr(attrs);
-
-        if(piece !== undefined){
-            var pieceElement = $(this.piecesToElements[piece.toString()]);
-            var srcForPiece = pieceElement.attr("src");
-            var height = Math.floor(pieceElement.height() * this.scale);
-            var width = Math.floor(pieceElement.width() * this.scale);
-            var marginTop = Math.floor((this.fieldSize - height)/2);
-            var marginLeft = Math.floor((this.fieldSize - width)/2);
-            var imgAttrs = {
-                src: srcForPiece,
-                draggable: true,
-                style: "position: absolute; top: " + marginTop + "px; left: " + marginLeft + "px;",
-                width: width
-            };
-            var img = $(document.createElement('img'));
-            img.attr(imgAttrs);
-            img.bind('dragstart', WebGame.drag);
-            newEl.append(img);
-//            newEl.html('<img src="' + srcForPiece + '" draggable="true" style="position: absolute; top:' + marginTop + 'px; left:' + marginLeft + 'px;" />');
-        }
-
-        newEl.bind('drop', webGame.getDropFn(newEl));
-        newEl.bind('dragover', webGame.dragover);
-        this.piecesLayer.append(newEl);
-
-        if(piece !== undefined)
-            this.piecesLayer.find("#" + field.toString()).bind('dragstart', webGame.drag);
-    };
-
-    Drawer.prototype.drawPiece = function(field, piece) {
-        var fieldEl = $('#' + field.toString());
-
-        // TODO: code duplicated with drawField
-        if(piece !== undefined){
-            var pieceElement = $(this.piecesToElements[piece.toString()]);
-            var srcForPiece = pieceElement.attr("src");
-            var height = Math.floor(pieceElement.height() * this.scale);
-            var width = Math.floor(pieceElement.width() * this.scale);
-            var marginTop = Math.floor((this.fieldSize - height)/2);
-            var marginLeft = Math.floor((this.fieldSize - width)/2);
-            var imgAttrs = {
-                src: srcForPiece,
-                draggable: true,
-                style: "position: absolute; top: " + marginTop + "px; left: " + marginLeft + "px;",
-                width: width
-            };
-            var img = $(document.createElement('img'));
-            img.attr(imgAttrs);
-            img.bind('dragstart', WebGame.drag);
-            fieldEl.html(img);
-        }else{
-            fieldEl.html("");
-        }
-    };
 
     $(document).ready(function() {
+        var userId = $.cookie("userId");
 
-//        var drawer = new Drawer(white, 70, 0.7, $("#pieces-layer"), $("#chessboard-canvas"));
-//        var webGame = new WebGame({addObserver: function(a){}}, drawer);
-//        $('#game-panel').show();
+        var notLoggedFn = function() {
+            $("#login-panel").show();
+        };
 
-        $("#send-introduce").click(function(){
-            var playerName = $("#player-name").val();
-            $.get(registerUserUrl, {"playerName": playerName}, function(data){
+        if(userId){
+            loggedIn(userId).then(
+                function() {
+                    activateRoomsPanel();
+                },
+                notLoggedFn
+            );
+        }else{
+            notLoggedFn();
+        }
+
+        $("#send-introduce").submit(function(ev){
+            ev.preventDefault();
+
+            var userName = $("#user-name").val();
+            $.get(registerUserUrl, {userName: userName}, function(data){
                 console.log(data);
-                $.cookie("userId", data.userId);
+                if(data && data.userId){
+                    $.cookie("userId", data.userId);
+                    $("#login-panel").hide();
+                    activateRoomsPanel();
+                }
             });
         });
 
         $('#create-room').click(function(){
-            var roomName = $('#new-room-name').val();
-            $.get(createRoomUrl, {name: roomName}, function(data){
+            $.get(createRoomUrl, function(data){
                 console.log(data);
-//                var wsUrl = data.url;
-//                createGameWebsocket(wsUrl);
+                if(data && data.url){
+                    var socket = new ChessGameWebSocket(data.url, white); // TODO hardcoded
+                }
             });
         });
 
         $(".join-room").click(function(){
-            var that = this;
-
-            function createUrl(baseUrl) {
-                var params = {
-                    color: $(that).hasClass("white") ? "w" : "b"
-                };
-                return [baseUrl, "&", $.param(params)].join("");
-            }
-
-            var url = createUrl($(this).attr("href"));
-            var socket = new ChessGameWebSocket(url);
-
-            socket.ws.onopen = function(){
-                console.log("onopen");
-                var color = $(that).hasClass("white") ? white : black;
-                var drawer = new Drawer(color, 70, 0.7, $("#pieces-layer"), $("#chessboard-canvas"));
-                var webGame = new WebGame(socket, drawer);
-                $('#game-panel').show();
-            };
-
-//            $("#game-panel").show();
-//            $("#send-move").click(function(){
-//                var fromStr = $("#from").val();
-//                var toStr = $("#to").val();
-//                var moveMessage = {type: "move", from: fromStr, to: toStr};
-//                socket.send(JSON.stringify(moveMessage));
-//            });
+            var url = $(this).attr("href");
+            var color = $(that).hasClass("white") ? white : black;
+            var socket = new ChessGameWebSocket(url, color);
         });
     });
 

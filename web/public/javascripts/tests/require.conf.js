@@ -23,9 +23,11 @@
         game:              'game-rules/game',
         funUtils:          'game-rules/funUtils',
 
+        drawer:            'gui/drawer',
+
         // Libraries
         jquery:     'libs/jquery-1.11.1',
-        underscore: 'libs/underscore-1.7.0',
+        underscore: 'libs/underscore-min',
         cookie:     'libs/jquery.cookie',
         sprintf:    'libs/sprintf.min'
     };

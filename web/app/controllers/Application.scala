@@ -1,13 +1,18 @@
 package controllers
 
 import play.api._
+import play.api.libs.concurrent.Akka
+import play.api.mvc.WebSocket.FrameFormatter
 import play.api.mvc._
-import net.michalsitko.kloc.game.Color
-import net.michalsitko.kloc.game.Chessboard
+import net.michalsitko.kloc.game.{Move, Color, Chessboard}
 import play.api.libs.iteratee.{Input, Enumerator, Iteratee}
 import play.api.libs.json._
-import models.Room
-import scala.concurrent.Future
+import models._
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import play.api.Play.current
+
+case class ChessTableInfos(tables: List[ChessTableInfo])
 
 object Application extends Controller {
 
@@ -16,25 +21,29 @@ object Application extends Controller {
   }
 
   def createRoom = Action { implicit request =>
-    request.getQueryString("name") match {
-      case Some(roomName) =>
-        val roomId = Room.newRoom(roomName)
+        val roomId = Room.newRoom()
         val webSocketUrl = routes.Application.joinRoom(roomId).webSocketURL()
         Ok(Json.obj("roomId" -> roomId, "url" -> webSocketUrl))
-      case _ =>
-        Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))
-    }
   }
 
-  def registerUser = Action { request =>
-    request.getQueryString("playerName") match {
-      case Some(playerName) =>
-        val userId = Room.registerUser(playerName)
+  def logInUser = Action { request =>
+    request.getQueryString("userName") match {
+      case Some(userName) =>
+        val userId = Room.registerUser(userName)
         Ok(Json.obj("userId" -> JsString(userId)))
       case None =>
         Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))
     }
+  }
 
+  def isUserLoggedIn = Action { request =>
+    val userExists = request.getQueryString("userId") match {
+      case Some(userId) =>
+        Room.existsUserId(userId)
+      case None =>
+        false
+    }
+    Ok(Json.obj("result" -> JsBoolean(userExists)))
   }
 
   def joinRoom(roomId: Int) = WebSocket.tryAccept[JsValue] { request =>
@@ -55,7 +64,12 @@ object Application extends Controller {
     }
   }
 
-  def mainJs = Action {
+  def listRooms() = WebSocket.using[JsValue] { request =>
+    println("bazinga listrooms")
+    Await.result(RoomsRepository.getRoomsSocket(), 2000 milliseconds)
+  }
+
+  def mainJs = Action { implicit request =>
     Ok(views.js.main())
   }
 

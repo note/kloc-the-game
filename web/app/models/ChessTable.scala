@@ -83,6 +83,12 @@ class ChessTable (timeLimitMs: Int) {
     }.getOrElse(None)
   }
 
+  def getInfo(): ChessTableInfo = {
+    val whitePlayer = if (white != null) Some(white.user.name) else None
+    val blackPlayer = if (black != null) Some(black.user.name) else None
+    ChessTableInfo(whitePlayer, blackPlayer)
+  }
+
   private def applyMove(player: Player, move: Move): Option[GameStatus] = {
     try{
       game.applyMove(move)

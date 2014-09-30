@@ -20,19 +20,42 @@
 
 
 <div id="main">
-    <div id="introduce">
-        <p>Nickname: <input type="text" id="player-name" /></p>
-        <button id="send-introduce">OK</button>
+    <div id="login-panel">
+        <form id="send-introduce">
+            <p><label for="user-name">Nickname: </label><input type="text" id="user-name"/></p>
+            <input type="submit" value="OK" />
+        </form>
     </div>
 
-    <input type="text" id="new-room-name" />
-    <button id="create-room">New Room</button>
+    <div id="rooms-panel">
+        <script id="table-template" type="text/html">
+            <% if(white) { %>
+                <div class="room-white-player place-occupied"><%= white %></div>
+            <% }else { %>
+                <div class="room-white-player place-free"><a href="<%= url %>">Join</a></div>
+            <% } %>
 
-    <ul>
-    @for(room <- rooms) {
-        <li><a href="@room._2" class="join-room white">@room._1</a> black: <a href="@room._2" class="join-room black">@room._1</a></li>
-    }
-    </ul>
+            <% if(black) { %>
+                <div class="room-black-player place-occupied"><%= black %></div>
+            <% }else { %>
+                <div class="room-black-player place-free"><a href="<%= url %>">Join</a></div>
+            <% } %>
+        </script>
+
+        <script id="room-template" type="text/html">
+            <li>
+                <% for(var i=0; i < fields.length; ++i) { %>
+                    <%= render(fields[i]) %>
+                <% } %>
+            </li>
+        </script>
+
+        <button id="create-room">New Room</button>
+
+        <ul id="rooms-list">
+
+        </ul>
+    </div>
 
     <div id="game-panel" style="display: none">
         <div id="hud">
