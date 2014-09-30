@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /createRoom                 controllers.Application.createRoom
+GET     /createRoom                 controllers.Application.createRoom(timeLimitInSeconds: Int)
 GET     /mainJs                     controllers.Application.mainJs
 GET     /joinRoom                   controllers.Application.joinRoom(roomId: Int)
 GET     /logInUser                  controllers.Application.logInUser

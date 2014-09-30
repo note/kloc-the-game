@@ -20,8 +20,8 @@ object Application extends Controller {
     Ok(views.html.index("Your new application is ready.", Room.getRoomNames().map((name: Int) => (name, routes.Application.joinRoom(name).webSocketURL()))))
   }
 
-  def createRoom = Action { implicit request =>
-        val roomId = Room.newRoom()
+  def createRoom(timeLimitInSeconds: Int) = Action { implicit request =>
+        val roomId = Room.newRoom(timeLimitInSeconds)
         Ok(Json.obj("roomId" -> roomId))
   }
 

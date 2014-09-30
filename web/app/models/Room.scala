@@ -72,8 +72,8 @@ object Room {
   val rand = new Random(System.currentTimeMillis())
   println("creating room")
 
-  def newRoom() = {
-    val table = new ChessTable(120 * 60 * 1000)
+  def newRoom(timeLimitInSeconds: Int) = {
+    val table = new ChessTable(timeLimitInSeconds * 1000)
     val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
     val roomId = useNextId()
     rooms += (roomId -> new Room(roomActor, roomId))

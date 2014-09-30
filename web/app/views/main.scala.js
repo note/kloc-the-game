@@ -2,19 +2,24 @@
 
 "use strict"
 
-require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbone'], function($, __notUsed, Game, _, SprintfModule, Drawer, Backbone) {
+require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbone', 'vex', 'vexDialog'], function($, __notUsed, Game, _, SprintfModule, Drawer, Backbone, vex, VexDialog) {
     var sprintf = SprintfModule.sprintf;
     var registerUserUrl = '@routes.Application.logInUser()';
-    var createRoomUrl = '@routes.Application.createRoom()';
     var loggedInUrl = '@routes.Application.isUserLoggedIn()';
     var listRoomsUrl = '@routes.Application.listRooms().webSocketURL()';
-    var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
+    var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket;
+    vex.defaultOptions.className = 'vex-theme-os';
+    vex.dialog = VexDialog;
 
     var white = Game.Color.white;
     var black = Game.Color.black;
 
     function getJoinRoomURL(roomId){
         return jsRoutes.controllers.Application.joinRoom(roomId).webSocketURL();
+    }
+
+    function getCreateRoomURL(timeLimitInSeconds){
+        return jsRoutes.controllers.Application.createRoom(timeLimitInSeconds).url;
     }
 
     var TableModel = Backbone.Model.extend({
@@ -384,12 +389,22 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
         });
 
         $('#create-room').click(function(){
-            $.get(createRoomUrl, function(data){
-                console.log(data);
-                if(data && data.roomId !== undefined){
-                    $("#rooms-panel").hide();
-                    var url = getJoinRoomURL(data.roomId);
-                    var socket = new ChessGameWebSocket(url, white); // TODO hardcoded
+            vex.dialog.open({
+                message: 'Choose color:',
+                input: '<p><input type="radio" name="color" id="white-color-dialog" value="w" checked /><label for="white-color-dialog">White</label></p>' +
+                       '<p><input type="radio" name="color" id="black-color-dialog" value="b" /><label for="black-color-dialog">Black</label></p>' +
+                       '<p><label for="time-limit-dialog">Time limit: (in minutes)</label><input type="text" name="time-limit" id="time-limit-dialog" value="5" /></p>',
+                callback: function(dialogData) {
+                    console.log(dialogData);
+                    var color = Game.Color.fromString(dialogData.color);
+                    var timeLimitInSeconds = dialogData['time-limit'] * 60;
+                    $.get(getCreateRoomURL(timeLimitInSeconds), function(data){
+                        if(data && data.roomId !== undefined){
+                            $("#rooms-panel").hide();
+                            var url = getJoinRoomURL(data.roomId);
+                            var socket = new ChessGameWebSocket(url, color);
+                        }
+                    });
                 }
             });
         });

@@ -30,7 +30,9 @@
         underscore: 'libs/underscore-min',
         cookie:     'libs/jquery.cookie',
         sprintf:    'libs/sprintf.min',
-        backbone:   'libs/backbone-min'
+        backbone:   'libs/backbone-min',
+        vexDialog:  'libs/vex.dialog',
+        vex:        'libs/vex.min'
     };
 
     if(window.EnvJasmine){
