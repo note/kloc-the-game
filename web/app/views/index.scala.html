@@ -23,6 +23,9 @@
 <img src="@routes.Assets.at("images/white_knight.svg")" id="white-knight" class="piece-template" />
 <img src="@routes.Assets.at("images/white_pawn.svg")" id="white-pawn" class="piece-template" />
 
+<div id="top">
+    <div id="logo"><span>Kloc - the game</span></div>
+</div>
 
 <div id="main">
     <div id="login-panel">
@@ -34,17 +37,19 @@
 
     <div id="rooms-panel">
         <script id="table-template" type="text/html">
+            <div class="room-time-control"><span class="room-time-control-value">5</span><br /><span class="minutes">min</span></div>
             <% if(white) { %>
                 <div class="room-white-player place-occupied"><%= white %></div>
             <% }else { %>
-                <div class="room-white-player place-free white"><a href="<%= url %>" class="join-room">Join</a></div>
+                <div class="room-white-player place-free white"><a href="<%= url %>" class="join-room">JOIN</a></div>
             <% } %>
 
             <% if(black) { %>
                 <div class="room-black-player place-occupied"><%= black %></div>
             <% }else { %>
-                <div class="room-black-player place-free black join-room"><a href="<%= url %>" class="join-room">Join</a></div>
+                <div class="room-black-player place-free black join-room"><a href="<%= url %>" class="join-room">JOIN</a></div>
             <% } %>
+            <div style="clear: left"></div>
         </script>
 
         <button id="create-room">New Room</button>
@@ -56,9 +61,9 @@
 
     <div id="game-panel" style="display: none">
         <div id="hud">
-            <p>
-                <span id="bottom_player">-</span>
-                <span id="bottom_time">0:00</span>
+            <p id="top-player-hud">
+                <span id="top-player">-</span>
+                <span id="top-time">0:00</span>
             </p>
         </div>
 
@@ -66,9 +71,9 @@
             <canvas id="chessboard-canvas" width="560" height="560">
             </canvas>
             <div id="pieces-layer"></div>
-            <p id="top_player_hud">
-                <span id="top_player">-</span>
-                <span id="top_time">0:00</span>
+            <p id="bottom-player-hud">
+                <span id="bottom-player">-</span>
+                <span id="bottom-time">0:00</span>
             </p>
         </div>
     </div>

@@ -39,7 +39,7 @@ define(['jquery', 'color'], function($, Color){
             for(var column = 0; column < 8; ++column){
                 chessboardContext.beginPath();
                 chessboardContext.rect(column * this.fieldSize, row * this.fieldSize, this.fieldSize, this.fieldSize);
-                chessboardContext.fillStyle = column % 2 == row % 2 ? '#fff' : '#a1a1a1';
+                chessboardContext.fillStyle = column % 2 == row % 2 ? '#E7D2B7' : '#CD8B34';
                 chessboardContext.fill();
             }
         }

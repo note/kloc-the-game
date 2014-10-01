@@ -198,10 +198,10 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
         this.socket = socket;
         this.drawer = drawer;
 
-        this.bottomPlayerId = "#bottom_player";
-        this.bottomTimeId = "#bottom_time";
-        this.topPlayerId = "#top_player";
-        this.topTimeId = "#top_time";
+        this.bottomPlayerId = "#bottom-player";
+        this.bottomTimeId = "#bottom-time";
+        this.topPlayerId = "#top-player";
+        this.topTimeId = "#top-time";
 
         this.playerNamesToColor = {};
         this.colorToPlayerNames = {};
