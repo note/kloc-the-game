@@ -1,6 +1,6 @@
 # Kloc The Game
 
-[[https://travis-ci.org/note/kloc-the-game][Travis-CI]] :: [[https://travis-ci.org/note/kloc-the-game.png]]
+[![Build Status](https://api.travis-ci.org/note/kloc-the-game.svg)](https://travis-ci.org/note/kloc-the-game)
 
 # About project
 
@@ -22,9 +22,9 @@ To run:
 sbt web/run
 ```
 
-## Running tests
+This command starts server listening at `localhost:9000`.
 
-This commands starts server listening at `localhost:9000`.
+## Running tests
 
 To run all tests:
 
@@ -32,13 +32,13 @@ To run all tests:
 sbt test
 ```
 
-To run chess rules tests:
+To run only chess logic tests:
 
 ```
 sbt rules/test
 ```
 
-To run web (both frontend and backend tests:
+To run web (both frontend and backend) tests:
 
 ```
 sbt web/test
