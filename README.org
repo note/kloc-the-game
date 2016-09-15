@@ -10,7 +10,11 @@ This project was intended to be implementation of the "kloc" - variation of ches
 
 # How to run
 
-## Prere
+## Prerequisites
+
+SBT installed. More in [installation guide] (http://www.scala-sbt.org/0.13/docs/Setup.html).
+
+## Running project
 
 To run:
 
@@ -18,11 +22,37 @@ To run:
 sbt web/run
 ```
 
-To run all tests
+## Running tests
+
+This commands starts server listening at `localhost:9000`.
+
+To run all tests:
+
 ```bash
 sbt test
 ```
 
-https://github.com/playframework/playframework/issues/3484
+To run chess rules tests:
 
-jasmineGenRunner
+```
+sbt rules/test
+```
+
+To run web (both frontend and backend tests:
+
+```
+sbt web/test
+```
+
+Mind that javascript tests will run on rhino (JVM's javascript implementation). If you want to run tests inside browser then:
+
+```
+sbt web/jasmineGenRunner
+```
+
+This command's result is a path to file. If you enter returned file in browser you'll be able to run tests in browser.
+
+## Tips and tricks
+
+You can run all sbt commands in sbt console. So instead of `sbt web/test` you can open sbt console with `sbt` and then
+run abitrary sbt commands (`web/test` in that case). That way sbt is initialized just once.
