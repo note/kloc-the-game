@@ -1,3 +1,23 @@
-.idea
-.idea_modules
+.history
+
+# Sbt / Play
+play/logs/
+play/target/
+project/project/*
+project/target/*
 target/
+logs/
+
+# Intelij Idea
+.idea/
+.idea_modules
+
+# Git
+**/*.orig
+
+# Mac OS
+.DS_Store
+
+# Binaries
+*.class
+*.pyc
