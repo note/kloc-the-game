@@ -2,12 +2,13 @@ name := """web"""
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   jdbc,
   cache,
-  ws
+  ws,
+  specs2 % Test
 )
 
 appJsDir <+= Def.setting { baseDirectory.value / "public" / "javascripts" }
