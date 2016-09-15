@@ -14,10 +14,10 @@ import play.api.Play.current
 
 case class ChessTableInfos(tables: List[ChessTableInfo])
 
-object Application extends Controller {
+class ApplicationController extends Controller {
 
   def index = Action { implicit request =>
-    Ok(views.html.index("Your new application is ready.", Room.getRoomNames().map((name: Int) => (name, routes.Application.joinRoom(name).webSocketURL()))))
+    Ok(views.html.index("Your new application is ready.", Room.getRoomNames().map((name: Int) => (name, routes.ApplicationController.joinRoom(name).webSocketURL()))))
   }
 
   def createRoom(timeLimitInSeconds: Int) = Action { implicit request =>

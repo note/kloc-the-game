@@ -2,4 +2,27 @@
 
 [[https://travis-ci.org/note/kloc-the-game][Travis-CI]] :: [[https://travis-ci.org/note/kloc-the-game.png]]
 
-This project is implementation of the "kloc" - variation of chess.
+# About project
+
+This project was intended to be implementation of the "kloc" - variation of chess. For now just chess logic has been implemented.
+
+
+
+# How to run
+
+## Prere
+
+To run:
+
+```bash
+sbt web/run
+```
+
+To run all tests
+```bash
+sbt test
+```
+
+https://github.com/playframework/playframework/issues/3484
+
+jasmineGenRunner

@@ -4,9 +4,9 @@
 
 require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbone', 'vex', 'vexDialog'], function($, __notUsed, Game, _, SprintfModule, Drawer, Backbone, vex, VexDialog) {
     var sprintf = SprintfModule.sprintf;
-    var registerUserUrl = '@routes.Application.logInUser()';
-    var loggedInUrl = '@routes.Application.isUserLoggedIn()';
-    var listRoomsUrl = '@routes.Application.listRooms().webSocketURL()';
+    var registerUserUrl = '@routes.ApplicationController.logInUser()';
+    var loggedInUrl = '@routes.ApplicationController.isUserLoggedIn()';
+    var listRoomsUrl = '@routes.ApplicationController.listRooms().webSocketURL()';
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket;
     vex.defaultOptions.className = 'vex-theme-os';
     vex.dialog = VexDialog;
@@ -15,11 +15,11 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
     var black = Game.Color.black;
 
     function getJoinRoomURL(roomId){
-        return jsRoutes.controllers.Application.joinRoom(roomId).webSocketURL();
+        return jsRoutes.controllers.ApplicationController.joinRoom(roomId).webSocketURL();
     }
 
     function getCreateRoomURL(timeLimitInSeconds){
-        return jsRoutes.controllers.Application.createRoom(timeLimitInSeconds).url;
+        return jsRoutes.controllers.ApplicationController.createRoom(timeLimitInSeconds).url;
     }
 
     var TableModel = Backbone.Model.extend({
