@@ -46,25 +46,24 @@ class ApplicationController extends Controller {
   }
 
   def joinRoom(roomId: Int) = WebSocket.tryAccept[JsValue] { request =>
-    println("bazinga44")
     val userId = request.cookies.get("userId")
+    Logger.debug(s"User with id '$userId' requested to join room with id '$roomId'")
+
     val colorStr = request.getQueryString("color")
     val color = colorStr.flatMap(Color.fromString(_))
-    if(userId.isDefined && color.isDefined){
+    if(userId.isDefined && color.isDefined) {
       Room.getRoomById(roomId) match {
         case Some(room) =>
           room.join(userId.get.value, color.get)
         case _ =>
           Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))))
       }
-    }else{
-      println("Bad formatted request")
+    } else {
       Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("Bad formatted request")))))))
     }
   }
 
   def listRooms() = WebSocket.using[JsValue] { request =>
-    println("bazinga listrooms")
     Await.result(RoomsRepository.getRoomsSocket(), 2000 milliseconds)
   }
 

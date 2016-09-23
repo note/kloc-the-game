@@ -1,13 +1,15 @@
 package models
 
 import akka.actor.{Actor, Props}
+import akka.pattern.ask
 import akka.util.Timeout
-import play.api.libs.iteratee.{Iteratee, Enumerator, Concurrent}
+import play.api.Logger
+import play.api.libs.iteratee.{Concurrent, Enumerator, Iteratee}
 import play.api.libs.json._
 import play.libs.Akka
-import scala.concurrent.duration._
-import akka.pattern.ask
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 
 /**
@@ -64,7 +66,7 @@ class RoomsRepositoryActor extends Actor{
       val tablesJson = Json.toJson(tablesInfo)
       sender() ! RepoConnected(repoEnumerator, tablesJson)
     case RefreshNeeded() => refreshListInClients()
-    case _ => println("unexpected message in RoomsRepository mailbox")
+    case _ => Logger.warn("unexpected message in RoomsRepositoryActor mailbox")
   }
 
   def refreshListInClients() = {

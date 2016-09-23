@@ -1,23 +1,23 @@
 package models
 
 
-import akka.actor.{PoisonPill, ActorRef, Actor, Props}
-import net.michalsitko.kloc.game.{GameStatus, Color, Move}
-import play.api.libs.iteratee.{Input, Enumerator, Iteratee, Concurrent}
-import play.api.libs.json._
-import scala.collection.mutable.{Map => MutableMap}
-import play.api.Play.current
-import play.api.libs.concurrent.Execution.Implicits._
+import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import akka.pattern.ask
 import akka.util.Timeout
-import scala.concurrent.duration._
-import play.api.libs.json.JsObject
-import play.api.libs.json.JsString
-import scala.util.Random
-import play.api.libs.json.Reads._
 import models.ChessTableState.ChessTableState
+import net.michalsitko.kloc.game.{Color, GameStatus, Move}
+import play.api.Logger
+import play.api.Play.current
 import play.api.libs.concurrent.Akka
+import play.api.libs.concurrent.Execution.Implicits._
+import play.api.libs.iteratee.{Concurrent, Enumerator, Input, Iteratee}
+import play.api.libs.json.Reads._
+import play.api.libs.json.{JsObject, JsString, _}
+
+import scala.collection.mutable.{Map => MutableMap}
 import scala.concurrent._
+import scala.concurrent.duration._
+import scala.util.Random
 
 class Room (actor: ActorRef, roomId: Int) {
   implicit val timeout = Timeout(1 second)
@@ -28,17 +28,15 @@ class Room (actor: ActorRef, roomId: Int) {
       case Connected(enumerator, state) =>
         RoomsRepository.refreshNeeded()
         val in = Iteratee.foreach[JsValue](event => {
-          println("websocket received something" + event.toString())
+          Logger.debug("websocket received something" + event.toString())
           (event \ "type").as[String] match {
             case "move" =>
               actor ! MoveMessage(user, Move((event \ "from").as[String], (event \ "to").as[String]))
           }
         }).map { _ =>
-          println("Disconnected")
           actor ! RoomLeft(roomId, user)
-          println("Disconnected2")
           RoomsRepository.refreshNeeded()
-          println("Disconnected3")
+          Logger.debug("Disconnected3")
         }
 
         if(state == ChessTableState.Started){
@@ -70,17 +68,17 @@ object Room {
   var nextId = 0;
   val users = MutableMap[String, User]()
   val rand = new Random(System.currentTimeMillis())
-  println("creating room")
 
-  def newRoom(timeLimitInSeconds: Int) = {
+  def newRoom(timeLimitInSeconds: Int): Int = {
     val table = new ChessTable(timeLimitInSeconds * 1000)
     val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
     val roomId = useNextId()
     rooms += (roomId -> new Room(roomActor, roomId))
+    Logger.info(s"Created room with id: $roomId")
     roomId
   }
 
-  def removeRoom(roomId: Int) = {
+  def removeRoom(roomId: Int): Unit = {
     rooms.remove(roomId)
   }
 
@@ -130,20 +128,20 @@ class RoomActor(table: ChessTable) extends Actor {
       notifyAll(startObj)
     case MoveMessage(user, move) =>
       val res = table.move(user, move)
-      if(res.isDefined){
+      if(res.isDefined) {
         notifyAll(MoveNotification.toJsObject(MoveNotification(user, move, res.get, table.getTimes().toMap)))
-      }else{
-        println("bazinga incorrect move")
+      } else {
+        Logger.warn("incorrect move")
       }
     case GetTablesInfo() =>
       val tablesInfo = table.getInfo()
       sender() ! List[ChessTableInfo](tablesInfo)
     case _ =>
-      println("bazinga RoomActor.receive unknown message")
+      Logger.error("RoomActor received unknown message")
   }
 
   override def postStop() {
-    println("bazinga stopped actor")
+    Logger.debug("stopped actor RoomActor")
   }
 
   private def notifyAll(msg: JsObject) = {

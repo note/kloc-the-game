@@ -1,6 +1,7 @@
 package models
 
 import net.michalsitko.kloc.game._
+import play.api.Logger
 import scala.collection.mutable.Map
 import akka.actor.Cancellable
 import scala.concurrent.duration._
@@ -48,7 +49,6 @@ class ChessTable (timeLimitMs: Int) {
   }
 
   def start() = {
-    println("chesstable start")
     noTimeLeftTask = Some(white.startTimer(this))
   }
 
@@ -140,11 +140,10 @@ case class Player(user: User, timeControl: TimeControl, color: Color){
 
   def startTimer(table: ChessTable): Cancellable = {
     timerStarted = System.nanoTime()
-    println("bazinga startTimer: " + millisecondsLeft)
+    Logger.debug("startTimer: " + millisecondsLeft)
     val res = Akka.system.scheduler.scheduleOnce(millisecondsLeft milliseconds){
       table.timeExceeded(user)
     }
-    println("bazinga startTimer2: " + millisecondsLeft)
     res
   }
 
