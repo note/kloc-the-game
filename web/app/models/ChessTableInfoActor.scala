@@ -1,8 +1,6 @@
 package models
 
 import akka.actor._
-import play.api.libs.concurrent.Akka
-import play.api.Play.current
 import play.api.libs.json.{JsArray, JsObject, Json, Writes}
 
 /**

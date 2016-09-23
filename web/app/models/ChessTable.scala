@@ -1,16 +1,14 @@
 package models
 
-import net.michalsitko.kloc.game._
-import play.api.Logger
-import scala.collection.mutable.Map
 import akka.actor.Cancellable
-import scala.concurrent.duration._
+import net.michalsitko.kloc.game.{Black, IncorrectMoveException, White, _}
+import play.api.Logger
 import play.libs.Akka
-import net.michalsitko.kloc.game.White
+
 import scala.Some
-import net.michalsitko.kloc.game.Black
-import net.michalsitko.kloc.game.IncorrectMoveException
+import scala.collection.mutable.Map
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 
 /**

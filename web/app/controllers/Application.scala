@@ -1,16 +1,13 @@
 package controllers
 
-import play.api._
-import play.api.libs.concurrent.Akka
-import play.api.mvc.WebSocket.FrameFormatter
-import play.api.mvc._
-import net.michalsitko.kloc.game.{Move, Color, Chessboard}
-import play.api.libs.iteratee.{Input, Enumerator, Iteratee}
-import play.api.libs.json._
 import models._
+import net.michalsitko.kloc.game.Color
+import play.api._
+import play.api.libs.json._
+import play.api.mvc._
+
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
-import play.api.Play.current
 
 case class ChessTableInfos(tables: List[ChessTableInfo])
 
@@ -31,7 +28,7 @@ class ApplicationController extends Controller {
         val userId = Room.registerUser(userName)
         Ok(Json.obj("userId" -> JsString(userId)))
       case None =>
-        Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))
+        Ok(Json.obj("errors" -> JsArray(List(JsString("Incorrect request")))))
     }
   }
 
