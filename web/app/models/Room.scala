@@ -65,7 +65,7 @@ class Room (actor: ActorRef, roomId: Int) {
 
 object Room {
   val rooms = MutableMap[Int, Room]()
-  var nextId = 0;
+  var nextId = 0
   val users = MutableMap[String, User]()
   val rand = new Random(System.currentTimeMillis())
 

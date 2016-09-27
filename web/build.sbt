@@ -6,7 +6,10 @@ scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   cache,
-  specs2 % Test
+  specs2 % Test,
+  "com.typesafe.akka" %% "akka-testkit" % "2.4.10" % Test,
+  "org.asynchttpclient" % "async-http-client" % "2.0.15" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
 
 appJsDir <+= Def.setting { baseDirectory.value / "public" / "javascripts" }
