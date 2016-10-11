@@ -42,6 +42,7 @@ class ApplicationController extends Controller {
     Ok(Json.obj("result" -> JsBoolean(userExists)))
   }
 
+  // TODO: replace with up to date method
   def joinRoom(roomId: Int) = WebSocket.tryAccept[JsValue] { request =>
     val userId = request.cookies.get("userId")
     Logger.debug(s"User with id '$userId' requested to join room with id '$roomId'")
