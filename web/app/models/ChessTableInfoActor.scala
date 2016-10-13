@@ -3,18 +3,12 @@ package models
 import akka.actor._
 import play.api.libs.json.{JsArray, JsObject, Json, Writes}
 
-/**
- * Created by michal on 25/09/14.
- */
 class ChessTableInfoActor (out: ActorRef) extends Actor {
+  import ChessTableInfoActor._
+  import ChessTableInfo._
+
   def receive = {
-    case msg: ChessTableInfoNeeded =>
-      implicit val chessTableInfoWrites = new Writes[ChessTableInfo] {
-        def writes(info: ChessTableInfo) = Json.obj(
-          "white" -> info.whitePlayerName.getOrElse(null),
-          "black" -> info.blackPlayerName.getOrElse(null)
-        )
-      }
+    case ChessTableInfoNeeded =>
 
       implicit val roomWrites = new Writes[List[ChessTableInfo]] {
         def writes(tables: List[ChessTableInfo]) = JsArray(tables.map(Json.toJson(_)))
@@ -35,6 +29,6 @@ class ChessTableInfoActor (out: ActorRef) extends Actor {
 
 object ChessTableInfoActor{
   def props(out: ActorRef) = Props(new ChessTableInfoActor(out))
-}
 
-case class ChessTableInfoNeeded()
+  case object ChessTableInfoNeeded
+}

@@ -45,7 +45,7 @@ class Room (actor: ActorRef, roomId: Int) {
           // This is just best effort - it does not guarantee anything
           // TODO: think about alternatives
           Akka.system.scheduler.scheduleOnce(1000 milliseconds){
-            actor ! Started()
+            actor ! Started
           }
         }
 
@@ -56,7 +56,7 @@ class Room (actor: ActorRef, roomId: Int) {
   }
 
   def getTablesInfo(): List[ChessTableInfo] = {
-    Await.result((actor ? GetTablesInfo()).map {
+    Await.result((actor ? GetTablesInfo).map {
       case res: List[ChessTableInfo] => res
       case _ => List[ChessTableInfo]()
     }, 1000 milliseconds)
@@ -122,7 +122,7 @@ class RoomActor(table: ChessTable) extends Actor {
         Room.removeRoom(roomId)
         self ! PoisonPill
       }
-    case Started() =>
+    case Started =>
       val colors = table.getColors
       val startObj = JsObject(Seq("type" -> JsString("start"), "times" -> MoveNotification.mapToJsObject(table.getTimes().toMap), "colors" -> JsObject(colors.map(mapItem => (mapItem._1, JsString(mapItem._2.toString))).toSeq)))
       notifyAll(startObj)
@@ -133,7 +133,7 @@ class RoomActor(table: ChessTable) extends Actor {
       } else {
         Logger.warn("incorrect move")
       }
-    case GetTablesInfo() =>
+    case GetTablesInfo =>
       val tablesInfo = table.getInfo()
       sender() ! List[ChessTableInfo](tablesInfo)
     case _ =>
@@ -148,9 +148,6 @@ class RoomActor(table: ChessTable) extends Actor {
     roomChannel.push(msg)
   }
 }
-
-
-class ClientMessage(user: User)
 
 case class Join(user: User, color: Color)
 case class RoomLeft(roomId: Int, user: User)
@@ -179,9 +176,16 @@ object MoveNotification{
 
 case class Connected(enumerator: Enumerator[JsValue], tableState: ChessTableState)
 
-case class Started()
+case object Started
 
-case class GetTablesInfo()
+case object GetTablesInfo
 
-case class ChessTableInfo(whitePlayerName: Option[String], blackPlayerName: Option[String])
+case class ChessTableInfo(white: Option[String], black: Option[String])
+
+object ChessTableInfo {
+  import play.api.libs.json._
+
+  implicit val chessTableInfoFormat = Json.format[ChessTableInfo]
+
+}
 

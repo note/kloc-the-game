@@ -12,19 +12,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 
-/**
- * Created by michal on 26/09/14.
- */
-class RoomsRepository {
-
-}
 object RoomsRepository{
   implicit val timeout = Timeout(1 second)
 
   lazy val repositoryActor = Akka.system.actorOf(Props[RoomsRepositoryActor])
 
   def getRoomsSocket() = {
-    (repositoryActor ? RepoConnect()).map {
+    (repositoryActor ? RepoConnect).map {
       case RepoConnected(actorEnumerator, infoJson) =>
         val enumerator = Enumerator[JsValue](infoJson).andThen(actorEnumerator)
         (Iteratee.ignore[JsValue], enumerator)
@@ -32,18 +26,13 @@ object RoomsRepository{
   }
 
   def refreshNeeded() = {
-    repositoryActor ! RefreshNeeded()
+    repositoryActor ! RefreshNeeded
   }
 }
 
 
 class RoomsRepositoryActor extends Actor{
-  implicit val chessTableInfoWrites = new Writes[ChessTableInfo] {
-    def writes(info: ChessTableInfo) = Json.obj(
-      "white" -> info.whitePlayerName.getOrElse(null),
-      "black" -> info.blackPlayerName.getOrElse(null)
-    )
-  }
+  import ChessTableInfo._
 
   implicit val roomWrites = new Writes[List[ChessTableInfo]] {
     def writes(tables: List[ChessTableInfo]) = JsArray(tables.map(Json.toJson(_)))
@@ -61,11 +50,11 @@ class RoomsRepositoryActor extends Actor{
   val (repoEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
 
   def receive = {
-    case RepoConnect() =>
+    case RepoConnect =>
       val tablesInfo = Room.getTablesInfo()
       val tablesJson = Json.toJson(tablesInfo)
       sender() ! RepoConnected(repoEnumerator, tablesJson)
-    case RefreshNeeded() => refreshListInClients()
+    case RefreshNeeded => refreshListInClients()
     case _ => Logger.warn("unexpected message in RoomsRepositoryActor mailbox")
   }
 
@@ -76,6 +65,6 @@ class RoomsRepositoryActor extends Actor{
   }
 }
 
-case class RepoConnect()
+case object RepoConnect
 case class RepoConnected(enumerator: Enumerator[JsValue], initialInfo: JsValue)
-case class RefreshNeeded()
+case object RefreshNeeded
