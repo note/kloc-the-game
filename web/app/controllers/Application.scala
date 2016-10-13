@@ -62,7 +62,7 @@ class ApplicationController extends Controller {
   }
 
   def listRooms() = WebSocket.using[JsValue] { request =>
-    Await.result(RoomsRepository.getRoomsSocket(), 2000 milliseconds)
+    RoomsRepository.getRoomsSocket()
   }
 
   def mainJs = Action { implicit request =>

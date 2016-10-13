@@ -11,10 +11,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 
-/**
- * Created by michal on 22/09/14.
- */
-
 object ChessTableState extends Enumeration {
   type ChessTableState = Value
   val WaitingForPlayers, Started, Finished = Value
@@ -157,7 +153,6 @@ case class Player(user: User, timeControl: TimeControl, color: Color){
   def getRequestedStart = requestedStart
 }
 
-case class TimeControl(initialMs: Int){
-}
+case class TimeControl(initialMs: Int)
 
 case class NoTimeLeft(user: User)

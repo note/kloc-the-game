@@ -1,37 +1,10 @@
 package models
 
-import akka.actor.{Actor, Props}
-import akka.pattern.ask
-import akka.util.Timeout
-import play.api.Logger
 import play.api.libs.iteratee.{Concurrent, Enumerator, Iteratee}
 import play.api.libs.json._
-import play.libs.Akka
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
 
 
 object RoomsRepository{
-  implicit val timeout = Timeout(1 second)
-
-  lazy val repositoryActor = Akka.system.actorOf(Props[RoomsRepositoryActor])
-
-  def getRoomsSocket() = {
-    (repositoryActor ? RepoConnect).map {
-      case RepoConnected(actorEnumerator, infoJson) =>
-        val enumerator = Enumerator[JsValue](infoJson).andThen(actorEnumerator)
-        (Iteratee.ignore[JsValue], enumerator)
-    }
-  }
-
-  def refreshNeeded() = {
-    repositoryActor ! RefreshNeeded
-  }
-}
-
-
-class RoomsRepositoryActor extends Actor{
   import ChessTableInfo._
 
   implicit val roomWrites = new Writes[List[ChessTableInfo]] {
@@ -47,24 +20,23 @@ class RoomsRepositoryActor extends Actor{
     }
   }
 
-  val (repoEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
-
-  def receive = {
-    case RepoConnect =>
-      val tablesInfo = Room.getTablesInfo()
-      val tablesJson = Json.toJson(tablesInfo)
-      sender() ! RepoConnected(repoEnumerator, tablesJson)
-    case RefreshNeeded => refreshListInClients()
-    case _ => Logger.warn("unexpected message in RoomsRepositoryActor mailbox")
+  def getRoomsSocket(): (Iteratee[JsValue, Unit], Enumerator[JsValue]) = {
+    val (actorEnumerator, infoJson) = getIterateeAndEnumerator
+    val enumerator = Enumerator[JsValue](infoJson).andThen(actorEnumerator)
+    (Iteratee.ignore[JsValue], enumerator)
   }
 
-  def refreshListInClients() = {
+  def refreshNeeded() = {
     val tablesInfo = Room.getTablesInfo()
     val tablesJson = Json.toJson(tablesInfo)
     chatChannel.push(tablesJson)
   }
-}
 
-case object RepoConnect
-case class RepoConnected(enumerator: Enumerator[JsValue], initialInfo: JsValue)
-case object RefreshNeeded
+  private val (repoEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
+
+  private def getIterateeAndEnumerator = {
+    val tablesInfo = Room.getTablesInfo()
+    val tablesJson = Json.toJson(tablesInfo)
+    (repoEnumerator, tablesJson)
+  }
+}
