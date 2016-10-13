@@ -1,7 +1,7 @@
 import akka.actor.ActorSystem
 import akka.util.Timeout
 import org.scalatest.BeforeAndAfterAll
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.{OneServerPerTest, OneServerPerSuite, PlaySpec}
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.test.Helpers._
@@ -23,159 +23,162 @@ class RoomFlowIntegrationTest extends PlaySpec with OneServerPerSuite with Futur
 
   val baseUrl = s"http://localhost:$port"
 
-//  "should works as expected for happy path" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//    val userId3 = createUser(user3)
-//
-//    val listRoomsProbe = new WebsocketProbe(s"localhost:$port/listRooms")
-//    listRoomsProbe.expectMsg(JsObject(List("rooms" -> JsObject(List.empty))))
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    roomOneWhite.expectMsg(startGameMsg)
-//    roomOneBlack.expectMsg(startGameMsg)
-//
-//    // Make the first move. In that case we don't use applyMoveAndVerify since we know user2's time up front
-//    roomOneWhite.sendMsg(moveMsg("g2", "g4"))
-//
-//    val move1RecvByWhite = roomOneWhite.fetchMsg(defaultDuration)
-//    val move1RecvByBlack = roomOneBlack.fetchMsg(defaultDuration)
-//
-//    move1RecvByWhite must equal(move1RecvByBlack)
-//
-//    val (JsNumber(whiteTime)) = (move1RecvByWhite \ "times" \ user1).get
-//
-//    val times = Map[String, Long](user1 -> whiteTime.toLong, user2 -> timeLimitInSeconds * 1000)
-//    val expectedMoveMsg = receivedMoveMsg("g2", "g4", "", times, userId1)
-//    move1RecvByWhite must equal(expectedMoveMsg)
-//
-//    // Make next moves. Ends with checkmate - black wins
-//    applyMoveAndVerify(roomOneBlack, roomOneWhite, "e7", "e5", userId2)
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "f2", "f4", userId1)
-//    applyMoveAndVerify(roomOneBlack, roomOneWhite, "d8", "h4", userId2, "b")
-//  }
+  "should works as expected for happy path" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+    val userId3 = createUser(user3)
 
-//  "cannot join non existing room" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val listRoomsProbe = new WebsocketProbe(s"localhost:$port/listRooms")
-//    listRoomsProbe.expectMsg(JsObject(List("rooms" -> JsObject(List.empty))))
-//
-//    // room with id 0 has not been created
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=0&color=w"
-//    an [AssertionError] should be thrownBy (new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1))
-//  }
+    val listRoomsProbe = new WebsocketProbe(s"localhost:$port/listRooms")
+    listRoomsProbe.expectMsg(JsObject(List("rooms" -> JsObject(List.empty))))
 
-//  "cannot join one room with already taken color" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val listRoomsProbe = new WebsocketProbe(s"localhost:$port/listRooms")
-//    listRoomsProbe.expectMsg(JsObject(List("rooms" -> JsObject(List.empty))))
-//
-//    val roomId = createRoom()
-//
-//    // user1 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//     new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    // we try to join as white which is already taken
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    an [AssertionError] should be thrownBy (new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2))
-//  }
+    val roomId = createRoom()
 
-//  "only 2 players can join" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//    val userId3 = createUser(user3)
-//
-//    val listRoomsProbe = new WebsocketProbe(s"localhost:$port/listRooms")
-//    listRoomsProbe.expectMsg(JsObject(List("rooms" -> JsObject(List.empty))))
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    an [AssertionError] should be thrownBy (new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId3))
-//  }
-//
-//  "should not allow for illegal moves" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    roomOneWhite.expectMsg(startGameMsg)
-//    roomOneBlack.expectMsg(startGameMsg)
-//
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e2", "e5", userId1)
-//  }
-//
-//  "should not allow for making two moves in row by the same player" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    roomOneWhite.expectMsg(startGameMsg)
-//    roomOneBlack.expectMsg(startGameMsg)
-//
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "e2", "e4", userId1)
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e4", "e5", userId1)
-//  }
-//
-//  "should not allow for making move after checkmate" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    roomOneWhite.expectMsg(startGameMsg)
-//    roomOneBlack.expectMsg(startGameMsg)
-//
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "g2", "g4", userId1)
-//    applyMoveAndVerify(roomOneBlack, roomOneWhite, "e7", "e5", userId2)
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "f2", "f4", userId1)
-//    applyMoveAndVerify(roomOneBlack, roomOneWhite, "d8", "h4", userId2, "b")
-//
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1, "b")
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1)
-//  }
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+    val roomsJson = JsObject(List(
+      // TODO: contract-change: get rid of JsArray - it's completely unneccessary
+      "0" -> JsArray(List(JsObject(List(
+        ("white" -> JsString(user1)), ("black" -> JsNull)))))
+    ))
+    listRoomsProbe.expectMsg(JsObject(List("rooms" -> roomsJson)))
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+    val roomsJson2 = JsObject(List(
+      "0" -> JsArray(List(JsObject(List(
+        ("white" -> JsString(user1)), ("black" -> JsString(user2))))))
+    ))
+    listRoomsProbe.expectMsg(JsObject(List("rooms" -> roomsJson2)))
+
+    roomOneWhite.expectMsg(startGameMsg)
+    roomOneBlack.expectMsg(startGameMsg)
+
+    // Make the first move. In that case we don't use applyMoveAndVerify since we know user2's time up front
+    roomOneWhite.sendMsg(moveMsg("g2", "g4"))
+
+    val move1RecvByWhite = roomOneWhite.fetchMsg(defaultDuration)
+    val move1RecvByBlack = roomOneBlack.fetchMsg(defaultDuration)
+
+    move1RecvByWhite must equal(move1RecvByBlack)
+
+    val (JsNumber(whiteTime)) = (move1RecvByWhite \ "times" \ user1).get
+
+    val times = Map[String, Long](user1 -> whiteTime.toLong, user2 -> timeLimitInSeconds * 1000)
+    val expectedMoveMsg = receivedMoveMsg("g2", "g4", "", times, userId1)
+    move1RecvByWhite must equal(expectedMoveMsg)
+
+    // Make next moves. Ends with checkmate - black wins
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "e7", "e5", userId2)
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "f2", "f4", userId1)
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "d8", "h4", userId2, "b")
+  }
+
+  "cannot join non existing room" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+    val nonExistingRoomId = 456
+
+    // room with id 0 has not been created
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$nonExistingRoomId&color=w"
+    an [AssertionError] should be thrownBy (new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1))
+  }
+
+  "cannot join one room with already taken color" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+
+    val roomId = createRoom()
+
+    // user1 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+     new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    // we try to join as white which is already taken
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    an [AssertionError] should be thrownBy (new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2))
+  }
+
+  "only 2 players can join" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+    val userId3 = createUser(user3)
+
+    val roomId = createRoom()
+
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+
+    an [AssertionError] should be thrownBy (new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId3))
+  }
+
+  "should not allow for illegal moves" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+
+    val roomId = createRoom()
+
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+
+    roomOneWhite.expectMsg(startGameMsg)
+    roomOneBlack.expectMsg(startGameMsg)
+
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e2", "e5", userId1)
+  }
+
+  "should not allow for making two moves in row by the same player" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+
+    val roomId = createRoom()
+
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+
+    roomOneWhite.expectMsg(startGameMsg)
+    roomOneBlack.expectMsg(startGameMsg)
+
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "e2", "e4", userId1)
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e4", "e5", userId1)
+  }
+
+  "should not allow for making move after checkmate" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+
+    val roomId = createRoom()
+
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+
+    roomOneWhite.expectMsg(startGameMsg)
+    roomOneBlack.expectMsg(startGameMsg)
+
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "g2", "g4", userId1)
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "e7", "e5", userId2)
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "f2", "f4", userId1)
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "d8", "h4", userId2, "b")
+
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1, "b")
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1)
+  }
 
   "should stop malicious user who tries to make move for his opponent" in new TestContext {
     val userId1 = createUser(user1)
