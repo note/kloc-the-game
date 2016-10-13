@@ -18,7 +18,7 @@ class RoomFlowIntegrationTest extends PlaySpec with OneServerPerSuite with Futur
 
   val baseUrl = s"http://localhost:$port"
 
-  "test server logic" in new TestContext {
+  "should works as expected for happy path" in new TestContext {
     val userId1 = createUser(user1)
     val userId2 = createUser(user2)
     val userId3 = createUser(user3)
@@ -38,7 +38,7 @@ class RoomFlowIntegrationTest extends PlaySpec with OneServerPerSuite with Futur
     roomOneWhite.expectMsg(startGameMsg)
     roomOneBlack.expectMsg(startGameMsg)
 
-    roomOneWhite.sendMsg(moveMsg("e2", "e4"))
+    roomOneWhite.sendMsg(moveMsg("g2", "g4"))
 
     val move1RecvByWhite = roomOneWhite.fetchMsg(defaultDuration)
     val move1RecvByBlack = roomOneBlack.fetchMsg(defaultDuration)
@@ -48,8 +48,12 @@ class RoomFlowIntegrationTest extends PlaySpec with OneServerPerSuite with Futur
     val (JsNumber(whiteTime)) = (move1RecvByWhite \ "times" \ user1).get
 
     val times = Map[String, Long](user1 -> whiteTime.toLong, user2 -> timeLimitInSeconds * 1000)
-    val expectedMoveMsg = receivedMoveMsg("e2", "e4", "", times, userId1)
+    val expectedMoveMsg = receivedMoveMsg("g2", "g4", "", times, userId1)
     move1RecvByWhite must equal(expectedMoveMsg)
+
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "e7", "e5", userId2)
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "f2", "f4", userId1)
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "d8", "h4", userId2, "b")
   }
 
   trait TestContext extends Fixtures {
@@ -91,6 +95,24 @@ class RoomFlowIntegrationTest extends PlaySpec with OneServerPerSuite with Futur
         "times" -> JsObject(times.mapValues(JsNumber(_))),
         "userId" -> JsString(userId)
       ))
+
+    def applyMoveAndVerify(activeWs: WebsocketProbe, passiveWs: WebsocketProbe,
+                           from: String, to: String, activeUserId: String, result: String = ""): Unit = {
+
+      activeWs.sendMsg(moveMsg(from, to))
+
+      val move1RecvByActive = activeWs.fetchMsg(defaultDuration)
+      val move1RecvByPassive = passiveWs.fetchMsg(defaultDuration)
+
+      move1RecvByActive must equal(move1RecvByPassive)
+
+      val (JsNumber(user1Time)) = (move1RecvByActive \ "times" \ user1).get
+      val (JsNumber(user2Time)) = (move1RecvByActive \ "times" \ user2).get
+
+      val times = Map[String, Long](user1 -> user1Time.toLong, user2 -> user2Time.toLong)
+      val expectedMoveMsg = receivedMoveMsg(from, to, result, times, activeUserId)
+      move1RecvByActive must equal(expectedMoveMsg)
+    }
   }
 
   trait Fixtures {
