@@ -1,6 +1,5 @@
 package models
 
-
 import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import akka.pattern.ask
 import akka.util.Timeout
@@ -83,7 +82,7 @@ object Room {
     rooms.remove(roomId)
   }
 
-  def useNextId() = {
+  private def useNextId() = {
     val res = nextId
     nextId += 1
     res
