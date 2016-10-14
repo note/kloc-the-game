@@ -15,11 +15,11 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
     var black = Game.Color.black;
 
     function getJoinRoomURL(roomId){
-        return jsRoutes.controllers.ApplicationController.joinRoom(roomId).webSocketURL();
+        return jsRoutes.controllers.RoomController.joinRoom(roomId).webSocketURL();
     }
 
     function getCreateRoomURL(timeLimitInSeconds){
-        return jsRoutes.controllers.ApplicationController.createRoom(timeLimitInSeconds).url;
+        return jsRoutes.controllers.RoomController.createRoom(timeLimitInSeconds).url;
     }
 
     var TableModel = Backbone.Model.extend({

@@ -25,6 +25,8 @@ class MyComponents(val context: Context)
     with AhcWSComponents {
 
   implicit val ec = play.api.libs.concurrent.Execution.Implicits.defaultContext
+  implicit val defaultActorSystem = actorSystem
+  implicit val defaultMaterializer = materializer
 
   lazy val userService = new InMemoryUserService
   lazy val roomService = new InMemoryRoomService(userService, actorSystem)

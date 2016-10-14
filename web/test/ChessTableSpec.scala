@@ -8,7 +8,6 @@ class ChessTableSpec extends PlaySpec with BeforeAndAfterAll {
   val actorSystem = ActorSystem("ChessTableSpecSystem")
 
   override def afterAll(): Unit = {
-    println("afterAll in chesstablespec")
     actorSystem.terminate()
   }
 

@@ -1,5 +1,6 @@
 package models
 
+import akka.actor.ActorSystem
 import models.ChessTableState.ChessTableState
 import net.michalsitko.kloc.game.{Color, GameStatus, Move}
 import play.api.Logger
