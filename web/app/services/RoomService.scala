@@ -16,8 +16,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.Play.current
 
 trait RoomService {
-  // TODO: Why List[ChessTableInfo] instead of simply ChessTableInfo§
-  def getTablesInfo(): Map[Int, List[ChessTableInfo]]
+  def newRoom(timeLimitInSeconds: Int): Int
+  def removeRoom(roomId: Int): Unit
+  def getRoomsSocket: (Iteratee[JsValue, Unit], Enumerator[JsValue])
+  def getRoomById(id: Int): Option[Room]
+  def getRoomNames: Iterable[Int]
 }
 
 object InMemoryRoomService extends RoomService {
@@ -26,6 +29,8 @@ object InMemoryRoomService extends RoomService {
 
   // TODO: it's just temporary, when Room is refactored to class it will be injected
   val userService = new InMemoryUserService
+
+  private val (repoEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
 
   def newRoom(timeLimitInSeconds: Int): Int = {
     val table = new ChessTable(timeLimitInSeconds * 1000)
@@ -40,48 +45,49 @@ object InMemoryRoomService extends RoomService {
     rooms.remove(roomId)
   }
 
-  import ChessTableInfo._
-
-  // TODO: try to get rid of both of those Writes
-  implicit val roomWrites = new Writes[List[ChessTableInfo]] {
-    def writes(tables: List[ChessTableInfo]) = JsArray(tables.map(Json.toJson(_)))
-  }
-
-  implicit val roomsWrites = new Writes[Map[Int, List[ChessTableInfo]]] {
-    def writes(rooms: Map[Int, List[ChessTableInfo]]) = {
-      val converted = rooms.map(mapItem => (mapItem._1.toString, Json.toJson(mapItem._2)))
-      Json.obj(
-        "rooms" -> JsObject(converted.toSeq)
-      )
-    }
-  }
-
-  def getRoomsSocket(): (Iteratee[JsValue, Unit], Enumerator[JsValue]) = {
+  def getRoomsSocket: (Iteratee[JsValue, Unit], Enumerator[JsValue]) = {
     val (actorEnumerator, infoJson) = getIterateeAndEnumerator
     val enumerator = Enumerator[JsValue](infoJson).andThen(actorEnumerator)
     (Iteratee.ignore[JsValue], enumerator)
   }
 
+  def getRoomById(id: Int): Option[Room] = rooms.get(id)
+
+  def getRoomNames = rooms.keys
+
+  private def getTablesInfo(): Map[Int, List[ChessTableInfo]] =
+    rooms.map(mapItem => (mapItem._1, mapItem._2.getTablesInfo())).toMap
+
   def refreshNeeded() = {
-    val tablesInfo = getTablesInfo()
-    val tablesJson = Json.toJson(tablesInfo)
+    val tablesJson = getTablesInfoJson
     chatChannel.push(tablesJson)
   }
 
-  private val (repoEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
-
   private def getIterateeAndEnumerator = {
-    val tablesInfo = getTablesInfo()
-    val tablesJson = Json.toJson(tablesInfo)
+    val tablesJson = getTablesInfoJson
     (repoEnumerator, tablesJson)
   }
 
-  def getRoomById(id: Int) = rooms.get(id)
+  private def getTablesInfoJson: JsValue = {
+    import ChessTableInfo._
 
-  def getRoomNames() = rooms.keys
+    // TODO: try to get rid of both of those Writes
+    implicit val roomWrites = new Writes[List[ChessTableInfo]] {
+      def writes(tables: List[ChessTableInfo]) = JsArray(tables.map(Json.toJson(_)))
+    }
 
-  def getTablesInfo(): Map[Int, List[ChessTableInfo]] =
-    rooms.map(mapItem => (mapItem._1, mapItem._2.getTablesInfo())).toMap
+    implicit val roomsWrites = new Writes[Map[Int, List[ChessTableInfo]]] {
+      def writes(rooms: Map[Int, List[ChessTableInfo]]) = {
+        val converted = rooms.map(mapItem => (mapItem._1.toString, Json.toJson(mapItem._2)))
+        Json.obj(
+          "rooms" -> JsObject(converted.toSeq)
+        )
+      }
+    }
+
+    val tablesInfo = getTablesInfo()
+    Json.toJson(tablesInfo)
+  }
 
   private def useNextId() = {
     val res = nextId

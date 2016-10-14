@@ -34,6 +34,6 @@ class RoomController extends Controller {
   }
 
   def listRooms() = WebSocket.using[JsValue] { request =>
-    InMemoryRoomService.getRoomsSocket()
+    InMemoryRoomService.getRoomsSocket
   }
 }
