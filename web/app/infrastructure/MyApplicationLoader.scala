@@ -1,17 +1,12 @@
 package infrastructure
 
-import java.util.concurrent.Executors
-
-import com.typesafe.config.Config
 import controllers.{ApplicationController, Assets, RoomController, UserController}
 import play.api.ApplicationLoader.Context
 import play.api._
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.routing.Router
 import router.Routes
-import services.InMemoryRoomService
-
-import scala.concurrent.ExecutionContext
+import services.{InMemoryRoomService, InMemoryUserService}
 
 class MyApplicationLoader extends ApplicationLoader {
   def load(context: Context) = {
@@ -20,9 +15,7 @@ class MyApplicationLoader extends ApplicationLoader {
 }
 
 class TestMyApplicationLoader(val components: TestMyComponents) extends MyApplicationLoader {
-
   override def load(context: Context): Application = components.application
-
 }
 
 class TestMyComponents(override val context: Context) extends MyComponents(context)
@@ -31,11 +24,13 @@ class MyComponents(val context: Context)
     extends BuiltInComponentsFromContext(context)
     with AhcWSComponents {
 
-  lazy val userService = InMemoryRoomService.userService
-  lazy val roomService = InMemoryRoomService
+  implicit val ec = play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+  lazy val userService = new InMemoryUserService
+  lazy val roomService = new InMemoryRoomService(userService, actorSystem)
 
   lazy val userController = new UserController(userService)
-  lazy val roomController = new RoomController
+  lazy val roomController = new RoomController(roomService)
   lazy val appController = new ApplicationController
   lazy val assets = new Assets(httpErrorHandler)
 
@@ -46,10 +41,4 @@ class MyComponents(val context: Context)
     appController,
     assets)
 
-  protected def executionContext(config: Config): ExecutionContext =
-    ExecutionContext.fromExecutor(Executors.newFixedThreadPool(8))
-
-  /** Allows control of HttpClient instance to be used. For now default PlayWS client is shared. */
-//  protected def httpClient(config: Config, ec: ExecutionContext): HttpAccess =
-//    new PlayWsHttpClient(config, wsClient)(ec, system) with LoggingClient
 }

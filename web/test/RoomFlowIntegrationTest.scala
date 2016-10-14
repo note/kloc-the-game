@@ -21,8 +21,6 @@ class RoomFlowIntegrationTest extends PlaySpec with OneServerPerSuite with Futur
     new TestMyApplicationLoader(components).load(testContext)
   }
 
-
-
   implicit val system = ActorSystem("RoomFlowIntegrationTest")
 
   override def afterAll(): Unit = {

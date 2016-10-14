@@ -2,38 +2,41 @@ package controllers
 
 import net.michalsitko.kloc.game.Color
 import play.api.Logger
+import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.libs.json.{JsArray, JsString, JsValue, Json}
-import play.api.mvc.{Action, Controller, WebSocket}
-import services.InMemoryRoomService
+import play.api.mvc.{Result, Action, Controller, WebSocket}
+import services.RoomService
 
 import scala.concurrent.Future
 
-class RoomController extends Controller {
+class RoomController (roomService: RoomService) extends Controller {
   def createRoom(timeLimitInSeconds: Int) = Action { implicit request =>
-    val roomId = InMemoryRoomService.newRoom(timeLimitInSeconds)
+    val roomId = roomService.newRoom(timeLimitInSeconds)
     Ok(Json.obj("roomId" -> roomId))
   }
 
   // TODO: replace with up to date method
   def joinRoom(roomId: Int) = WebSocket.tryAccept[JsValue] { request =>
-    val userId = request.cookies.get("userId")
-    Logger.debug(s"User with id '$userId' requested to join room with id '$roomId'")
+    val userIdOpt = request.cookies.get("userId")
+    Logger.debug(s"User with id '$userIdOpt' requested to join room with id '$roomId'")
 
     val colorStr = request.getQueryString("color")
-    val color = colorStr.flatMap(Color.fromString(_))
-    if(userId.isDefined && color.isDefined) {
-     InMemoryRoomService.getRoomById(roomId) match {
+    val colorOpt = colorStr.flatMap(Color.fromString(_))
+    val result: Option[Either[Result, (Iteratee[JsValue, Unit], Enumerator[JsValue])] with Product with Serializable] = for {
+      userId <- userIdOpt
+      color <- colorOpt
+    } yield {
+      roomService.getRoomById(roomId) match {
         case Some(room) =>
-          room.join(userId.get.value, color.get)
+          Right(room.join(userId.value, color))
         case _ =>
-          Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("No room name")))))))
+          Left(Ok(Json.obj("errors" -> JsArray(List(JsString("No room name"))))))
       }
-    } else {
-      Future.successful(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("Bad formatted request")))))))
     }
+    Future.successful(result.getOrElse(Left(Ok(Json.obj("errors" -> JsArray(List(JsString("Bad formatted request"))))))))
   }
 
   def listRooms() = WebSocket.using[JsValue] { request =>
-    InMemoryRoomService.getRoomsSocket
+    roomService.getRoomsSocket
   }
 }

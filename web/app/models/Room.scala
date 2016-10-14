@@ -1,111 +1,84 @@
 package models
 
-import akka.actor.{Actor, ActorRef, PoisonPill, Props}
-import akka.pattern.ask
-import akka.util.Timeout
 import models.ChessTableState.ChessTableState
 import net.michalsitko.kloc.game.{Color, GameStatus, Move}
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.iteratee.{Concurrent, Enumerator, Input, Iteratee}
+import play.api.libs.iteratee.{Concurrent, Enumerator, Iteratee}
 import play.api.libs.json.Reads._
-import play.api.libs.json.{JsObject, JsString, _}
-import services.{InMemoryRoomService, RoomService, InMemoryUserService, UserService}
+import play.api.libs.json._
+import services.{RoomService, UserService}
 
-import scala.collection.mutable.{Map => MutableMap}
-import scala.concurrent._
 import scala.concurrent.duration._
 
-class Room (roomActor: ActorRef, userService: UserService, roomId: Int) {
-  implicit val timeout = Timeout(1 second)
+class Room (table: ChessTable, roomService: RoomService, userService: UserService, roomId: Int) {
+  private val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
 
-  def join(userId: String, color: Color) = {
+  def join(userId: String, color: Color): (Iteratee[JsValue, Unit], Enumerator[JsValue]) = {
     val user = userService.getUserById(userId)
-    (roomActor ? Join(user, color)).map {
-      case Connected(enumerator, state) =>
-        InMemoryRoomService.refreshNeeded()
-        val in = Iteratee.foreach[JsValue](event => {
-          Logger.debug("websocket received something" + event.toString())
-          (event \ "type").as[String] match {
-            case "move" =>
-              roomActor ! MoveMessage(user, Move((event \ "from").as[String], (event \ "to").as[String]))
-          }
-        }).map { _ =>
-          roomActor ! RoomLeft(roomId, user)
-          InMemoryRoomService.refreshNeeded()
-          Logger.debug("Disconnected3")
-        }
+    val Connected(enumerator, state) = join(user, color)
+    roomService.refreshNeeded()
+    val in = Iteratee.foreach[JsValue](event => {
+      Logger.debug("websocket received something" + event.toString())
+      (event \ "type").as[String] match {
+        case "move" =>
+          val move = Move((event \ "from").as[String], (event \ "to").as[String])
+          applyMove(user, move)
+      }
+    }).map { _ =>
+      leaveRoom(roomId, user)
+      roomService.refreshNeeded()
+      Logger.debug("Disconnected3")
+    }
 
-        if(state == ChessTableState.Started){
-          // RoomActor reacts to this message by sending start message to clients
-          // we should be sure that client has been already established
-          // This is just best effort - it does not guarantee anything
-          // TODO: think about alternatives
-          Akka.system.scheduler.scheduleOnce(1000 milliseconds){
-            roomActor ! Started
-          }
-        }
+    if(state == ChessTableState.Started){
+      // RoomActor reacts to this message by sending start message to clients
+      // we should be sure that client has been already established
+      // This is just best effort - it does not guarantee anything
+      // TODO: think about alternatives
+      Akka.system.scheduler.scheduleOnce(1000 milliseconds){
+        started()
+      }
+    }
 
-        Right((in, enumerator))
-      case _ =>
-        Right((Iteratee.ignore[JsValue], Enumerator[JsValue](JsObject(Seq("error" -> JsString("cannot connect to room")))).andThen(Enumerator.enumInput(Input.EOF))))
+    (in, enumerator)
+  }
+
+  def getTablesInfo: List[ChessTableInfo] = List(table.getInfo())
+
+  private def join(user: User, color: Color): Connected = {
+    table.addPlayer(user, color)
+    Connected(roomEnumerator, table.state)
+  }
+
+  private def leaveRoom(roomId: Int, user: User) = {
+    table.userLeft(user)
+    if(table.getPlayers.size == 0){
+      roomService.removeRoom(roomId)
     }
   }
 
-  def getTablesInfo(): List[ChessTableInfo] = {
-    Await.result((roomActor ? GetTablesInfo).map {
-      case res: List[ChessTableInfo] => res
-      case _ => List[ChessTableInfo]()
-    }, 1000 milliseconds)
-  }
-}
-
-class RoomActor(table: ChessTable) extends Actor {
-  val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
-
-  override def receive: Actor.Receive = {
-    case Join(user, color) =>
-      table.addPlayer(user, color)
-      sender() ! Connected(roomEnumerator, table.state)
-    case RoomLeft(roomId, user) =>
-      table.userLeft(user)
-      if(table.getPlayers.size == 0){
-        InMemoryRoomService.removeRoom(roomId)
-        self ! PoisonPill
-      }
-    case Started =>
-      val colors = table.getColors
-      val startObj = JsObject(Seq("type" -> JsString("start"), "times" -> MoveNotification.mapToJsObject(table.getTimes().toMap), "colors" -> JsObject(colors.map(mapItem => (mapItem._1, JsString(mapItem._2.toString))).toSeq)))
-      notifyAll(startObj)
-    case MoveMessage(user, move) =>
-      val res = table.move(user, move)
-      if(res.isDefined) {
-        notifyAll(MoveNotification.toJsObject(MoveNotification(user, move, res.get, table.getTimes().toMap)))
-      } else {
-        Logger.warn("incorrect move")
-      }
-    case GetTablesInfo =>
-      val tablesInfo = table.getInfo()
-      sender() ! List[ChessTableInfo](tablesInfo)
-    case _ =>
-      Logger.error("RoomActor received unknown message")
+  private def started() = {
+    val colors = table.getColors
+    val startObj = JsObject(Seq("type" -> JsString("start"), "times" -> MoveNotification.mapToJsObject(table.getTimes().toMap), "colors" -> JsObject(colors.map(mapItem => (mapItem._1, JsString(mapItem._2.toString))).toSeq)))
+    notifyAll(startObj)
   }
 
-  override def postStop() {
-    Logger.debug("stopped actor RoomActor")
+  private def applyMove(user: User, move: Move) = {
+    val res = table.move(user, move)
+    if(res.isDefined) {
+      notifyAll(MoveNotification.toJsObject(MoveNotification(user, move, res.get, table.getTimes().toMap)))
+    } else {
+      Logger.warn("incorrect move")
+    }
   }
 
   private def notifyAll(msg: JsObject) = {
     roomChannel.push(msg)
   }
 }
-
-case class Join(user: User, color: Color)
-case class RoomLeft(roomId: Int, user: User)
-case class MoveMessage(user: User, move: Move)
-
 
 case class MoveNotification(user: User, move: Move, gameStatus: GameStatus, playersMillisecondsLeft: Map[String, Long])
 object MoveNotification{
@@ -128,10 +101,6 @@ object MoveNotification{
 }
 
 case class Connected(enumerator: Enumerator[JsValue], tableState: ChessTableState)
-
-case object Started
-
-case object GetTablesInfo
 
 case class ChessTableInfo(white: Option[String], black: Option[String])
 

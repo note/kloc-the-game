@@ -1,51 +1,40 @@
-import akka.actor.Props
-import models._
-import models.User
-import net.michalsitko.kloc.game.{Winner, Black, White}
-
+import models.{User, _}
+import net.michalsitko.kloc.game.{Black, White, Winner}
+import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import org.junit.runner._
-import play.api.libs.concurrent.Akka
 import play.api.test._
 
 
-/**
- * Created by michal on 22/09/14.
- */
 @RunWith(classOf[JUnitRunner])
 class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessages{
   "ChessTable" should {
 
-    "allows to add 2 players" in new WithApplication {
+    "allows to add 2 players" in {
       val table = new ChessTable(120 * 1000)
-      val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
       table.addPlayer(user2, Black()) should not(throwA[Throwable])
     }
 
-    "not allow to add the same player twice" in new WithApplication {
+    "not allow to add the same player twice" in {
       val table = new ChessTable(120 * 1000)
-      val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       table.addPlayer(user1, Black()) must throwA[IllegalArgumentException]
     }
 
-    "not allow to add 2 players with the same color" in new WithApplication {
+    "not allow to add 2 players with the same color" in {
       val table = new ChessTable(120 * 1000)
-      val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
       table.addPlayer(user2, White()) must throwA[IllegalArgumentException]
     }
 
-    "not allow to add 3 players" in new WithApplication {
+    "not allow to add 3 players" in {
       val table = new ChessTable(120 * 1000)
-      val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
@@ -54,9 +43,8 @@ class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessage
       table.addPlayer(user3, null) must throwA[IllegalArgumentException]
     }
 
-    "starts after 2 players has been added" in new WithApplication {
+    "starts after 2 players has been added" in {
       val table = new ChessTable(120 * 1000)
-      val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
       table.state must equalTo(ChessTableState.WaitingForPlayers)
 
       val user1 = User("bob", "dfad")
@@ -70,12 +58,11 @@ class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessage
       table.state must equalTo(ChessTableState.Started)
     }
 
-  };
+  }
 
   "Game on ChessTable" can {
-    "ends because of lack of time" in new WithApplication {
+    "ends because of lack of time" in {
       val table = new ChessTable(300)
-      val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
@@ -93,8 +80,6 @@ class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessage
         case Some(winner: Winner) => winner.color must equalTo(Black())
         case _ => fail("game is expected to have winner")
       }
-
-      roomActor ! NoTimeLeft(null)
     }
   }
 }
