@@ -1,6 +1,6 @@
 package models
 
-import akka.actor.Cancellable
+import akka.actor.{ActorSystem, Cancellable}
 import net.michalsitko.kloc.game.{Black, IncorrectMoveException, White, _}
 import play.api.Logger
 import play.libs.Akka
@@ -16,8 +16,8 @@ object ChessTableState extends Enumeration {
   val WaitingForPlayers, Started, Finished = Value
 }
 
-// make constructor private
-class ChessTable (timeLimitMs: Int) {
+// TODO: should not depend on actorSystem (introduce some TimerService)
+class ChessTable (actorSystem: ActorSystem, timeLimitMs: Int) {
   private var white: Player = _
   private var black: Player = _
   private val players = Map[User, Player]()
@@ -58,7 +58,7 @@ class ChessTable (timeLimitMs: Int) {
       throw new IllegalArgumentException("User cannot be added to this ChessTable")
     }
 
-    val player = new Player(user, TimeControl(timeLimitMs), color)
+    val player = Player(actorSystem, user, TimeControl(timeLimitMs), color)
     players(user) = player
     player.color match {
       case White() => white = player
@@ -122,7 +122,7 @@ class ChessTable (timeLimitMs: Int) {
 
 case class User(name: String, id: String)
 
-case class Player(user: User, timeControl: TimeControl, color: Color){
+case class Player(actorSystem: ActorSystem, user: User, timeControl: TimeControl, color: Color){
   private var millisecondsLeft: Long = timeControl.initialMs
   private var requestedStart: Boolean = false
   private var timerStarted: Long = _
@@ -135,7 +135,7 @@ case class Player(user: User, timeControl: TimeControl, color: Color){
   def startTimer(table: ChessTable): Cancellable = {
     timerStarted = System.nanoTime()
     Logger.debug("startTimer: " + millisecondsLeft)
-    val res = Akka.system.scheduler.scheduleOnce(millisecondsLeft milliseconds){
+    val res = actorSystem.scheduler.scheduleOnce(millisecondsLeft milliseconds){
       table.timeExceeded(user)
     }
     res

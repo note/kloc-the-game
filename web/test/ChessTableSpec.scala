@@ -1,83 +1,87 @@
+import akka.actor.ActorSystem
 import models.{User, _}
 import net.michalsitko.kloc.game.{Black, White, Winner}
-import org.junit.runner._
-import org.specs2.mutable._
-import org.specs2.runner._
-import play.api.test._
+import org.scalatest.BeforeAndAfterAll
+import org.scalatestplus.play.PlaySpec
 
+class ChessTableSpec extends PlaySpec with BeforeAndAfterAll {
+  val actorSystem = ActorSystem("ChessTableSpecSystem")
 
-@RunWith(classOf[JUnitRunner])
-class ChessTableSpec extends Specification with org.specs2.matcher.ThrownMessages{
+  override def afterAll(): Unit = {
+    println("afterAll in chesstablespec")
+    actorSystem.terminate()
+  }
+
   "ChessTable" should {
 
     "allows to add 2 players" in {
-      val table = new ChessTable(120 * 1000)
+      val table = new ChessTable(actorSystem, 120 * 1000)
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
-      table.addPlayer(user2, Black()) should not(throwA[Throwable])
+      table.addPlayer(user2, Black())
     }
 
     "not allow to add the same player twice" in {
-      val table = new ChessTable(120 * 1000)
+      val table = new ChessTable(actorSystem, 120 * 1000)
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
-      table.addPlayer(user1, Black()) must throwA[IllegalArgumentException]
+      an[IllegalArgumentException] should be thrownBy(table.addPlayer(user1, Black()))
     }
 
     "not allow to add 2 players with the same color" in {
-      val table = new ChessTable(120 * 1000)
+      val table = new ChessTable(actorSystem, 120 * 1000)
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
-      table.addPlayer(user2, White()) must throwA[IllegalArgumentException]
+      an[IllegalArgumentException] should be thrownBy(table.addPlayer(user2, White()))
     }
 
     "not allow to add 3 players" in {
-      val table = new ChessTable(120 * 1000)
+      val table = new ChessTable(actorSystem, 120 * 1000)
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
       table.addPlayer(user2, Black())
       val user3 = User("bob3", "dfad3")
-      table.addPlayer(user3, null) must throwA[IllegalArgumentException]
+      an[IllegalArgumentException] should be thrownBy(table.addPlayer(user3, null))
     }
 
     "starts after 2 players has been added" in {
-      val table = new ChessTable(120 * 1000)
-      table.state must equalTo(ChessTableState.WaitingForPlayers)
+      val table = new ChessTable(actorSystem, 120 * 1000)
+      table.state mustBe(ChessTableState.WaitingForPlayers)
 
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
 
-      table.state must equalTo(ChessTableState.WaitingForPlayers)
+      table.state mustBe(ChessTableState.WaitingForPlayers)
 
       val user2 = User("bob2", "dfad2")
       table.addPlayer(user2, Black())
 
-      table.state must equalTo(ChessTableState.Started)
+      table.state mustBe(ChessTableState.Started)
     }
 
   }
 
   "Game on ChessTable" can {
     "ends because of lack of time" in {
-      val table = new ChessTable(300)
+      val table = new ChessTable(actorSystem, 300)
       val user1 = User("bob", "dfad")
       table.addPlayer(user1, White())
       val user2 = User("bob2", "dfad2")
       table.addPlayer(user2, Black())
 
-      table.state must equalTo(ChessTableState.Started)
-      table.game.status.isFinished() must equalTo(false)
+      table.state mustBe(ChessTableState.Started)
+      table.game.status.isFinished() mustBe(false)
 
       Thread.sleep(800)
 
-      table.state must equalTo(ChessTableState.Finished)
-      table.game.status.isFinished() must equalTo(true)
-      table.game.status.result.isDefined must equalTo(true)
+      table.state mustBe(ChessTableState.Finished)
+      table.game.status.isFinished() mustBe(true)
+      table.game.status.result.isDefined mustBe(true)
       table.game.status.result match {
-        case Some(winner: Winner) => winner.color must equalTo(Black())
+        case Some(winner: Winner) => winner.color mustBe(Black())
         case _ => fail("game is expected to have winner")
       }
     }

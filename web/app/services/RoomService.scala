@@ -25,7 +25,7 @@ class InMemoryRoomService (userService: UserService, actorSystem: ActorSystem)(i
   private val (repoEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
 
   def newRoom(timeLimitInSeconds: Int): Int = {
-    val table = new ChessTable(timeLimitInSeconds * 1000)
+    val table = new ChessTable(actorSystem, timeLimitInSeconds * 1000)
     val roomId = useNextId()
     rooms += (roomId -> new Room(table, this, userService, roomId))
     Logger.info(s"Created room with id: $roomId")
