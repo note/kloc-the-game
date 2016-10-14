@@ -13,28 +13,28 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.iteratee.{Concurrent, Enumerator, Input, Iteratee}
 import play.api.libs.json.Reads._
 import play.api.libs.json.{JsObject, JsString, _}
+import services.{InMemoryUserService, UserService}
 
 import scala.collection.mutable.{Map => MutableMap}
 import scala.concurrent._
 import scala.concurrent.duration._
-import scala.util.Random
 
-class Room (actor: ActorRef, roomId: Int) {
+class Room (roomActor: ActorRef, userService: UserService, roomId: Int) {
   implicit val timeout = Timeout(1 second)
 
   def join(userId: String, color: Color) = {
-    val user = Room.getUserById(userId)
-    (actor ? Join(user, color)).map {
+    val user = userService.getUserById(userId)
+    (roomActor ? Join(user, color)).map {
       case Connected(enumerator, state) =>
         RoomsRepository.refreshNeeded()
         val in = Iteratee.foreach[JsValue](event => {
           Logger.debug("websocket received something" + event.toString())
           (event \ "type").as[String] match {
             case "move" =>
-              actor ! MoveMessage(user, Move((event \ "from").as[String], (event \ "to").as[String]))
+              roomActor ! MoveMessage(user, Move((event \ "from").as[String], (event \ "to").as[String]))
           }
         }).map { _ =>
-          actor ! RoomLeft(roomId, user)
+          roomActor ! RoomLeft(roomId, user)
           RoomsRepository.refreshNeeded()
           Logger.debug("Disconnected3")
         }
@@ -45,7 +45,7 @@ class Room (actor: ActorRef, roomId: Int) {
           // This is just best effort - it does not guarantee anything
           // TODO: think about alternatives
           Akka.system.scheduler.scheduleOnce(1000 milliseconds){
-            actor ! Started
+            roomActor ! Started
           }
         }
 
@@ -56,7 +56,7 @@ class Room (actor: ActorRef, roomId: Int) {
   }
 
   def getTablesInfo(): List[ChessTableInfo] = {
-    Await.result((actor ? GetTablesInfo).map {
+    Await.result((roomActor ? GetTablesInfo).map {
       case res: List[ChessTableInfo] => res
       case _ => List[ChessTableInfo]()
     }, 1000 milliseconds)
@@ -66,14 +66,15 @@ class Room (actor: ActorRef, roomId: Int) {
 object Room {
   val rooms = MutableMap[Int, Room]()
   var nextId = 0
-  val users = MutableMap[String, User]()
-  val rand = new Random(System.currentTimeMillis())
+
+  // TODO: it's just temporary, when Room is refactored to class it will be injected
+  val userService = new InMemoryUserService
 
   def newRoom(timeLimitInSeconds: Int): Int = {
     val table = new ChessTable(timeLimitInSeconds * 1000)
     val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
     val roomId = useNextId()
-    rooms += (roomId -> new Room(roomActor, roomId))
+    rooms += (roomId -> new Room(roomActor, userService, roomId))
     Logger.info(s"Created room with id: $roomId")
     roomId
   }
@@ -93,20 +94,6 @@ object Room {
   def getRoomNames() = rooms.keys
 
   def getTablesInfo(): Map[Int, List[ChessTableInfo]] = rooms.map(mapItem => (mapItem._1, mapItem._2.getTablesInfo())).toMap
-
-  def registerUser(userName: String) = {
-    val userId = rand.alphanumeric.take(20).foldLeft("")((res, nextChar) => res + nextChar)
-    users += (userId -> User(userName, userId))
-    userId
-  }
-
-  def existsUserId(userId: String) = {
-    users.contains(userId)
-  }
-
-  def getUserById(userId: String): User = {
-    users(userId)
-  }
 }
 
 class RoomActor(table: ChessTable) extends Actor {

@@ -4,9 +4,10 @@ import play.api.libs.iteratee.{Concurrent, Enumerator, Iteratee}
 import play.api.libs.json._
 
 
-object RoomsRepository{
+object RoomsRepository {
   import ChessTableInfo._
 
+  // TODO: try to get rid of both of those Writes
   implicit val roomWrites = new Writes[List[ChessTableInfo]] {
     def writes(tables: List[ChessTableInfo]) = JsArray(tables.map(Json.toJson(_)))
   }

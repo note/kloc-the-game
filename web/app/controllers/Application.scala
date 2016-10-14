@@ -6,8 +6,7 @@ import play.api._
 import play.api.libs.json._
 import play.api.mvc._
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 case class ChessTableInfos(tables: List[ChessTableInfo])
 
@@ -20,26 +19,6 @@ class ApplicationController extends Controller {
   def createRoom(timeLimitInSeconds: Int) = Action { implicit request =>
         val roomId = Room.newRoom(timeLimitInSeconds)
         Ok(Json.obj("roomId" -> roomId))
-  }
-
-  def logInUser = Action { request =>
-    request.getQueryString("userName") match {
-      case Some(userName) =>
-        val userId = Room.registerUser(userName)
-        Ok(Json.obj("userId" -> JsString(userId)))
-      case None =>
-        Ok(Json.obj("errors" -> JsArray(List(JsString("Incorrect request")))))
-    }
-  }
-
-  def isUserLoggedIn = Action { request =>
-    val userExists = request.getQueryString("userId") match {
-      case Some(userId) =>
-        Room.existsUserId(userId)
-      case None =>
-        false
-    }
-    Ok(Json.obj("result" -> JsBoolean(userExists)))
   }
 
   // TODO: replace with up to date method

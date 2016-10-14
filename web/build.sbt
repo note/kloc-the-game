@@ -5,7 +5,7 @@ version := "1.0-SNAPSHOT"
 scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
-  cache,
+  ws,
   specs2 % Test,
   "com.typesafe.akka" %% "akka-testkit" % "2.4.10" % Test,
   "org.asynchttpclient" % "async-http-client" % "2.0.15" % Test,
