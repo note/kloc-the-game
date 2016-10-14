@@ -6,7 +6,7 @@ require(['jquery', 'cookie', 'game', 'underscore', 'sprintf', 'drawer', 'backbon
     var sprintf = SprintfModule.sprintf;
     var registerUserUrl = '@routes.UserController.logInUser()';
     var loggedInUrl = '@routes.UserController.isUserLoggedIn()';
-    var listRoomsUrl = '@routes.ApplicationController.listRooms().webSocketURL()';
+    var listRoomsUrl = '@routes.RoomController.listRooms().webSocketURL()';
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket;
     vex.defaultOptions.className = 'vex-theme-os';
     vex.dialog = VexDialog;

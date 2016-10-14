@@ -1,24 +1,17 @@
 package controllers
 
-import models._
 import net.michalsitko.kloc.game.Color
-import play.api._
-import play.api.libs.json._
-import play.api.mvc._
+import play.api.Logger
+import play.api.libs.json.{JsArray, JsString, JsValue, Json}
+import play.api.mvc.{Action, Controller, WebSocket}
+import services.InMemoryRoomService
 
 import scala.concurrent.Future
 
-case class ChessTableInfos(tables: List[ChessTableInfo])
-
-class ApplicationController extends Controller {
-
-  def index = Action { implicit request =>
-    Ok(views.html.index("Your new application is ready.", Room.getRoomNames().map((name: Int) => (name, routes.ApplicationController.joinRoom(name).webSocketURL()))))
-  }
-
+class RoomController extends Controller {
   def createRoom(timeLimitInSeconds: Int) = Action { implicit request =>
-        val roomId = Room.newRoom(timeLimitInSeconds)
-        Ok(Json.obj("roomId" -> roomId))
+    val roomId = InMemoryRoomService.newRoom(timeLimitInSeconds)
+    Ok(Json.obj("roomId" -> roomId))
   }
 
   // TODO: replace with up to date method
@@ -29,7 +22,7 @@ class ApplicationController extends Controller {
     val colorStr = request.getQueryString("color")
     val color = colorStr.flatMap(Color.fromString(_))
     if(userId.isDefined && color.isDefined) {
-      Room.getRoomById(roomId) match {
+     InMemoryRoomService.getRoomById(roomId) match {
         case Some(room) =>
           room.join(userId.get.value, color.get)
         case _ =>
@@ -41,11 +34,6 @@ class ApplicationController extends Controller {
   }
 
   def listRooms() = WebSocket.using[JsValue] { request =>
-    RoomsRepository.getRoomsSocket()
+    InMemoryRoomService.getRoomsSocket()
   }
-
-  def mainJs = Action { implicit request =>
-    Ok(views.js.main())
-  }
-
 }

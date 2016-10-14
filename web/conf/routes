@@ -2,14 +2,28 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+
 ####################
 # UserController routes
 ####################
+
 # In case of success returns 200 OK with JSON like: {"userId": "someUserId"}
 GET     /logInUser                  controllers.UserController.logInUser
 
 # Returns 200 OK with JSON like: {"result": true}
 GET     /logged                     controllers.UserController.isUserLoggedIn
+
+
+####################
+# RoomController routes
+####################
+
+GET     /listRooms                  controllers.RoomController.listRooms
+
+GET     /createRoom                 controllers.RoomController.createRoom(timeLimitInSeconds: Int)
+
+GET     /joinRoom                   controllers.RoomController.joinRoom(roomId: Int)
+
 
 ####################
 # ApplicationController routes
@@ -17,12 +31,6 @@ GET     /logged                     controllers.UserController.isUserLoggedIn
 
 # Home page
 GET     /                           controllers.ApplicationController.index
-
-GET     /listRooms                  controllers.ApplicationController.listRooms
-
-GET     /createRoom                 controllers.ApplicationController.createRoom(timeLimitInSeconds: Int)
-
-GET     /joinRoom                   controllers.ApplicationController.joinRoom(roomId: Int)
 
 GET     /mainJs                     controllers.ApplicationController.mainJs
 

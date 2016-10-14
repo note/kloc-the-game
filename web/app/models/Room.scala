@@ -12,7 +12,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.iteratee.{Concurrent, Enumerator, Input, Iteratee}
 import play.api.libs.json.Reads._
 import play.api.libs.json.{JsObject, JsString, _}
-import services.{InMemoryUserService, UserService}
+import services.{InMemoryRoomService, RoomService, InMemoryUserService, UserService}
 
 import scala.collection.mutable.{Map => MutableMap}
 import scala.concurrent._
@@ -25,7 +25,7 @@ class Room (roomActor: ActorRef, userService: UserService, roomId: Int) {
     val user = userService.getUserById(userId)
     (roomActor ? Join(user, color)).map {
       case Connected(enumerator, state) =>
-        RoomsRepository.refreshNeeded()
+        InMemoryRoomService.refreshNeeded()
         val in = Iteratee.foreach[JsValue](event => {
           Logger.debug("websocket received something" + event.toString())
           (event \ "type").as[String] match {
@@ -34,7 +34,7 @@ class Room (roomActor: ActorRef, userService: UserService, roomId: Int) {
           }
         }).map { _ =>
           roomActor ! RoomLeft(roomId, user)
-          RoomsRepository.refreshNeeded()
+          InMemoryRoomService.refreshNeeded()
           Logger.debug("Disconnected3")
         }
 
@@ -62,39 +62,6 @@ class Room (roomActor: ActorRef, userService: UserService, roomId: Int) {
   }
 }
 
-object Room {
-  val rooms = MutableMap[Int, Room]()
-  var nextId = 0
-
-  // TODO: it's just temporary, when Room is refactored to class it will be injected
-  val userService = new InMemoryUserService
-
-  def newRoom(timeLimitInSeconds: Int): Int = {
-    val table = new ChessTable(timeLimitInSeconds * 1000)
-    val roomActor = Akka.system.actorOf(Props(classOf[RoomActor], table))
-    val roomId = useNextId()
-    rooms += (roomId -> new Room(roomActor, userService, roomId))
-    Logger.info(s"Created room with id: $roomId")
-    roomId
-  }
-
-  def removeRoom(roomId: Int): Unit = {
-    rooms.remove(roomId)
-  }
-
-  private def useNextId() = {
-    val res = nextId
-    nextId += 1
-    res
-  }
-
-  def getRoomById(id: Int) = rooms.get(id)
-
-  def getRoomNames() = rooms.keys
-
-  def getTablesInfo(): Map[Int, List[ChessTableInfo]] = rooms.map(mapItem => (mapItem._1, mapItem._2.getTablesInfo())).toMap
-}
-
 class RoomActor(table: ChessTable) extends Actor {
   val (roomEnumerator, roomChannel) = Concurrent.broadcast[JsValue]
 
@@ -105,7 +72,7 @@ class RoomActor(table: ChessTable) extends Actor {
     case RoomLeft(roomId, user) =>
       table.userLeft(user)
       if(table.getPlayers.size == 0){
-        Room.removeRoom(roomId)
+        InMemoryRoomService.removeRoom(roomId)
         self ! PoisonPill
       }
     case Started =>

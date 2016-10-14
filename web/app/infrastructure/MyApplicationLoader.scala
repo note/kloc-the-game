@@ -3,13 +3,13 @@ package infrastructure
 import java.util.concurrent.Executors
 
 import com.typesafe.config.Config
-import controllers.{UserController, ApplicationController, Assets}
-import models.Room
+import controllers.{ApplicationController, Assets, RoomController, UserController}
 import play.api.ApplicationLoader.Context
 import play.api._
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.routing.Router
 import router.Routes
+import services.InMemoryRoomService
 
 import scala.concurrent.ExecutionContext
 
@@ -31,14 +31,18 @@ class MyComponents(val context: Context)
     extends BuiltInComponentsFromContext(context)
     with AhcWSComponents {
 
-  lazy val appController = new ApplicationController
-  lazy val userService = Room.userService
+  lazy val userService = InMemoryRoomService.userService
+  lazy val roomService = InMemoryRoomService
+
   lazy val userController = new UserController(userService)
+  lazy val roomController = new RoomController
+  lazy val appController = new ApplicationController
   lazy val assets = new Assets(httpErrorHandler)
 
   lazy val router: Router = new Routes(
     httpErrorHandler,
     userController,
+    roomController,
     appController,
     assets)
 

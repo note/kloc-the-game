@@ -146,70 +146,70 @@ class RoomFlowIntegrationTest extends PlaySpec with OneServerPerSuite with Futur
     an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e2", "e5", userId1)
   }
 
-//  "should not allow for making two moves in row by the same player" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    roomOneWhite.expectMsg(startGameMsg)
-//    roomOneBlack.expectMsg(startGameMsg)
-//
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "e2", "e4", userId1)
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e4", "e5", userId1)
-//  }
-//
-//  "should not allow for making move after checkmate" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    roomOneWhite.expectMsg(startGameMsg)
-//    roomOneBlack.expectMsg(startGameMsg)
-//
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "g2", "g4", userId1)
-//    applyMoveAndVerify(roomOneBlack, roomOneWhite, "e7", "e5", userId2)
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "f2", "f4", userId1)
-//    applyMoveAndVerify(roomOneBlack, roomOneWhite, "d8", "h4", userId2, "b")
-//
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1, "b")
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1)
-//  }
-//
-//  "should stop malicious user who tries to make move for his opponent" in new TestContext {
-//    val userId1 = createUser(user1)
-//    val userId2 = createUser(user2)
-//
-//    val roomId = createRoom()
-//
-//    // user1 and user2 joins room
-//    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
-//    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
-//
-//    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
-//    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
-//
-//    roomOneWhite.expectMsg(startGameMsg)
-//    roomOneBlack.expectMsg(startGameMsg)
-//
-//    applyMoveAndVerify(roomOneWhite, roomOneBlack, "g2", "g4", userId1)
-//    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e7", "e5", userId1)
-//  }
+  "should not allow for making two moves in row by the same player" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+
+    val roomId = createRoom()
+
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+
+    roomOneWhite.expectMsg(startGameMsg)
+    roomOneBlack.expectMsg(startGameMsg)
+
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "e2", "e4", userId1)
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e4", "e5", userId1)
+  }
+
+  "should not allow for making move after checkmate" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+
+    val roomId = createRoom()
+
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+
+    roomOneWhite.expectMsg(startGameMsg)
+    roomOneBlack.expectMsg(startGameMsg)
+
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "g2", "g4", userId1)
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "e7", "e5", userId2)
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "f2", "f4", userId1)
+    applyMoveAndVerify(roomOneBlack, roomOneWhite, "d8", "h4", userId2, "b")
+
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1, "b")
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e1", "f2", userId1)
+  }
+
+  "should stop malicious user who tries to make move for his opponent" in new TestContext {
+    val userId1 = createUser(user1)
+    val userId2 = createUser(user2)
+
+    val roomId = createRoom()
+
+    // user1 and user2 joins room
+    val joinRoomOneWhiteUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=w"
+    val roomOneWhite = new WebsocketProbe(joinRoomOneWhiteUrl, "userId" -> userId1)
+
+    val joinRoomOneBlackUrl = s"localhost:$port/joinRoom?roomId=$roomId&color=b"
+    val roomOneBlack = new WebsocketProbe(joinRoomOneBlackUrl, "userId" -> userId2)
+
+    roomOneWhite.expectMsg(startGameMsg)
+    roomOneBlack.expectMsg(startGameMsg)
+
+    applyMoveAndVerify(roomOneWhite, roomOneBlack, "g2", "g4", userId1)
+    an [AssertionError] should be thrownBy applyMoveAndVerify(roomOneWhite, roomOneBlack, "e7", "e5", userId1)
+  }
 
 
   trait TestContext extends Fixtures {
